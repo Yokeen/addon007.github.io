@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="CTF,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/111.png?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="通过准备CTF比赛所学习到的知识前言有时候为了节约时间就偷懒直接用文字代替了，我知道这样会让有些朋友看不明白，如果不明白的话可以加我的QQ来交流，本人也比较喜欢广交朋友。回归正题，马上要参加CTF比赛了，但是也不知道初赛能不能过…..-.-">
+<meta name="keywords" content="CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过准备ctf所学习到的知识">
+<meta property="og:url" content="http://yoursite.com/2016/10/24/通过准备ctf所学习到的知识/index.html">
+<meta property="og:site_name" content="Yokeen&#39;s blog">
+<meta property="og:description" content="通过准备CTF比赛所学习到的知识前言有时候为了节约时间就偷懒直接用文字代替了，我知道这样会让有些朋友看不明白，如果不明白的话可以加我的QQ来交流，本人也比较喜欢广交朋友。回归正题，马上要参加CTF比赛了，但是也不知道初赛能不能过…..-.-">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/12.png">
+<meta property="og:image" content="http://yoursite.com/images/13.jpg">
+<meta property="og:updated_time" content="2018-02-06T05:16:29.996Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="通过准备ctf所学习到的知识">
+<meta name="twitter:description" content="通过准备CTF比赛所学习到的知识前言有时候为了节约时间就偷懒直接用文字代替了，我知道这样会让有些朋友看不明白，如果不明白的话可以加我的QQ来交流，本人也比较喜欢广交朋友。回归正题，马上要参加CTF比赛了，但是也不知道初赛能不能过…..-.-">
+<meta name="twitter:image" content="http://yoursite.com/images/12.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/24/通过准备ctf所学习到的知识/">
+
+
+
+
+
+  <title>通过准备ctf所学习到的知识 | Yokeen's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12246f7e36b6d790ccbbfabf73da926b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yokeen's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/10/24/通过准备ctf所学习到的知识/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yokeen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/beiy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yokeen's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">通过准备ctf所学习到的知识</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-24T20:59:17+08:00">
+                2016-10-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/10/24/通过准备ctf所学习到的知识/" class="leancloud_visitors" data-flag-title="通过准备ctf所学习到的知识">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="通过准备CTF比赛所学习到的知识"><a href="#通过准备CTF比赛所学习到的知识" class="headerlink" title="通过准备CTF比赛所学习到的知识"></a>通过准备CTF比赛所学习到的知识</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>有时候为了节约时间就偷懒直接用文字代替了，我知道这样会让有些朋友看不明白，如果不明白的话可以加我的QQ来交流，本人也比较喜欢广交朋友。<br>回归正题，马上要参加CTF比赛了，但是也不知道初赛能不能过…..-.-<br><a id="more"></a></p>
+<h1 id="WEB篇"><a href="#WEB篇" class="headerlink" title="WEB篇"></a>WEB篇</h1><blockquote>
+<p>WEB篇目作为非常大的一面，也许是我做的还不够多，做了做百度杯的题，就知识的涉及的话，我个人感觉它涉及的并不多，但是非常考验逻辑思考能力以及经验问题。<br>拿到一个web题目<br>一、要看他的名字是否透露出了一些信息<br>二、查看他的源代码<br>三、抓包分析<br>这是拿到一个web题目最基本的流程，通过抓包改包来透出一些其他的信息，但是之后就涉及到了代码审计，当他给出这个功能实现的源代码，你要能通过审计来audit他的小漏洞或者是反向写出另外一个php代码来找到数据，这是我个人认为很难的一点，也许是还没有学习php..还有就是有些大量的琐碎的事情，需要写另一些脚本来运行，还好我学的是python，可以用来做这样的一些事情，但是思路方面还是要不断练习<br>还有就是利用web渗透的方法，像什么注入，以及万能密码直接过…….</p>
+</blockquote>
+<p>web方面涉及的知识也比较多，还是要不断做题才能发现更多的知识点以及更为老练的经验..</p>
+<h1 id="隐写术篇"><a href="#隐写术篇" class="headerlink" title="隐写术篇"></a>隐写术篇</h1><h2 id="图片隐写"><a href="#图片隐写" class="headerlink" title="图片隐写"></a>图片隐写</h2><blockquote>
+<p>在隐写术篇目中只先接触了图片隐写，而视频隐写暂时还未了解，一切的拓展，等赛后再次充实，为了下次比赛的绽放，哈哈。<br>关于图片的隐写我来介绍几种我这几天遇到的<br>第一种：直接在图片中隐藏一些信息，我们可以通过stegsolve这款调节像素的工具来调节图片的像素从而来发现这个图片是否隐写了一些信息。<br>第二种：图片中包含一个另一个文件，或者是一个解压包或者有另一个图片。我们通过binwalk(我在kali环境)来查看这个文件是否含有其他的文件binwalk xx.xx。然后利用dd命令来将他分出来dd if=源文件 of=要输出的文件名 bs=1 skip=xxx 来将文件输出出来，binwalk后在你如果发现了其他名称的文件，在他的文件名前边会有一个编号，将他输入到skip后，就可以将这个文件从源文件中提取出来，of就是提取后的文件。<br>dd和binwalk用法不止在图片的隐写以及分离中使用，他很强大，有兴趣的朋友可以多多了解。<br>第三种：对图片的每一帧每一帧的查看，可能会得到相关的信息。<br>第四种：他会给你一串代码，或许是base64编码，我们可以拿到<a href="http://www.vgot.net/test/image2base64.php" target="_blank" rel="noopener">Image2Base64</a>这个网站将bas64转为图片格式，再从图片上发现信息，如果图片发现不了信息，可以拿到谷歌图片去搜索这个图片的相关信息。<br>直接用记事本打开</p>
+</blockquote>
+<blockquote>
+<p>有时候我们发现一个图片损坏，我们可以查看一些各种格式的文件头，然后利用winhex(windows环境下)和Ghex(linux环境下)，看看他的格式头是否和标准格式头相同，然后来修改其中的一些东西，使其能够正常运行，所以我们需要收集一些文件头以备不时之需<br>如果是一个没有后缀的文件可以尝试加一个rar来看看里边有没有东西</p>
+</blockquote>
+<h2 id="音频隐写"><a href="#音频隐写" class="headerlink" title="音频隐写"></a>音频隐写</h2><blockquote>
+<p>关于音频隐写这里只是简单的涉及了一个工具的使用，叫做silenteye直接将音频文件放进去decode即可，运气好可以直接爆出来…..</p>
+</blockquote>
+<h1 id="密码篇"><a href="#密码篇" class="headerlink" title="密码篇"></a>密码篇</h1><h2 id="摩斯密码"><a href="#摩斯密码" class="headerlink" title="摩斯密码"></a>摩斯密码</h2><blockquote>
+<p>哈哈，很著名的一种密码，举手眨眼间就可以散发出密码的味道。关于摩斯密码，我们要背一些东西，他的加密表。<br><img src="/images/12.png" alt="摩斯密码表">当然网上也有在线的解密器，但是为了提高自己的逼格，还是背一下，毕竟感觉很高大上哦~</p>
+</blockquote>
+<h2 id="培根密码"><a href="#培根密码" class="headerlink" title="培根密码"></a>培根密码</h2><blockquote>
+<p>培根密码是采用a和b来构成的，解密请看他的密码表<br>note:只有a和b的也不一定是培根密码，也有可能是摩斯密码</p>
+</blockquote>
+<h2 id="猪圈密码"><a href="#猪圈密码" class="headerlink" title="猪圈密码"></a>猪圈密码</h2><blockquote>
+<p>直接看他的密码表吧，如果不懂百度即可加我QQ互相探讨也可以<br><img src="/images/13.jpg" alt="猪圈密码表"></p>
+</blockquote>
+<h2 id="rot13密码"><a href="#rot13密码" class="headerlink" title="rot13密码"></a>rot13密码</h2><p>这是rot13的置换表<br>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz<br>NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm<br>比如：hello world经过rot13加密后就为<br>uryyb jbeyq</p>
+<h2 id="凯撒加密"><a href="#凯撒加密" class="headerlink" title="凯撒加密"></a>凯撒加密</h2><blockquote>
+<p>凯撒加密其实就是根据字母表将消息中的字母移动常量k，举个例子。比如我想隐藏的密文是hello，然后移动的常量是3，最后得出的密文就是khoor这样。<br>我们也可以写一个脚本来快速得到解密后的值，这个写起来比较简单，网上的方法也很多，我也就不再赘述。</p>
+</blockquote>
+<h2 id="栅栏密码"><a href="#栅栏密码" class="headerlink" title="栅栏密码"></a>栅栏密码</h2><blockquote>
+<p>关于栅栏密码的实现<br>比如这是一串密文  you are so beautiful<br>拿到明文后，先把明文的空格去掉，变为youaresobeautiful，然后将他两两分为一组，yo ua re so be au ti fu l，然后将第一个字母取出，得出一组，yursbatfl 然后将第二个字母取出来，得为第二组。  oaeoeuiu，然后将两组连到一起从而得到最后的密文。<br>解密为他的逆向，你懂得。</p>
+</blockquote>
+<blockquote>
+<p>我们通过一个python脚本来快速的得出栅栏密码的明文，网上找大牛的,代码的实现还没有细细研究，不过也不难，赛后再好好看看，现在先保存可能比赛的时候用。(不过我已经背下了哦-.-)<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">result = &#123;</span><br><span class="line">	<span class="number">0</span>:<span class="string">''</span>,<span class="number">1</span>:<span class="string">''</span>,<span class="number">2</span>:<span class="string">''</span>,<span class="number">3</span>:<span class="string">''</span>,<span class="number">4</span>:<span class="string">''</span>,<span class="number">5</span>:<span class="string">''</span>,<span class="number">6</span>:<span class="string">''</span>,<span class="number">7</span>:<span class="string">''</span>,<span class="number">8</span>:<span class="string">''</span>,<span class="number">9</span>:<span class="string">''</span>,<span class="number">10</span>:<span class="string">''</span>,<span class="number">11</span>:<span class="string">''</span>,<span class="number">12</span>:<span class="string">''</span>,<span class="number">13</span>:<span class="string">''</span>,<span class="number">14</span>:<span class="string">''</span>,<span class="number">15</span>:<span class="string">''</span>,<span class="number">16</span>:<span class="string">''</span>,<span class="number">17</span>:<span class="string">''</span></span><br><span class="line">&#125;</span><br><span class="line">b = <span class="number">17</span></span><br><span class="line">cryptograph = <span class="string">'密文'</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(cryptograph)):</span><br><span class="line">	a = a%b</span><br><span class="line">	result.update(&#123;a:result[a]+str(i)&#125;)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(b):</span><br><span class="line">	print(result[i])</span><br></pre></td></tr></table></figure><br>通过代码的实现，我们可以快速的得到栅栏密码的明文方式。</p>
+</blockquote>
+<h2 id="bf"><a href="#bf" class="headerlink" title="bf"></a>bf</h2><blockquote>
+<p>不知道这个能不能算是一种密码，但我觉得应该算。<br>有时候我们看到一串诸如++++++++++++[&gt;++++&gt;+++++&gt;++++++&gt;++这样的代码，我们可以猜想，或许他就是brainfuck语言的代码，而后缀为bf就是这种语言的特有后缀，我们可以通过c语言来写出brainfuck的解释器从而来破解这段密文，以下是用c实现brainfuck解释器的代码:(当然我现在还写不出来-.-)<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TOKENS <span class="meta-string">"&gt;&lt;+-.,[]"</span></span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CODE_SEGMENT_SIZE 30000</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> STACK_SEGMENT_SIZE 1000</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DATA_SEGMENT_SIZE 30000</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*Callback)</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">  <span class="keyword">char</span> cs[CODE_SEGMENT_SIZE];   <span class="comment">/* Code Segment */</span></span><br><span class="line">  <span class="keyword">long</span> ip;                      <span class="comment">/* Instruction Pointer */</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">char</span> ss[STACK_SEGMENT_SIZE];  <span class="comment">/* Stack Segment */</span></span><br><span class="line">  <span class="keyword">long</span> sp;                      <span class="comment">/* Stack Pointer */</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">char</span> ds[DATA_SEGMENT_SIZE];   <span class="comment">/* Data Segment */</span></span><br><span class="line">  <span class="keyword">long</span> bp;                      <span class="comment">/* Base Pointer */</span></span><br><span class="line"> </span><br><span class="line">  Callback fn[<span class="number">128</span>];</span><br><span class="line">&#125; vm;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vm_forward</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  vm.bp = (vm.bp + <span class="number">1</span>) % DATA_SEGMENT_SIZE;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vm_backward</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  vm.bp = (vm.bp + DATA_SEGMENT_SIZE - <span class="number">1</span>) % DATA_SEGMENT_SIZE;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vm_increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  vm.ds[vm.bp]++;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vm_decrement</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  vm.ds[vm.bp]--;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vm_input</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  vm.ds[vm.bp] = getchar();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vm_output</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="built_in">putchar</span>(vm.ds[vm.bp]);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vm_while_entry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (vm.ds[vm.bp]) &#123;</span><br><span class="line">    vm.ss[vm.sp] = vm.ip - <span class="number">1</span>;</span><br><span class="line">    vm.sp++;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">int</span> c = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (vm.ip++; vm.cs[vm.ip] &amp;&amp; c; vm.ip++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (vm.cs[vm.ip] == <span class="string">'['</span>) &#123;</span><br><span class="line">        c++;</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (vm.cs[vm.ip] == <span class="string">']'</span>) &#123;</span><br><span class="line">        c--;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vm_while_exit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (vm.ds[vm.bp]) &#123;</span><br><span class="line">    vm.sp--;</span><br><span class="line">    vm.ip = vm.ss[vm.sp];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> c;</span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line"> </span><br><span class="line">  <span class="built_in">memset</span>(&amp;vm, <span class="number">0</span>, <span class="keyword">sizeof</span>(vm));</span><br><span class="line">  vm.fn[<span class="string">'&gt;'</span>] = vm_forward;</span><br><span class="line">  vm.fn[<span class="string">'&lt;'</span>] = vm_backward;</span><br><span class="line">  vm.fn[<span class="string">'+'</span>] = vm_increment;</span><br><span class="line">  vm.fn[<span class="string">'-'</span>] = vm_decrement;</span><br><span class="line">  vm.fn[<span class="string">'.'</span>] = vm_output;</span><br><span class="line">  vm.fn[<span class="string">','</span>] = vm_input;</span><br><span class="line">  vm.fn[<span class="string">'['</span>] = vm_while_entry;</span><br><span class="line">  vm.fn[<span class="string">']'</span>] = vm_while_exit;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; (c = getchar()) != EOF;) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strchr</span>(TOKENS, c)) &#123;</span><br><span class="line">      vm.cs[i] = c;</span><br><span class="line">      i++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (vm.cs[vm.ip]) &#123;</span><br><span class="line">    vm.fn[vm.cs[vm.ip]]();</span><br><span class="line">    vm.ip++;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (argc &gt; <span class="number">1</span>) &#123;</span><br><span class="line">    freopen(argv[<span class="number">1</span>], <span class="string">"r"</span>, <span class="built_in">stdin</span>);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  setup();</span><br><span class="line">  run();</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>将他运行一遍然后将所得到的exe文件保存以后直接使用exe文件即可。我们把密文保存为.bf后缀，然后运行。<br>**注意：<br>    运行时候要brainfuck.exe xxxx.bf这样来运行。</p>
+<h1 id="数据流分析篇"><a href="#数据流分析篇" class="headerlink" title="数据流分析篇"></a>数据流分析篇</h1><blockquote>
+<p>刚接触了一个ctf的数据流分析题，也许是刚接触wireshark和数据的分析，做的实在头大，看见格式为pcapng还以为是写错了图片格式，自作主张的将其改为了Png……<br>关于数据包的分析这一节先不做解释，还是等赛后全面充实的时候再做全面拓展。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="Yokeen WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Yokeen Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CTF/" rel="tag"># CTF</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/12/nmap以及sqlmap的使用/" rel="next" title="nmap以及burp的简单使用以及一些基本知识">
+                <i class="fa fa-chevron-left"></i> nmap以及burp的简单使用以及一些基本知识
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/06/好长时间了的一点随感/" rel="prev" title="这一段时间的感受">
+                这一段时间的感受 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/beiy.jpg" alt="Yokeen">
+          <p class="site-author-name" itemprop="name">Yokeen</p>
+           
+              <p class="site-description motion-element" itemprop="description">无所畏惧，勇往直前</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Yokeen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.test404.com" title="Test404'Blog" target="_blank">Test404'Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.lmxspace.com" title="l1nk3r's blog" target="_blank">l1nk3r's blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过准备CTF比赛所学习到的知识"><span class="nav-number">1.</span> <span class="nav-text">通过准备CTF比赛所学习到的知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WEB篇"><span class="nav-number">2.</span> <span class="nav-text">WEB篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#隐写术篇"><span class="nav-number">3.</span> <span class="nav-text">隐写术篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#图片隐写"><span class="nav-number">3.1.</span> <span class="nav-text">图片隐写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#音频隐写"><span class="nav-number">3.2.</span> <span class="nav-text">音频隐写</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#密码篇"><span class="nav-number">4.</span> <span class="nav-text">密码篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#摩斯密码"><span class="nav-number">4.1.</span> <span class="nav-text">摩斯密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#培根密码"><span class="nav-number">4.2.</span> <span class="nav-text">培根密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#猪圈密码"><span class="nav-number">4.3.</span> <span class="nav-text">猪圈密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rot13密码"><span class="nav-number">4.4.</span> <span class="nav-text">rot13密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#凯撒加密"><span class="nav-number">4.5.</span> <span class="nav-text">凯撒加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#栅栏密码"><span class="nav-number">4.6.</span> <span class="nav-text">栅栏密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bf"><span class="nav-number">4.7.</span> <span class="nav-text">bf</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据流分析篇"><span class="nav-number">5.</span> <span class="nav-text">数据流分析篇</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yokeen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("jwmoWLlH6Y6Lhn3O89mgQzzU-gzGzoHsz", "d2eM2PNMsQCyGqPbC5aaIyuz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

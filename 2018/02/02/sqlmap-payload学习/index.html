@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="tools,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/111.png?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="他的心灵上已被脂肪包围，久不使用的天赋，终已泯灭。                              —–海明威">
+<meta name="keywords" content="tools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqlmap payload学习">
+<meta property="og:url" content="http://yoursite.com/2018/02/02/sqlmap-payload学习/index.html">
+<meta property="og:site_name" content="Yokeen&#39;s blog">
+<meta property="og:description" content="他的心灵上已被脂肪包围，久不使用的天赋，终已泯灭。                              —–海明威">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-2/77183872.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/68763305.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/96705923.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/55854105.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/31188633.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/79033137.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/9066058.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/99957435.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/57856514.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/6259629.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/24582722.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/63403841.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/2164104.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-5/43409334.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/32716936.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/91299579.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/63656593.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/10294832.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/25873990.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/25915640.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/52937463.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/33474963.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/73313367.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/52358096.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/35526228.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/24144416.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-6/2294263.jpg">
+<meta property="og:updated_time" content="2018-02-06T05:24:26.794Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sqlmap payload学习">
+<meta name="twitter:description" content="他的心灵上已被脂肪包围，久不使用的天赋，终已泯灭。                              —–海明威">
+<meta name="twitter:image" content="http://oxrfjovwk.bkt.clouddn.com/18-2-2/77183872.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/02/sqlmap-payload学习/">
+
+
+
+
+
+  <title>sqlmap payload学习 | Yokeen's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12246f7e36b6d790ccbbfabf73da926b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yokeen's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/02/sqlmap-payload学习/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yokeen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/beiy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yokeen's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">sqlmap payload学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-02T11:50:46+08:00">
+                2018-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/02/02/sqlmap-payload学习/" class="leancloud_visitors" data-flag-title="sqlmap payload学习">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>他的心灵上已被脂肪包围，久不使用的天赋，终已泯灭。<br>                              —–海明威</p>
+<hr>
+<a id="more"></a>
+<h1 id="sqlmap的探测注入类型"><a href="#sqlmap的探测注入类型" class="headerlink" title="sqlmap的探测注入类型"></a>sqlmap的探测注入类型</h1><h2 id="1-UNION-query-SQL-injection（联合查询注入）"><a href="#1-UNION-query-SQL-injection（联合查询注入）" class="headerlink" title="1.UNION query SQL injection（联合查询注入）"></a>1.UNION query SQL injection（联合查询注入）</h2><p>联合查询就是通过union关键字将多条语句合并在一起执行，让前一条语句报错从而让后一条语句的执行结果输出到前一条语句的显位中。需要注意的是查询语句要符合1.相同列数2.相似的数据类型3.相同的编码。</p>
+<p>示例语句：id=-1’ union select 1,(select user()),(select version())#</p>
+<h2 id="2-Error-based-SQL-injection（基于报错型注入）"><a href="#2-Error-based-SQL-injection（基于报错型注入）" class="headerlink" title="2.Error-based SQL injection（基于报错型注入）"></a>2.Error-based SQL injection（基于报错型注入）</h2><p>报错型注入是利用了MySQL的第8652号BUG，但是用echo mysql_error();输出了错误信息时使用，</p>
+<p>示例语句：id=’ and (extractvalue(1,concat(0x7e,(select user()),0x7e)))#</p>
+<p>当然如果报错的数据不能回显到页面上来，就无法使用报错注入，这时候我们就可以考虑是否存在盲注。</p>
+<h2 id="3-Boolean-based-blind-SQL-injection（基于布尔型的盲注）"><a href="#3-Boolean-based-blind-SQL-injection（基于布尔型的盲注）" class="headerlink" title="3.Boolean-based blind SQL injection（基于布尔型的盲注）"></a>3.Boolean-based blind SQL injection（基于布尔型的盲注）</h2><p>布尔盲注的核心思想就是通过判断两种不同的页面状态来进一步推断注入语句是否被执行以及数据是否存在。<br>示例语句：id=1’ and length(database())&gt;1 #<br>当我们输入的注入语句无法通过回显以及报错的方式来获取数据，这时候就可能存在盲注，通过判断有跟没有、对或错来判断regexp 是否匹配到数据了。</p>
+<h2 id="4-Time-based-blind-SQL-injection（基于时间的盲注）"><a href="#4-Time-based-blind-SQL-injection（基于时间的盲注）" class="headerlink" title="4.Time-based blind SQL injection（基于时间的盲注）"></a>4.Time-based blind SQL injection（基于时间的盲注）</h2><p>如果在测试的时候发现都不存在前面三种所说的注入，那就有可能是时间盲注，时间盲注的特点是无回显，无报错，也没有多种页面状态。</p>
+<p>这时候就需要通过增加sleep()函数来判断注入语句的执行，而布尔则是根据页面的对错来判断。</p>
+<p>示例语句：id=1’ and sleep(5)# 如果sleep则可以初步判断可能存在时间盲注</p>
+<h2 id="5-Stacked-queries-SQL-injection（可多语句查询注入）"><a href="#5-Stacked-queries-SQL-injection（可多语句查询注入）" class="headerlink" title="5.Stacked queries SQL injection（可多语句查询注入）"></a>5.Stacked queries SQL injection（可多语句查询注入）</h2><p>多语句查询注入也叫做堆叠查询，与联合查询有点相似，都可以多条语句查询，堆叠查询的关键是分号(;)比较直观的就是如果分号被过滤或者无法绕过就无法注入，当然还有一些数据库引擎不支持，权限不足等限制，实际工作中遇到的也很比较少，这里就不做过多讨论。</p>
+<h2 id="6-Inline-queries（内联查询注入）"><a href="#6-Inline-queries（内联查询注入）" class="headerlink" title="6.Inline queries（内联查询注入）"></a>6.Inline queries（内联查询注入）</h2><p>碰到的比较少，这里暂不做过多讨论。</p>
+<h1 id="sqlmap的payload文件"><a href="#sqlmap的payload文件" class="headerlink" title="sqlmap的payload文件"></a>sqlmap的payload文件</h1><p>sqlmap根据6大类型探测技术生成的payload就放在sqlmap源码中\xml\payloads文件中<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-2/77183872.jpg" alt=""></p>
+<h2 id="xml"><a href="#xml" class="headerlink" title="xml"></a>xml</h2><p>可扩展标记语言，是一种用于标记电子文件使其具有结构性的标记语言。</p>
+<h2 id="payloads相关文件解释"><a href="#payloads相关文件解释" class="headerlink" title="payloads相关文件解释"></a>payloads相关文件解释</h2><p>sqlmap通过xml语言来定义多个不同的标签组成一个payload的模板，每个标签有设置不同的等级，通过这样的方式可以实现灵活组合和调用payload。</p>
+<p>标签的意思和作用可以在sqlmap源码的\xml文件夹中的boundaries.xml以及\xml\payloads文件夹下的.xml文件的注释中查看。</p>
+<p>boundaries.xml<br>&lt;//boundary&gt;标签定义了sqlmap诸如语句的边界问题<br>level：注入的发包等级，也就是–level，共五个等级，默认是1<br>clause：使用的查询从句，比如having、where、order by…<br>where：指定如何添加前缀、payload、comment、后缀<br>ptype：payload的类型<br>prefix：payload之前输入的<br>suffix：payload之后输入的<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/68763305.jpg" alt=""></p>
+<p>payloads文件夹<br>test标签定义了比较详细的测试案例，这也就是我们的payload<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/96705923.jpg" alt=""><br>title：标题<br>stype：注入的类型<br>level：发包等级，与boundary中的level一致<br>risk：风险等级，默认1，总共3（1.测试大部分测试语句，2.增加基于事件额度测试语句，3.增加OR语句的SQL注入测试）<br>clause：指定为每个payload使用的SQL查询从句，与boundary中一致<br>where：与boundary中一致<br>vector：指定将使用的注入模版<br>request：这次注入都要进行些什么<br>payload：测试使用的payload<br>comment：在payload之后，后缀之前的语句<br>char：联合查询中爆破的字符<br>columns：联合查询测试的列数范围<br>response：根据回显辨别这次注入的payload是否成功<br>comparison：使用字符串作为payload执行请求，将响应和负载响应进行对比，在基于布尔值的盲注中有效。<br>grep：使用正则表达式去匹配响应的主体，在显错注入中有效。<br>time：在响应返回之前等待的秒数。在时间盲注和堆查询注入中有效。<br>union：调用unionTest()方法，在联合查询中有效。<br>details：哪些细节可以推断出来如果这个载荷成功<br>dbms：系统数据库类型<br>dbms_version：系统数据库版本<br>os：操作系统类型</p>
+<h2 id="开始测试"><a href="#开始测试" class="headerlink" title="开始测试"></a>开始测试</h2><p>测试所使用的语句：<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/55854105.jpg" alt=""><br>boundary和test相结合就可以得到以下测试语句<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/31188633.jpg" alt=""><br>可以看到，在boundary中指定前缀和后缀，在union_query.xml相应的位置指定测试所使用的字符以及数量</p>
+<p>中间的union测试语句，通过使用vector标签指定了使用union模版，而构造union查询的语句来自于sqlmap\lib\core\agent.py<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/79033137.jpg" alt=""><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/9066058.jpg" alt=""></p>
+<p>同时从这张图我们可以看到，查询语句之后先是comment后是suffix，这时候我们就可以对boundary中的suffix和test中的comment有一个了解。</p>
+<blockquote>
+<p>这里不知道大家有没有注意一个问题？<br>在sqlmap测试语句中，我使用的level和risk是1，但在上边的boundary，payload，sqlmap相对应的那张图片中，右边的test中level是1,risk是1，标题也对应，这个正确。<br>但是在左边boundary中level是3，虽然level不对应但是实际产生的效果却是一致（我找遍了boundaries.xml里边没有level1并且前缀是)后缀是–随机字符串的）</p>
+</blockquote>
+<p>我们再来看一张图片<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/99957435.jpg" alt=""><br>这时候就可以对应了，没有前缀，后缀是–随即字符串</p>
+<p><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/57856514.jpg" alt=""><br>….这张图片显示的是level=4，但是我指定的是level=1，按道理来说应该不会测试更高等级的，而且经过实际测试发现虽然我指定的level=1，但是boundaries.xml里边的基本大部分（不管level是多少）都会测试。</p>
+<blockquote>
+<p>理解一下level参数，–level命令有5个等级，默认是1，表示做最少的检测，level=2或2以上时会对cookie进行测试，3或3以上时会对user-agent和referer进行测试。</p>
+</blockquote>
+<p>这里可以先假定这里也就是boundary中的level和我们实际使用的level并不是同一个东西（不是同一个那这个level是干嘛用的..），实际指定的level是发包数量，2及其以上会测试cookie，3及其以上会测试头，这个也就是说他其实指定了sqlmap测试的位置，当然也会发更多的包。但是在这，也就是boundaries.xml中的level和位置并没有什么别的关系，那应该就是和别的搭配有关系，这里就先暂且不分析了。</p>
+<p>原作者的说明这里的level标签就是我们sqlmap注入时候–level命令，我感觉boundaries.xml中的level和测试指定的level关系并不大，当然这是特指测试语句这个例子，别的还得另说。</p>
+<p>这里看一下原作者的分析：</p>
+<blockquote>
+<p>level标签就是我们使用sqlmap注入时候–level的命令，这个标签分别定义了1-5个等级的发包数量，默认是1，表示做最少的检测，level越高，检测的数量越高。level等于2时会检测cookie字段是否有注入，等于3时会检测User-Agent、Host、Referer等HTTP的头部字段是否有注入。</p>
+</blockquote>
+<blockquote>
+<p>最终的payload = where + boundary.prefix+test.payload+boundary.suffix，影响最终payload的生成主要由clause,where标签决定的。</p>
+</blockquote>
+<blockquote>
+<p>当且仅当某个boundary元素的where节点的值包含test元素的子节点where的值，clause节点的值包含test元素的子节点的clause的值时候，该boundary才能和当前的test匹配生成最终的payload。经过测试发现除了这两个文件决定最终payload的生成，还包括sqlmap使用的注入方式以及payload使用的查询语句有关。如果把这两个文件比作两个集合，生成的payload比作两个集合的映射，则这两个集合之间的映射关系是多对多的关系。<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/6259629.jpg" alt=""><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/24582722.jpg" alt=""><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/63403841.jpg" alt=""></p>
+</blockquote>
+<p>在他的图片中是测试已经实际有了payload的两个标签中的东西，而作者写出来的话以及所展示的图片中：<br>boundary的where的值（1，2）包含test子节点where的值（1）， test[where]含于boundary[where]，这个是正确的。<br>clause节点的值（1）包含test子节点clause(1,2,3,4,5)，test[clause]含于boundary[clause] 这个明显不对，1有，那2345呢？ 图片和话并不对应，如果说是包含某个值的话就应该正确的，取交集。</p>
+<p>相关问题可能还是得把sqlmap源码多读一读才能看得明白和透彻。</p>
+<h1 id="搭配实际案例的payload修改"><a href="#搭配实际案例的payload修改" class="headerlink" title="搭配实际案例的payload修改"></a>搭配实际案例的payload修改</h1><h2 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$mysql_server=<span class="string">"10.10.10.136"</span>;</span><br><span class="line">$mysql_username=<span class="string">"root"</span>;</span><br><span class="line">$mysql_userpass=<span class="string">"xxxxx"</span>;</span><br><span class="line">$mysql_select_db=<span class="string">"test"</span>;</span><br><span class="line">$config=mysql_connect($mysql_server,$mysql_username,$mysql_userpass)<span class="keyword">or</span> <span class="keyword">die</span> (mysql_error());</span><br><span class="line">$db=mysql_select_db($mysql_select_db)<span class="keyword">or</span> <span class="keyword">die</span> (mysql_error());</span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_REQUEST[ <span class="string">'evil'</span> ]) ) &#123;</span><br><span class="line">$evil = $_REQUEST[ <span class="string">'evil'</span> ];</span><br><span class="line">$query  = <span class="string">"select * from test order by user_id $evil;"</span>;</span><br><span class="line"><span class="comment">//$query  = "(select * from test order by user_id $evil);";</span></span><br><span class="line">$result = mysql_query( $query,$config) <span class="keyword">or</span> <span class="keyword">die</span>( $query.<span class="string">'&lt;pre&gt;'</span> . mysql_error() . <span class="string">'&lt;/pre&gt;'</span>);</span><br><span class="line">$num = mysql_numrows( $result );</span><br><span class="line">$i   = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span>( $i &lt; $num ) &#123;</span><br><span class="line">$user_id = mysql_result( $result, $i, <span class="string">"user_id"</span> );</span><br><span class="line">$user = mysql_result( $result, $i, <span class="string">"user"</span> );</span><br><span class="line">$password  = mysql_result( $result, $i, <span class="string">"password"</span> );</span><br><span class="line">$html .= <span class="string">"&lt;pre&gt;user_id: &#123;$user_id&#125; user: &#123;$user&#125; password: &#123;$password&#125;&lt;/pre&gt;"</span>;</span><br><span class="line">$i++;</span><br><span class="line">&#125;</span><br><span class="line">mysql_close();</span><br><span class="line"><span class="keyword">echo</span> $query;</span><br><span class="line"><span class="keyword">echo</span> $html;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这是一种order by的排序注入</p>
+</blockquote>
+<p>正常页面<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/2164104.jpg" alt=""></p>
+<h2 id="可以手注的方法"><a href="#可以手注的方法" class="headerlink" title="可以手注的方法"></a>可以手注的方法</h2><h3 id="显错注入"><a href="#显错注入" class="headerlink" title="显错注入"></a>显错注入</h3><p>这里利用的是updatexml进行显错注入。<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-5/43409334.jpg" alt=""><br>updatexml总共接收三个参数，第一个是xml文档的对象，第二个是xpath形式的字符串，最后一个是字符串格式，因为第二个参数是需要xpath格式的字符串，这里并不满足，从而导致报错。</p>
+<h3 id="盲注"><a href="#盲注" class="headerlink" title="盲注"></a>盲注</h3><p>这里盲注的方法是使用位运算符^(异或，当然别的也有别的妙处)，通过构造返回的真假值来对user_id进行异或，从然根据返回的数据的顺序来判断是否匹配。</p>
+<p>order by的结果默认是升序的。<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/32716936.jpg" alt=""></p>
+<p>查询语句是 select * from test order by user_id $evil;</p>
+<p>因为evil变量我们可以自己构造，所以我们通过异或来进行构造，可以看到，0与user_id的二进制异或返回的值是正常升序，而1返回的是略有变异的升序。<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/91299579.jpg" alt=""></p>
+<p>0与任何数字异或是数字本身，所以排序不变。<br>1与user_id的二进制进行异或，然后按照异或的结果升序排列，但是显示的排列会发生变化。</p>
+<p>所以我们通过构造条件，来判断我们构造的语句是真（返回1）还是假（返回0），从而根据页面返回的排列顺序来判断是否我们所判断的数据的正确性。</p>
+<p>这里利用mysql的正则表达式regexp与select取到的值进行匹配。<br>当前用户是root@localhost<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/63656593.jpg" alt=""></p>
+<p>先随便输入一个用户admin，排序是错误结果输出的排序，admin不对<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/10294832.jpg" alt=""></p>
+<p>用正则表达式判断一下数据的开头是不是root，正确<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/25873990.jpg" alt=""><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/25915640.jpg" alt=""><br>当前用户就是root@localhost</p>
+<h3 id="联合查询"><a href="#联合查询" class="headerlink" title="联合查询"></a>联合查询</h3><blockquote>
+<p>这里需要修改代码，将$sql = “select * from test order by user_id $evil;”;注释，将下边带括号的注释给去掉。<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/52937463.jpg" alt=""><br>因为没有用括号进行包裹时，无法直接使用union进行查询。</p>
+</blockquote>
+<p>自己网上找了一些文章，union子句中使用order by，就是先将select子句的结果先排序，然后把这些子句查询的结果进行整合，并且需要将整个子句加括号。</p>
+<p>作者原文中贴出了MySQL官方文档中的话，文档中说并把ORDER BY或LIMIT放到最后一个的后边，其实放到前边也可以，但是不常见。</p>
+<p>然后再进行注入构造<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/33474963.jpg" alt=""><br><a href="http://127.0.0.1/1.php?evil=desc)%20union%20(select%201,(version()),3)%23" target="_blank" rel="noopener">http://127.0.0.1/1.php?evil=desc)%20union%20(select%201,(version()),3)%23</a></p>
+<h2 id="sqlmap-payload修改"><a href="#sqlmap-payload修改" class="headerlink" title="sqlmap payload修改"></a>sqlmap payload修改</h2><p>使用sqlmap跑一跑先<br>注入语句：sqlmap -u “<a href="http://127.0.0.1/1.php?evil=desc&quot;" target="_blank" rel="noopener">http://127.0.0.1/1.php?evil=desc&quot;</a> –technique=U –dbms=mysql –current-user -v 3<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/73313367.jpg" alt=""><br>提示不可以注入，看一下跑着时候的payload<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/52358096.jpg" alt=""><br>payload之前有一个括号是对的，后缀是)加注释，我们这用)#<br>作者是直接在payload文件中添加了这个前缀和后缀，sqlmap有参数的，–prefix指定前缀，–suffix指定后缀<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/35526228.jpg" alt=""><br>select前边还有一个括号，我们在文件中寻找，前边我们已经知道lib\core\agent.py文件中有一个forgeUnionQuery函数是构造union查询的，把unionQuery里边的UNION ALL SELECT，在里边添加一个括号就可以了。<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/24144416.jpg" alt=""></p>
+<p>记得用–purge-output先删除以前的缓存文件，防止注入失败<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-2-6/2294263.jpg" alt=""><br>注入成功。</p>
+<p>参考文章：<br><a href="http://www.freebuf.com/column/161535.html" target="_blank" rel="noopener">sqlmap payload修改之路 上</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzIwNDI4MzAwOA==&amp;mid=2650524695&amp;idx=2&amp;sn=766a43be39d2dd346e741ef4cc5da157&amp;chksm=8ecde1f8b9ba68ee835822ad2bd470de9418e3ea69949f1d1dd8ae3c0a8bdfa8d593d0dc5c63&amp;mpshare=1&amp;scene=23&amp;srcid=0128ud7vOFKMPTbpkjmpACMl#rd" target="_blank" rel="noopener">sqlmap payload修改之路 下</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzIwNDI4MzAwOA==&amp;mid=2650523190&amp;idx=1&amp;sn=9c2027aa1cd03e75c4ab250944ff143a&amp;chksm=8ecdebd9b9ba62cfd76c514cd3fe460a5ad105d5271f778fab1dd293384287a891231fbb4159&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">玩的一手好注入之order by排序篇</a></p>
+<p>文章来自于漏斗社区，前两天无意在公众号看到了这几篇文章，就自己搭起来琢磨与学习，在感谢社区的同时也感谢文章作者，让自己又有了进一步的提高。</p>
+<p>也顺便把博客的标签整理了一下，精简一些。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="Yokeen WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Yokeen Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tools/" rel="tag"># tools</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/28/学期总结-大三上/" rel="next" title="大学三年级上 学习总结">
+                <i class="fa fa-chevron-left"></i> 大学三年级上 学习总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/25/利用Python爆破教务系统批量获取用户信息/" rel="prev" title="利用Python爆破教务系统批量获取用户信息">
+                利用Python爆破教务系统批量获取用户信息 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/beiy.jpg" alt="Yokeen">
+          <p class="site-author-name" itemprop="name">Yokeen</p>
+           
+              <p class="site-description motion-element" itemprop="description">无所畏惧，勇往直前</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Yokeen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.test404.com" title="Test404'Blog" target="_blank">Test404'Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.lmxspace.com" title="l1nk3r's blog" target="_blank">l1nk3r's blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sqlmap的探测注入类型"><span class="nav-number">1.</span> <span class="nav-text">sqlmap的探测注入类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-UNION-query-SQL-injection（联合查询注入）"><span class="nav-number">1.1.</span> <span class="nav-text">1.UNION query SQL injection（联合查询注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Error-based-SQL-injection（基于报错型注入）"><span class="nav-number">1.2.</span> <span class="nav-text">2.Error-based SQL injection（基于报错型注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Boolean-based-blind-SQL-injection（基于布尔型的盲注）"><span class="nav-number">1.3.</span> <span class="nav-text">3.Boolean-based blind SQL injection（基于布尔型的盲注）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Time-based-blind-SQL-injection（基于时间的盲注）"><span class="nav-number">1.4.</span> <span class="nav-text">4.Time-based blind SQL injection（基于时间的盲注）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Stacked-queries-SQL-injection（可多语句查询注入）"><span class="nav-number">1.5.</span> <span class="nav-text">5.Stacked queries SQL injection（可多语句查询注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Inline-queries（内联查询注入）"><span class="nav-number">1.6.</span> <span class="nav-text">6.Inline queries（内联查询注入）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sqlmap的payload文件"><span class="nav-number">2.</span> <span class="nav-text">sqlmap的payload文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#xml"><span class="nav-number">2.1.</span> <span class="nav-text">xml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#payloads相关文件解释"><span class="nav-number">2.2.</span> <span class="nav-text">payloads相关文件解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始测试"><span class="nav-number">2.3.</span> <span class="nav-text">开始测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#搭配实际案例的payload修改"><span class="nav-number">3.</span> <span class="nav-text">搭配实际案例的payload修改</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#测试代码"><span class="nav-number">3.1.</span> <span class="nav-text">测试代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可以手注的方法"><span class="nav-number">3.2.</span> <span class="nav-text">可以手注的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#显错注入"><span class="nav-number">3.2.1.</span> <span class="nav-text">显错注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#盲注"><span class="nav-number">3.2.2.</span> <span class="nav-text">盲注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#联合查询"><span class="nav-number">3.2.3.</span> <span class="nav-text">联合查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sqlmap-payload修改"><span class="nav-number">3.3.</span> <span class="nav-text">sqlmap payload修改</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yokeen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("jwmoWLlH6Y6Lhn3O89mgQzzU-gzGzoHsz", "d2eM2PNMsQCyGqPbC5aaIyuz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

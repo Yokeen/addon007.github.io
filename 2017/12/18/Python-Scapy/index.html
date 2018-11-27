@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="python,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/111.png?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="Scapy在大一的时候就学习了，但是当时做的笔记比较简陋，当时是写在本子上的，如果本子丢了还真就忘了…..自从用了onenote，可以把学过的所有的相关知识都放到一个标签页面，很好很强大，所以重新学习一遍，一方面是整理笔记，二来也是加深印象同时也分享下所学的知识">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python-Scapy">
+<meta property="og:url" content="http://yoursite.com/2017/12/18/Python-Scapy/index.html">
+<meta property="og:site_name" content="Yokeen&#39;s blog">
+<meta property="og:description" content="Scapy在大一的时候就学习了，但是当时做的笔记比较简陋，当时是写在本子上的，如果本子丢了还真就忘了…..自从用了onenote，可以把学过的所有的相关知识都放到一个标签页面，很好很强大，所以重新学习一遍，一方面是整理笔记，二来也是加深印象同时也分享下所学的知识">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-18/33232528.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-22/39761573.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-19/79121813.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/59781497.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/58466323.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/23513690.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/13033644.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/26023437.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/51162520.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/62381724.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/99224290.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/32517114.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/88897854.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-20/16538397.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-22/618090.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-22/37069549.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-22/74854834.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-22/65123625.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-22/15688820.jpg">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-22/2414005.jpg">
+<meta property="og:updated_time" content="2018-03-13T03:18:34.175Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python-Scapy">
+<meta name="twitter:description" content="Scapy在大一的时候就学习了，但是当时做的笔记比较简陋，当时是写在本子上的，如果本子丢了还真就忘了…..自从用了onenote，可以把学过的所有的相关知识都放到一个标签页面，很好很强大，所以重新学习一遍，一方面是整理笔记，二来也是加深印象同时也分享下所学的知识">
+<meta name="twitter:image" content="http://oxrfjovwk.bkt.clouddn.com/17-12-18/33232528.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/18/Python-Scapy/">
+
+
+
+
+
+  <title>Python-Scapy | Yokeen's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12246f7e36b6d790ccbbfabf73da926b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yokeen's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/18/Python-Scapy/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yokeen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/beiy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yokeen's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python-Scapy</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-18T12:10:46+08:00">
+                2017-12-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/12/18/Python-Scapy/" class="leancloud_visitors" data-flag-title="Python-Scapy">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Scapy在大一的时候就学习了，但是当时做的笔记比较简陋，当时是写在本子上的，如果本子丢了还真就忘了…..<br>自从用了onenote，可以把学过的所有的相关知识都放到一个标签页面，很好很强大，所以重新学习一遍，一方面是整理笔记，二来也是加深印象同时也分享下所学的知识<br><a id="more"></a><br>贴一张自己的Onenote<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-18/33232528.jpg" alt=""></p>
+<p>学习的是乾颐堂秦柯老师讲的scapy<br><a href="http://edu.51cto.com/course/7506.html" target="_blank" rel="noopener">http://edu.51cto.com/course/7506.html</a></p>
+<h1 id="Scapy基础知识"><a href="#Scapy基础知识" class="headerlink" title="Scapy基础知识"></a>Scapy基础知识</h1><p>乾颐堂上课用的是Python3.4(Fedora) + secureCRT+ WinSCP<br>上课环境拓扑<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-22/39761573.jpg" alt=""><br>具体安装过程请看课程或百度。 </p>
+<h2 id="包内的基础知识"><a href="#包内的基础知识" class="headerlink" title="包内的基础知识"></a>包内的基础知识</h2><p>当你铸造包的时候，scapy有一个默认值，不可能每个值都让你填<br>a = Ether()/IP()/TCP()<br>a.show()<br>看一下构造以太网/IP/TCP三种包的默认头部是什么<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-19/79121813.jpg" alt=""></p>
+<p>里边有相当一部分的默认值，这里用一个ARP包的请求包和响应包来学习里边字段的意思，在学习之前，我们先来看一下关于Scapy的发包方式</p>
+<h2 id="关于scapy的发包"><a href="#关于scapy的发包" class="headerlink" title="关于scapy的发包"></a>关于scapy的发包</h2><p>带p的是二层包（要手写以太网头部），没有p的是三层包（二层的自动帮我处理）<br>sr()           #发一个，可以收到很多<br>sr1()       #发一个，只要一个响应<br>srp()       #二层包，要手写以太网头部<br>send()        #只管发，不关心返回的东西（可以涉及到flood相关的知识）<br>sendp()     #二层包。</p>
+<h1 id="经典的ARP抓包"><a href="#经典的ARP抓包" class="headerlink" title="经典的ARP抓包"></a>经典的ARP抓包</h1><p>这是ARP数据帧的结构<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/59781497.jpg" alt=""></p>
+<p>我们来通过构造ARP包手动操作一个ARP请求</p>
+<h2 id="构造包"><a href="#构造包" class="headerlink" title="构造包"></a>构造包</h2><blockquote>
+<p>arp = srp(Ether(src=’00:0c:29:3d:5e:ec’,dst=’FF:FF:FF:FF:FF:FF’)/ARP(op=1,hwsrc=’00:0c:29:3d:5e:ec’,hwdst=’00:00:00:00:00:00’,psrc=’192.168.19.130’,pdst=’192.168.19.1’))<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/58466323.jpg" alt=""><br>关于srp的意思在上边写了，Ether的src代表本地MAC（这使我虚拟机一块虚拟网卡的MAC），dst为全F，代表广播。<br>ARP中的op代表操作位，1是请求，2是响应，hwsrc代表本地硬件地址（MAC地址），hwdst全0（我们这要问192.168.19.1它的MAC是多少，填全0），psrc代表逻辑本地地址（IP地址），pdst代表你要询问的目的地址。</p>
+</blockquote>
+<p>我们看到我们收到了一个响应，在这里我们需要学习如何去分析包。</p>
+<h2 id="分析包"><a href="#分析包" class="headerlink" title="分析包"></a>分析包</h2><p><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/23513690.jpg" alt=""><br>在图中我们看到收到了一个other的回应，因为ARP不是TCP也不是UDP更不是ICMP，返回的结果是一个元组</p>
+<p>我们需要看的是有结果的而不是未响应的，所以是arp[0]<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/13033644.jpg" alt=""></p>
+<p>我们想看到里边的内容，把包产生为清单，arp[0].res<br><strong>这里需要好好注意一下，我们看到返回的是一个列表，而列表里边只有一个元组（当我们收到多少个包，这个列表就会出现多少个元组），这个元组里边分别是请求包和响应包。</strong><br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/26023437.jpg" alt=""></p>
+<p>因为请求包是我们自己构造的，所以我们查看第一个元组的第二部分 arp[0].res[0][1]<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/51162520.jpg" alt=""></p>
+<p>里边东西太多，我们看起来不舒服，想让这个包产生为字典，通过arp[0].res[0][1].fields<br>因为这个包是由192.168.19.1向我们发送过来的，所以源MAC地址是它的MAC地址，而目标MAC是我们自己的<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/62381724.jpg" alt=""></p>
+<p>其实在这里还是需要注意一点，我们show一下<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/99224290.jpg" alt=""><br>发现有3个头部，我们刚才使用arp[0].res[0][1].fields默认读取的是以太网头部，你如果想要看ARP的或者是负载的可以用arp[0].res[0][1][x].fields   0是以太网，1是ARP，2是负载</p>
+<p>这样我们就可以打印源IP地址所对应的MAC地址<br>源IP地址 + result_raw[0].res[0][1][0].fields[‘psrc’]<br>源MAC地址 + result_raw[0].res[0][1][0].fields[‘hwsrc’]</p>
+<h2 id="知识补充"><a href="#知识补充" class="headerlink" title="知识补充"></a>知识补充</h2><p>这里还需要补充一点知识，就是关于ARP数据包<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/32517114.jpg" alt=""><br>Ether中<br>协议类型：0x0806（正常是0x0800，代表IPv4）<br>ARP中<br>Hardware：1   硬件地址为1代表以太网<br>Hardware Addr Length：6       以太网地址长度是6个字节<br>Protocol Addr Length：4          IP地址长度是4个字节<br>接下来就是源硬件地址IP地址，目的硬件地址IP地址</p>
+<p>这里边还有一个额外的数据，MTU不能超过1500否则要分片，最小MTU是46，ARP头部是28，所以要加18补够最小MTU才会发包。</p>
+<blockquote>
+<p>MTU：最大传输单元，指一种通信协议的某一层上面所能通过的最大数据报大小（字节为单元）。<br>MTU越大，一个协议数据单元的承载的有效数据就越长，通信效率也就越高，传送给相同用户数据需要的数据包个数也就越少，<br>MTU越大，通信效率越高产生的传输延迟也就越大。<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/88897854.jpg" alt=""></p>
+</blockquote>
+<h1 id="产生一个PING包"><a href="#产生一个PING包" class="headerlink" title="产生一个PING包"></a>产生一个PING包</h1><p>这个其实应该放在ARP之前，也是比较经典的一个例子</p>
+<p>ping = sr1（IP（dst=’目标IP’，ttl=1，id=168）/ICMP（id=188,seq=1）/b’Welcome to china!’）<br>ping.show()</p>
+<p><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-20/16538397.jpg" alt=""></p>
+<p>自己去看看返回了哪些东西</p>
+<h1 id="Scapy其他知识"><a href="#Scapy其他知识" class="headerlink" title="Scapy其他知识"></a>Scapy其他知识</h1><p>课程上到这也就差不多了，接下来的就是写脚本来练手了</p>
+<h2 id="ARP探测脚本"><a href="#ARP探测脚本" class="headerlink" title="ARP探测脚本"></a>ARP探测脚本</h2><p>脚本见下Github</p>
+<h3 id="脚本一"><a href="#脚本一" class="headerlink" title="脚本一"></a>脚本一</h3><p>用os和re模块来查询本地IP和MAC，然后用sys接收参数（其实用optparse也可以，是不是大材小用-.-），然后查询指定IP的MAC</p>
+<h3 id="脚本二"><a href="#脚本二" class="headerlink" title="脚本二"></a>脚本二</h3><p>直接用ARP探测局域网内存活的IP，然后返回其MAC</p>
+<h3 id="脚本三"><a href="#脚本三" class="headerlink" title="脚本三"></a>脚本三</h3><p>ARP毒化，中间人攻击，让指定的两个IP的MAC互换，欺骗路由器.</p>
+<h3 id="脚本四"><a href="#脚本四" class="headerlink" title="脚本四"></a>脚本四</h3><p>Scapy监控异常ARP事件（ARP攻击），首先先了解网络里边IP和MAC对应关系，如果监控中出现IP和MAC不匹配或者一个IP对应多个MAC，就发出警告。<br>这里需要调用sniff来抓取ARP包，然后用一个函数来过滤。</p>
+<h1 id="Scapy-SYN端口扫描"><a href="#Scapy-SYN端口扫描" class="headerlink" title="Scapy SYN端口扫描"></a>Scapy SYN端口扫描</h1><p>raw = sr(IP(dst=’192.168.19.1’)/TCP(dport=(1,5555),flags=”S”),verbose=False)<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-22/618090.jpg" alt=""><br>这里的dport支持元组，（开始端口，结束端口），我们可以利用这个来扫描目标开放的端口，效率更高，只是探测力度不够。flags是S也就是SYN，也就是成功发出去的请求包。</p>
+<p>看到只有一个TCP响应。</p>
+<p><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-22/37069549.jpg" alt=""><br>我们看到目标向我们发过来的包里边，1539端口，发送的flags位是SA，也就是SYN+ACK，说明这个端口是开的，而本地这个端口也确实是打开的。<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-22/74854834.jpg" alt=""></p>
+<p>直接把老师的结果拿过来看看<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-22/65123625.jpg" alt=""></p>
+<p>脚本见Github.</p>
+<h1 id="Scapy实现防火墙开放端口扫描"><a href="#Scapy实现防火墙开放端口扫描" class="headerlink" title="Scapy实现防火墙开放端口扫描"></a>Scapy实现防火墙开放端口扫描</h1><p>防火墙身后有台服务器，所以防火墙必须为服务器开启端口号，探测防火墙到底为其内部的机器开放了哪些端口号<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-22/15688820.jpg" alt=""></p>
+<p>环境自己没有搭，其实要搭也可以，用PT拉进来ASA、路由器、PC，设好ACL，然后本地脚本来探测一下也是可以的。<br>脚本见gayhub。<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-12-22/2414005.jpg" alt=""></p>
+<p>拓扑见文章开头的拓扑。</p>
+<p>第一步还是清除报错，引入scapy。</p>
+<p>然后为scapy添加一条路由来让包从scapy到达防火墙后边的inside，这个路由只是单独为scapy添加的，linux是不看这个路由表。</p>
+<p>这个包必须得有ttl，你得确认这个包到防火墙的瞬间TTL为0，然后inside向我们的scapy返回包，经过防火墙时防火墙检查是否开启了这个端口号，如果开启，那么给你返回一个ICMP的TTL超时，通过这样来确定防火墙对内部主机开放了哪些端口。</p>
+<p>inter，间隔。每隔1秒发一个包，对于防火墙你不能太快。<br>timeout，超时，5秒要是还没有包就超时。如果没有超时scapy会等很久，你发过去的包的有些东西如果防火墙没有它可能不会给你响应。<br>verbose=False，不出现回显，就是发了多少个包收到了多少个等等。<br>ICMP TYPE CODE对应表中11，就是表示TTL为0.<br>其余见脚本。</p>
+<h1 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h1><p><a href="https://github.com/Yokeen/Scapy" target="_blank" rel="noopener">https://github.com/Yokeen/Scapy</a></p>
+<p>若有差错，还望多多指正。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="Yokeen WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Yokeen Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/27/【优化】合天知识小优化篇/" rel="next" title="【优化】合天知识小优化篇">
+                <i class="fa fa-chevron-left"></i> 【优化】合天知识小优化篇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/28/学期总结-大三上/" rel="prev" title="大学三年级上 学习总结">
+                大学三年级上 学习总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/beiy.jpg" alt="Yokeen">
+          <p class="site-author-name" itemprop="name">Yokeen</p>
+           
+              <p class="site-description motion-element" itemprop="description">无所畏惧，勇往直前</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Yokeen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.test404.com" title="Test404'Blog" target="_blank">Test404'Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.lmxspace.com" title="l1nk3r's blog" target="_blank">l1nk3r's blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Scapy基础知识"><span class="nav-number">1.</span> <span class="nav-text">Scapy基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#包内的基础知识"><span class="nav-number">1.1.</span> <span class="nav-text">包内的基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于scapy的发包"><span class="nav-number">1.2.</span> <span class="nav-text">关于scapy的发包</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#经典的ARP抓包"><span class="nav-number">2.</span> <span class="nav-text">经典的ARP抓包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#构造包"><span class="nav-number">2.1.</span> <span class="nav-text">构造包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析包"><span class="nav-number">2.2.</span> <span class="nav-text">分析包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#知识补充"><span class="nav-number">2.3.</span> <span class="nav-text">知识补充</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#产生一个PING包"><span class="nav-number">3.</span> <span class="nav-text">产生一个PING包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Scapy其他知识"><span class="nav-number">4.</span> <span class="nav-text">Scapy其他知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ARP探测脚本"><span class="nav-number">4.1.</span> <span class="nav-text">ARP探测脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本一"><span class="nav-number">4.1.1.</span> <span class="nav-text">脚本一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本二"><span class="nav-number">4.1.2.</span> <span class="nav-text">脚本二</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本三"><span class="nav-number">4.1.3.</span> <span class="nav-text">脚本三</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本四"><span class="nav-number">4.1.4.</span> <span class="nav-text">脚本四</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Scapy-SYN端口扫描"><span class="nav-number">5.</span> <span class="nav-text">Scapy SYN端口扫描</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Scapy实现防火墙开放端口扫描"><span class="nav-number">6.</span> <span class="nav-text">Scapy实现防火墙开放端口扫描</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Github"><span class="nav-number">7.</span> <span class="nav-text">Github</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yokeen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("jwmoWLlH6Y6Lhn3O89mgQzzU-gzGzoHsz", "d2eM2PNMsQCyGqPbC5aaIyuz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

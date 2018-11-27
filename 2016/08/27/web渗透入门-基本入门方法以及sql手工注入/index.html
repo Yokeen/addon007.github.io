@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Web安全,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/111.png?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="前言 忽然想起来有几天没有更新了，django搭建的博客马上就要完工，也马上快要开学，所以趁着这几天再更新几篇文章。   今天选择的是入门很快的web渗透之手工注入。   有很多人从小就对黑客感兴趣，我也不例外。但是搜索资料直接搜索黑客相关的，搜出来的东西很多很杂，因为黑客要会渗透的东西很多，一时也找不到这个方面的入口。所以今天来讲一讲比较容易懂，也上手快的web渗透之sql手工注入。">
+<meta name="keywords" content="Web安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="web渗透-基本入门方法以及sql手工注入">
+<meta property="og:url" content="http://yoursite.com/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/index.html">
+<meta property="og:site_name" content="Yokeen&#39;s blog">
+<meta property="og:description" content="前言 忽然想起来有几天没有更新了，django搭建的博客马上就要完工，也马上快要开学，所以趁着这几天再更新几篇文章。   今天选择的是入门很快的web渗透之手工注入。   有很多人从小就对黑客感兴趣，我也不例外。但是搜索资料直接搜索黑客相关的，搜出来的东西很多很杂，因为黑客要会渗透的东西很多，一时也找不到这个方面的入口。所以今天来讲一讲比较容易懂，也上手快的web渗透之sql手工注入。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-02-06T05:14:08.591Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="web渗透-基本入门方法以及sql手工注入">
+<meta name="twitter:description" content="前言 忽然想起来有几天没有更新了，django搭建的博客马上就要完工，也马上快要开学，所以趁着这几天再更新几篇文章。   今天选择的是入门很快的web渗透之手工注入。   有很多人从小就对黑客感兴趣，我也不例外。但是搜索资料直接搜索黑客相关的，搜出来的东西很多很杂，因为黑客要会渗透的东西很多，一时也找不到这个方面的入口。所以今天来讲一讲比较容易懂，也上手快的web渗透之sql手工注入。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/">
+
+
+
+
+
+  <title>web渗透-基本入门方法以及sql手工注入 | Yokeen's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12246f7e36b6d790ccbbfabf73da926b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yokeen's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yokeen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/beiy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yokeen's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">web渗透-基本入门方法以及sql手工注入</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-27T22:39:37+08:00">
+                2016-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/" class="leancloud_visitors" data-flag-title="web渗透-基本入门方法以及sql手工注入">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>忽然想起来有几天没有更新了，django搭建的博客马上就要完工，也马上快要开学，所以趁着这几天再更新几篇文章。</p>
+</blockquote>
+<blockquote>
+<p>今天选择的是入门很快的web渗透之手工注入。</p>
+</blockquote>
+<blockquote>
+<p>有很多人从小就对黑客感兴趣，我也不例外。但是搜索资料直接搜索黑客相关的，搜出来的东西很多很杂，因为黑客要会渗透的东西很多，一时也找不到这个方面的入口。所以今天来讲一讲比较容易懂，也上手快的web渗透之sql手工注入。<br><a id="more"></a></p>
+</blockquote>
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><h2 id="关于sql注入"><a href="#关于sql注入" class="headerlink" title="关于sql注入"></a>关于sql注入</h2><p>sql注入，就是把sql命令插入到web表单递交或输入域名或者页面请求的查询字符串中去，最终达到欺骗服务器执行恶意的sql命令的一种入侵方法。</p>
+<h2 id="如何利用简单的方法判断是否有sql注入漏洞"><a href="#如何利用简单的方法判断是否有sql注入漏洞" class="headerlink" title="如何利用简单的方法判断是否有sql注入漏洞"></a>如何利用简单的方法判断是否有sql注入漏洞</h2><p>在存在id=xx这样的Url动态链接形式中。<br>方法1：在末尾加上   ‘  (一个单引号)   看是否报错，报错存在漏洞，不报错，可能存在漏洞。<br>方法2：在末尾加上and 1=1，再加上and 1=2看两种情况是否报错。 and 1=1正常 and 1=2错误，存在注入漏洞。</p>
+<h2 id="对于access数据库的手工注入"><a href="#对于access数据库的手工注入" class="headerlink" title="对于access数据库的手工注入"></a>对于access数据库的手工注入</h2><p>方法1：联合查询法<br>①and 1=1    and 1=2   或者 ‘   (观察是否报错来判断是否为一个注入点，并且通过报错来得知相关的信息，比如数据库类型)<br>②order by xx    (查询当前页面连接的字段个数，这里需要不断的试，比如输入order 6报错，order by 5不报错，就说明有5个字段数。)<br>③union select 1,2,3,4,5 from 要猜测的表名   (对于猜测的表名，猜测正确，页面返回正常并且爆出显位(爆出数据的位置)，猜测错误，页面返回失败)<br>④union select 1,xx,3,4,xx from 猜对的表名  (通过爆出的显位，我们在显位中输入要猜测的列名。列名猜对，就可以在显位中爆出数据)<br>方法2：逐字猜解法<br>①and 1=1  and 1=2 或者 ‘  （来简单的判断是否有注入点）<br>②order by xx          (这时候发现order by 多少页面都不会报错)<br>③and exists(select * from 要猜测的表名)      —存在返回正常<br>④and exists(select 要猜测的列名 from 猜对的表名)   ——存在返回正常<br>⑤and (select top 1 len(列名) from 表名)&gt;=xx    ——-这里猜这个列名的数据的长度是多少不断测试<br>⑥and (select top 1 asc(mid(列名,1,1)) from 表名) &gt;=97   ——这里猜测的是列名数据的第一位的ascii码是多少，不断测试。<br> and (select top 1 asc(mid(列名,2,1)) from 表名) &gt;=97    ——猜测列名数据的第二位的ascii码是多少，不断测试<br> 接下来以此类推，直到猜测出他的列名数据是多少。</p>
+<hr>
+<p>注意：windows和Linux区分大小写问题。</p>
+<h2 id="对于mysql数据库的手工注入"><a href="#对于mysql数据库的手工注入" class="headerlink" title="对于mysql数据库的手工注入"></a>对于mysql数据库的手工注入</h2><blockquote>
+<p>这里有必要讲一下关于mysql和access数据库的不同,(mssql和Mysql类型一样)<br>access数据库下，直接是好多表，然后表里是字段，字段再对应相关的数据。<br>mysql数据库下，又分为好多数据库，然后相应的数据库里有相关的表，表里的字段，字段的数据。</p>
+</blockquote>
+<p>首先我们需要知道几个查询的参数。<br>user()当前数据库用户  version()当前数据库版本 database()当前页面所连接数据库名称   @@version_complie_os服务器操作系统</p>
+<p>之所以要查操作系统，是因为windows和linux的大小写区分问题，有时候不是你的命令输错了，而是你没注意大小写。</p>
+<p>①and 1=1  and 1=2  或者 ‘<br>②order by 5       (以5个字段举例)<br>③union select 1,2,3,4,5   (查看爆出的显位)  —–这里之所以不用类似access的from是因为对access的注入是属于暴力猜解，而对于mysql是属于有依据的注入，因为mysql里边有个叫information_schema的数据库，这里边储存了所有数据库的信息。<br>④union select 1,@@version_complie_os,3,database(),5         –在显位处填上要查找的信息方便下一步操作以及关于是否调整大小写<br>⑤union select 1,group_concat(table_name),3,4,5 from information_schema.tables where table_schema=当前页面连接数据库的十六进制<br>    (从information_schema.tables这个表中查询当前页面数据库的所有表)<br>⑥union select 1,group_concat(column_name),3,4,5 from information_schema.columns where table_name=想要查询数据库表的十六进制名称        (从上一步中找到想要的表名，然后从information_schema.columns这个表中查询当前这个表下的所有列名)<br>⑦union select 1，字段名，2，3，4，5 from 表名   (从想要的表名中得出想要的字段的数据)</p>
+<p>如果你找到了管理员的帐号和密码，就可以用工具扫到这个网站的后台页面，来对网站进行管理，不过后台的权限一般很小，注入是为了下一步的获得更高权限的铺垫。</p>
+<h2 id="关于cookie注入和post注入"><a href="#关于cookie注入和post注入" class="headerlink" title="关于cookie注入和post注入"></a>关于cookie注入和post注入</h2><p>其实有好多工具也是集合了好多手工注入的指令，不过工具的比较死板，所以有时候工具注入不了试试手工注入万一注入了呢。</p>
+<blockquote>
+<p>cookie注入一般是结合工具。<br>第一种、利用burp抓包后保存为文件，然后在sqlmap下指定这个文件，让他判断并且注入。<br>第二种、直接利用sqlmap来进行注入。</p>
+</blockquote>
+<p>具体的方法可以结合burpsuite和sqlmap的教程，网上也有。</p>
+<blockquote>
+<p>关于post注入<br>以前有很多漏洞，比如在用户名框和密码框输入一段指定的代码，就可以绕过用户名和密码的输入，从而直接登陆成功。</p>
+</blockquote>
+<h1 id="手工注入的进阶"><a href="#手工注入的进阶" class="headerlink" title="手工注入的进阶"></a>手工注入的进阶</h1><h2 id="闭合法"><a href="#闭合法" class="headerlink" title="闭合法"></a>闭合法</h2><p>①字符类型<br>‘ 语句 and’1=’1      语句就可以填写order by……<br>②搜索型<br> %’ 语句 and ‘%1%’=%1</p>
+<h2 id="注释法"><a href="#注释法" class="headerlink" title="注释法"></a>注释法</h2><p>这种方法主要是针对于php网页去做。<br>当我们用order by 1就报错的时候，并不是没有字段，而是他的sql查询语句写的比较复杂，我们在语句的最后边加上–，因为–在php中就是注释的意思。这样一切返回正常。<br>然后union select 1,2,3,4,5–    看看这样是否会爆出显位，如果没有爆出来，我们可以在id=xx后边加上一个  -   ，故意让他报错来爆出显位，然后利用前边讲的方法来进行相应的手工注入。</p>
+<p>order by 一定要用–，union select可以不用，自己尝试。</p>
+<h1 id="成功登录后台之后的事"><a href="#成功登录后台之后的事" class="headerlink" title="成功登录后台之后的事"></a>成功登录后台之后的事</h1><blockquote>
+<p>这时候我们已经成功的拿到了网站后台的用户名和密码并且登录成功，但是网站后台管理员的权限一般都比较小，所以我们通过上传大马来拿到webshell权限或或通过在网站的上传点上传一句话木马，来利用菜刀或者蚁剑来连接一句话木马，然后进行上传提权工具来进行提权。</p>
+</blockquote>
+<h2 id="关于漏洞的解析和截断上传"><a href="#关于漏洞的解析和截断上传" class="headerlink" title="关于漏洞的解析和截断上传"></a>关于漏洞的解析和截断上传</h2><p>这里小小的提一下。<br>其中比较典型的就是iis6.0，正常命名方式xxx.jpg，触发漏洞命名方式xxx.asp;.jpg让这个图片格式的以asp格式来解析。解析成功我们就可以连接他。通常你上传一个一句话木马的图片后，服务器并没有解析他，你用菜刀或者蚁剑连接不了，通过文件名漏洞来解析他，这样就可以成功地用工具来连接这个一句话木马。</p>
+<p>这里相关的还有iis7.0和iis7.5以及nginx&lt;8.03的漏洞，还有apache的向左解析法漏洞。</p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>这里就先简单的介绍一下web渗透最基本的手工注入流程。</p>
+<p>说实话现在的好多工具已经做的很不错了，用工具可以进行很方便的注入，但是为了入门，还是选择了最容易上手的手工注入来做讲解，打开这扇神秘的大门，关于靶机可以在i春秋网站的实验上找到，可以用来练练手，试验机的漏洞都非常多，注入起来也很方便，容易成功来提升信心。<br>现在也有好多小公司的网站用的是比较老的方法，没有进行更新，可以用谷歌语法来找一找，进行实战。</p>
+<p>手工注入就先告一段落，马上就要开学，等到学校后再进行后续的更新，我目前先继续搞web渗透，等web渗透差不多了，在这个方向上再会陆续学习逆向工程等等…..</p>
+<p>以上都是我通过学习总结出来的，可能写得多也会有地方出错，如果有地方出错了，欢迎指正</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="Yokeen WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Yokeen Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web安全/" rel="tag"># Web安全</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/23/python-web框架django博客开发/" rel="next" title="python-web框架django博客开发">
+                <i class="fa fa-chevron-left"></i> python-web框架django博客开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/17/最近目标/" rel="prev" title="最近目标">
+                最近目标 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/beiy.jpg" alt="Yokeen">
+          <p class="site-author-name" itemprop="name">Yokeen</p>
+           
+              <p class="site-description motion-element" itemprop="description">无所畏惧，勇往直前</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Yokeen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.test404.com" title="Test404'Blog" target="_blank">Test404'Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.lmxspace.com" title="l1nk3r's blog" target="_blank">l1nk3r's blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始"><span class="nav-number">2.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于sql注入"><span class="nav-number">2.1.</span> <span class="nav-text">关于sql注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何利用简单的方法判断是否有sql注入漏洞"><span class="nav-number">2.2.</span> <span class="nav-text">如何利用简单的方法判断是否有sql注入漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对于access数据库的手工注入"><span class="nav-number">2.3.</span> <span class="nav-text">对于access数据库的手工注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对于mysql数据库的手工注入"><span class="nav-number">2.4.</span> <span class="nav-text">对于mysql数据库的手工注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于cookie注入和post注入"><span class="nav-number">2.5.</span> <span class="nav-text">关于cookie注入和post注入</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#手工注入的进阶"><span class="nav-number">3.</span> <span class="nav-text">手工注入的进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#闭合法"><span class="nav-number">3.1.</span> <span class="nav-text">闭合法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注释法"><span class="nav-number">3.2.</span> <span class="nav-text">注释法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#成功登录后台之后的事"><span class="nav-number">4.</span> <span class="nav-text">成功登录后台之后的事</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于漏洞的解析和截断上传"><span class="nav-number">4.1.</span> <span class="nav-text">关于漏洞的解析和截断上传</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yokeen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("jwmoWLlH6Y6Lhn3O89mgQzzU-gzGzoHsz", "d2eM2PNMsQCyGqPbC5aaIyuz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

