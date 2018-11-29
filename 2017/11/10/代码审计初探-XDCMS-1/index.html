@@ -75,21 +75,21 @@
 <meta property="og:site_name" content="Yokeen&#39;s blog">
 <meta property="og:description" content="代码审计初探之XDCMS">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-9/52523049.jpg">
-<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-9/80116506.jpg">
-<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-9/18506993.jpg">
-<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-9/35619309.jpg">
-<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-9/81667703.jpg">
-<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-10/24462565.jpg">
-<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-10/19122373.jpg">
-<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-10/2025174.jpg">
-<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-10/11116629.jpg">
-<meta property="og:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-10/61284747.jpg">
-<meta property="og:updated_time" content="2018-02-06T05:14:41.775Z">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/52523049.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/80116506.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/18506993.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/35619309.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/81667703.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/24462565.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/19122373.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/2025174.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/11116629.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/61284747.jpg">
+<meta property="og:updated_time" content="2018-11-29T13:33:51.894Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="代码审计初探-XDCMS">
 <meta name="twitter:description" content="代码审计初探之XDCMS">
-<meta name="twitter:image" content="http://oxrfjovwk.bkt.clouddn.com/17-11-9/52523049.jpg">
+<meta name="twitter:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/52523049.jpg">
 
 
 
@@ -339,15 +339,15 @@
       
         <p>代码审计初探之XDCMS<br><a id="more"></a></p>
 <h1 id="开始审计"><a href="#开始审计" class="headerlink" title="开始审计"></a>开始审计</h1><p>想起了开始的两种审计方法<br>一、直接丢到审计系统去扫一下，找到敏感函数之后回溯，然后找到入口点和可控的位置<br>二、从最开始的地方（index.php）读起，一直到程序初始化完成，这样可以比较明确的了解源码的结构。之后阅读到有问题的代码有较大的帮助</p>
-<h1 id="审计流程"><a href="#审计流程" class="headerlink" title="审计流程"></a>审计流程</h1><p>查看index.php文件<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-11-9/52523049.jpg" alt=""><br>包含两个文件，第一个是数据库配置文件，默认字符集是utf8</p>
+<h1 id="审计流程"><a href="#审计流程" class="headerlink" title="审计流程"></a>审计流程</h1><p>查看index.php文件<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/52523049.jpg" alt=""><br>包含两个文件，第一个是数据库配置文件，默认字符集是utf8</p>
 <h2 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h2><h3 id="宽字节注入"><a href="#宽字节注入" class="headerlink" title="宽字节注入"></a>宽字节注入</h3><p>这里再巩固一下宽字节注入的绕过<br>默认情况下开启了GPC或用addslashes过滤GET/POST，当提交’时会变成\’<br>1) GBK里的宽字节<br>a) 当提交为%df’时，会转变为%df\’  - &gt;   %df%5c%27，由于是从GBK -&gt; UTF8，%df%5c会变成一个汉字 縗，这样就造成了单引号逃逸<br>b) 现在基本都是使用set charset_set_client=binary来解决这个问题。<br>2) UTF8的宽字节<br>如果是UTF8 -&gt; GBK，同样适用addslashes进行过滤，我们输入錦这个字，它的utf8编码是e98ca6，GBK编码是e55c，而反斜杠正好是5c，所以输入錦’，它们被转成GBK（%e5%5c%5c%27），两个反斜杠被转义成一个反斜杠，导致单引号逃逸</p>
-<p>第二个文件：<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-11-9/80116506.jpg" alt=""><br>应该是系统整体架构文件，发现在最下面一行又引入了一个文件fun.inc.php<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-11-9/18506993.jpg" alt=""><br>从这个文件中我们发现了一个过滤函数，并发现其存在一些绕过，我们来找一下都是哪些页面调用了这个函数<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-11-9/35619309.jpg" alt=""><br>1) 我们可以从中排除一些不必要的页面，比如管理员后台php，以及管理员才能接触的一些组件<br>来到member/index.php中<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-11-9/81667703.jpg" alt=""><br>我们在登录或注册页面对其进行注入绕过<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-11-10/24462565.jpg" alt=""><br>fuzz之后，m应该是目录，f所对应的是member/index.php里边的函数<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-11-10/19122373.jpg" alt=""><br>单引号报错，根据源码对其进行显错注入的绕过</p>
+<p>第二个文件：<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/80116506.jpg" alt=""><br>应该是系统整体架构文件，发现在最下面一行又引入了一个文件fun.inc.php<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/18506993.jpg" alt=""><br>从这个文件中我们发现了一个过滤函数，并发现其存在一些绕过，我们来找一下都是哪些页面调用了这个函数<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/35619309.jpg" alt=""><br>1) 我们可以从中排除一些不必要的页面，比如管理员后台php，以及管理员才能接触的一些组件<br>来到member/index.php中<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/81667703.jpg" alt=""><br>我们在登录或注册页面对其进行注入绕过<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/24462565.jpg" alt=""><br>fuzz之后，m应该是目录，f所对应的是member/index.php里边的函数<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/19122373.jpg" alt=""><br>单引号报错，根据源码对其进行显错注入的绕过</p>
 <h3 id="updatexml"><a href="#updatexml" class="headerlink" title="updatexml()"></a>updatexml()</h3><p>这里需要再学习一下MySQL updatexml() 函数的使用<br>UPDATEXML (XML_document, XPath_string, new_value);<br>第一个参数：XML_document是String格式，为XML文档对象的名称，文中为Doc<br>第二个参数：XPath_string (Xpath格式的字符串) ，如果不了解Xpath语法，可以在网上查找教程。<br>第三个参数：new_value，String格式，替换查找到的符合条件的数据<br>作用：改变文档中符合条件的节点的值</p>
 <blockquote>
 <p><a href="http://www.XXXIII.com/a.php?id=1" target="_blank" rel="noopener">http://www.XXXIII.com/a.php?id=1</a> and updatexml(1,concat(0x7e,(SELECT @@version),0x7e),1)<br>通过查询@@version,返回版本。然后CONCAT将其字符串化。因为UPDATEXML第二个参数需要Xpath格式的字符串,所以不符合要求，然后报错。<br>错误大概会是：<br>ERROR 1105 (HY000): XPATH syntax error: ’:root@localhost’</p>
 </blockquote>
-<p>构造语句得出所要信息，其他方法类似<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-11-10/2025174.jpg" alt=""></p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><img src="http://oxrfjovwk.bkt.clouddn.com/17-11-10/11116629.jpg" alt=""><br>上传点还有几个，也不用进行绕过了，直接修改后缀上传木马即可。<br>上传上去是个txt文本<br><img src="http://oxrfjovwk.bkt.clouddn.com/17-11-10/61284747.jpg" alt=""><br>完了再搞，吃饭时间到了..</p>
+<p>构造语句得出所要信息，其他方法类似<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/2025174.jpg" alt=""></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/11116629.jpg" alt=""><br>上传点还有几个，也不用进行绕过了，直接修改后缀上传木马即可。<br>上传上去是个txt文本<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/61284747.jpg" alt=""><br>完了再搞，吃饭时间到了..</p>
 <h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a href="https://www.cnblogs.com/MiWhite/p/6228491.html" target="_blank" rel="noopener">https://www.cnblogs.com/MiWhite/p/6228491.html</a><br><a href="http://foreversong.cn/archives/709#" target="_blank" rel="noopener">http://foreversong.cn/archives/709#</a></p>
 
       
@@ -518,7 +518,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -540,7 +540,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
