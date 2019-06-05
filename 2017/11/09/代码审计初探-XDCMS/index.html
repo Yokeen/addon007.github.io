@@ -70,7 +70,7 @@
 <meta name="description" content="代码审计初探之XDCMS一来总结一下最近所学习的代码审计的知识。二来实战一下一个小CMS的代码审计。">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
-<meta property="og:title" content="代码审计初探与其他小总结-XDCMS">
+<meta property="og:title" content="代码审计初探与XDCMS审计">
 <meta property="og:url" content="http://yoursite.com/2017/11/09/代码审计初探-XDCMS/index.html">
 <meta property="og:site_name" content="Yokeen&#39;s blog">
 <meta property="og:description" content="代码审计初探之XDCMS一来总结一下最近所学习的代码审计的知识。二来实战一下一个小CMS的代码审计。">
@@ -79,9 +79,19 @@
 <meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/637324.jpg">
 <meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/82174230.jpg">
 <meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/46027846.jpg">
-<meta property="og:updated_time" content="2018-11-29T13:33:47.550Z">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/52523049.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/80116506.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/18506993.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/35619309.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/81667703.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/24462565.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/19122373.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/2025174.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/11116629.jpg">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/61284747.jpg">
+<meta property="og:updated_time" content="2019-06-05T03:14:26.493Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="代码审计初探与其他小总结-XDCMS">
+<meta name="twitter:title" content="代码审计初探与XDCMS审计">
 <meta name="twitter:description" content="代码审计初探之XDCMS一来总结一下最近所学习的代码审计的知识。二来实战一下一个小CMS的代码审计。">
 <meta name="twitter:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/75228704.jpg">
 
@@ -117,7 +127,7 @@
 
 
 
-  <title>代码审计初探与其他小总结-XDCMS | Yokeen's blog</title>
+  <title>代码审计初探与XDCMS审计 | Yokeen's blog</title>
   
 
 
@@ -273,7 +283,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">代码审计初探与其他小总结-XDCMS</h1>
+          <h1 class="post-title" itemprop="name headline">代码审计初探与XDCMS审计</h1>
         
 
         <div class="post-meta">
@@ -303,7 +313,7 @@
 
           
           
-             <span id="/2017/11/09/代码审计初探-XDCMS/" class="leancloud_visitors" data-flag-title="代码审计初探与其他小总结-XDCMS">
+             <span id="/2017/11/09/代码审计初探-XDCMS/" class="leancloud_visitors" data-flag-title="代码审计初探与XDCMS审计">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -352,7 +362,25 @@
 <li>对数据进行精确匹配</li>
 <li>接收白名单的数据</li>
 <li>拒绝黑名单的数据</li>
-<li>对匹配黑名单的数据进行编码<br>PHP可以由用户输入的变量列表<br>• $_SERVER<br>• $_GET/_POST/COOKIE/REQUEST<br>• $_FILES<br>• $_ENV<br>• $_HTTP_COOKIE_VARS<br>• $_HTTP_ENV_VARS<br>• $_HTTP_GET_VARS<br>• $_HTTP_POST_FILES<br>• $_HTTP_POST_VARS<br>• $_HTTP_SERVER_VARS<h3 id="命令注入"><a href="#命令注入" class="headerlink" title="命令注入"></a>命令注入</h3>i. PHP执行系统命令可以使用 system、exec、passthru、<code></code>、shell_exec、popen、proc_open、pcntl_exec<br>ii. 通过在全部程序文件中搜索这些函数，确定函数的参数是否会因为外部提交而提交，检查是否经过安全处理<br>防范方法：<br>1) 使用自定义的函数或函数库来替代外部命令的功能<br>2) 使用escapeshellarg函数来处理命令函数<br>3) 使用safe_mode_exec_dir指定可执行文件的路径<h3 id="跨站脚本"><a href="#跨站脚本" class="headerlink" title="跨站脚本"></a>跨站脚本</h3>输出函数经常用：echo、print、printf、vprintf、&lt;%=$test%&gt;<br>防范方法：<br>1) 如果输入数据只包含字母和数字，那么任何特殊字符都应当组织<br>2) 对输入的数据经过严格匹配，比如邮件格式，用户名只包含英文或中文、下划线、连字符<br>3) 对输出进行HTML编码，编码规范<h3 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h3>PHP中可能出现的文件包含函数：Include[_once]、require[_once]、show_source、highlight_file、readfile、file_get_contents、fopen、file<br>防范方法：<br>1) 对输入数据进行精确匹配，比如根据变量的值确定语言，比如根据变量的值确定语言en.php或cn.php，两个文件放在’language/‘.$_POST[‘lang’].’.php’，那么检查提交的数据是否是en或者cn是最严格的，检查是否只包含字母也不错<br>2) 过滤参数中的/、..等字符<h3 id="代码注入"><a href="#代码注入" class="headerlink" title="代码注入"></a>代码注入</h3>i. 将字符串按照PHP代码来执行。这里的例子是DVWA里边，本来是输入一个网页然后Ping，结果输入 网址 &amp; net user可以执行代码<br>ii. PHP可能出现的代码注入函数：eval、preg_replace+/e、assert、call_user_func、call_user_func_array、create_function 查找使用这些函数的地方，检查用户是否可控并且有无做输入验证<br>防范方法：<br>1) 输入数据精确匹配<br>2) 白名单方式过滤可执行函数<h3 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h3>SQL语句关键字：select、insert、delete、update，查看传递的变量参数是否用户可控，有无做过安全处理<br>防范方法：<br>1) 使用参数化查询<br>2) 过滤关键词<br>3) 预编译语句<h3 id="Xpath注入"><a href="#Xpath注入" class="headerlink" title="Xpath注入"></a>Xpath注入</h3>Xpath用于操控xml，通过搜索xpath来分析，提交给xpath函数的参数是否经过安全处理<br>防范方法：<br>1) 对数据进行精确匹配<h3 id="HTTP响应拆分"><a href="#HTTP响应拆分" class="headerlink" title="HTTP响应拆分"></a>HTTP响应拆分</h3>i. 也叫做CRLF漏洞，CR和LF分别对应回车、换行字符。HTTP头又很多被CRLF组合分离的行构成，每行的结构都是“键：值”。如果用户输入部分注入了CRLF，有可能改变HTTP报头结构。可以注入自定义的HTTP头，比如注入cookie或者HTML代码，进行类似XSS或者会话固定攻击。<br>ii. PHP中可以导致HTTP响应拆分的情况为：使用header函数和使用$_SERVER变量。高版本PHP会禁止HTTP表头中出现换行字符。<br>防范方法：<br>1) 精确匹配数据<br>2) 检测输入如果有\r或\n，直接拒绝<h3 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h3>PHP用于文件管理的函数，如果输入变量用户可控，程序中也没有做数据验证，便可成为高危漏洞。<br>相关函数：<br>copy、rmdir、unlink、delete、fwrite、chmod、fgetc、fgetcsv、fgets、fgetss、file、file_get_contents、fread、readfile、ftruncate、file_put_contents、fputcsv、fputs，通常PHP中每一个文件操作函数都是危险的。<br>防范方法：<br>1) 对提交数据进行严格匹配<br>2) 限定文件可操作目录<h3 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h3>上传通常使用move_uploaded_file，也可以找到文件上传的程序进行具体分析<br>防范方法：<br>1) 使用白名单方式检测文件后缀<br>2) 上传之后按时间算法生成文件名称<br>3) 上传目录脚本文件不可执行<br>4) 注意%00截断<h3 id="变量覆盖"><a href="#变量覆盖" class="headerlink" title="变量覆盖"></a>变量覆盖</h3>i. 情况一、遍历初始化变量<br> 1) foreach($_GET as $key =&gt; $value)<br> 2) $$key = $value<br>ii. 情况二、函数覆盖变量：parse_str、mb_parse_str、import_request_variables<br>iii. 情况三、register_globals =ON,GET方式提交变量会直接覆盖<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/637324.jpg" alt=""><br>防范方法：<br>1) 设置register_globals=Off<br>2) 不要使用这些函数来获取变量<h2 id="会话安全"><a href="#会话安全" class="headerlink" title="会话安全"></a>会话安全</h2></li>
+<li>对匹配黑名单的数据进行编码</li>
+</ol>
+<p>PHP可以由用户输入的变量列表：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">* $_SERVER</span><br><span class="line">* $_GET/_POST/COOKIE/REQUEST</span><br><span class="line">* $_FILES</span><br><span class="line">* $_ENV</span><br><span class="line">* $_HTTP_COOKIE_VARS</span><br><span class="line">* $_HTTP_ENV_VARS</span><br><span class="line">* $_HTTP_GET_VARS</span><br><span class="line">* $_HTTP_POST_FILES</span><br><span class="line">* $_HTTP_POST_VARS</span><br><span class="line">* $_HTTP_SERVER_VARS</span><br></pre></td></tr></table></figure></p>
+<h3 id="命令注入"><a href="#命令注入" class="headerlink" title="命令注入"></a>命令注入</h3><p>i. PHP执行系统命令可以使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system、exec、passthru、``、shell_exec、popen、proc_open、pcntl_exec</span><br></pre></td></tr></table></figure></p>
+<p>ii. 通过在全部程序文件中搜索这些函数，确定函数的参数是否会因为外部提交而提交，检查是否经过安全处理<br>防范方法：<br>1) 使用自定义的函数或函数库来替代外部命令的功能<br>2) 使用escapeshellarg函数来处理命令函数<br>3) 使用safe_mode_exec_dir指定可执行文件的路径</p>
+<h3 id="跨站脚本"><a href="#跨站脚本" class="headerlink" title="跨站脚本"></a>跨站脚本</h3><p>输出函数经常用：echo、print、printf、vprintf、&lt;%=$test%&gt;<br>防范方法：<br>1) 如果输入数据只包含字母和数字，那么任何特殊字符都应当组织<br>2) 对输入的数据经过严格匹配，比如邮件格式，用户名只包含英文或中文、下划线、连字符<br>3) 对输出进行HTML编码，编码规范</p>
+<h3 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h3><p>PHP中可能出现的文件包含函数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Include</span>[_once]、<span class="keyword">require</span>[_once]、show_source、highlight_file、readfile、file_get_contents、fopen、file</span><br></pre></td></tr></table></figure></p>
+<p>防范方法：<br>1) 对输入数据进行精确匹配，比如根据变量的值确定语言，比如根据变量的值确定语言en.php或cn.php，两个文件放在<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'language/'</span>.$_POST[<span class="string">'lang'</span>].<span class="string">'.php'</span></span><br></pre></td></tr></table></figure></p>
+<p>那么检查提交的数据是否是en或者cn是最严格的，检查是否只包含字母也不错<br>2) 过滤参数中的/、..等字符</p>
+<h3 id="代码注入"><a href="#代码注入" class="headerlink" title="代码注入"></a>代码注入</h3><p>i. 将字符串按照PHP代码来执行。这里的例子是DVWA里边，本来是输入一个网页然后Ping，结果输入 网址 &amp; net user可以执行代码<br>ii. PHP可能出现的代码注入函数：eval、preg_replace+/e、assert、call_user_func、call_user_func_array、create_function 查找使用这些函数的地方，检查用户是否可控并且有无做输入验证<br>防范方法：<br>1) 输入数据精确匹配<br>2) 白名单方式过滤可执行函数</p>
+<h3 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h3><p>SQL语句关键字：select、insert、delete、update，查看传递的变量参数是否用户可控，有无做过安全处理<br>防范方法：<br>1) 使用参数化查询<br>2) 过滤关键词<br>3) 预编译语句</p>
+<h3 id="Xpath注入"><a href="#Xpath注入" class="headerlink" title="Xpath注入"></a>Xpath注入</h3><p>Xpath用于操控xml，通过搜索xpath来分析，提交给xpath函数的参数是否经过安全处理<br>防范方法：<br>1) 对数据进行精确匹配</p>
+<h3 id="HTTP响应拆分"><a href="#HTTP响应拆分" class="headerlink" title="HTTP响应拆分"></a>HTTP响应拆分</h3><p>i. 也叫做CRLF漏洞，CR和LF分别对应回车、换行字符。HTTP头又很多被CRLF组合分离的行构成，每行的结构都是“键：值”。如果用户输入部分注入了CRLF，有可能改变HTTP报头结构。可以注入自定义的HTTP头，比如注入cookie或者HTML代码，进行类似XSS或者会话固定攻击。</p>
+<p>ii. PHP中可以导致HTTP响应拆分的情况为：使用header函数和使用&amp;#36_SERVER变量。高版本PHP会禁止HTTP表头中出现换行字符。</p>
+<p>防范方法：<br>1) 精确匹配数据<br>2) 检测输入如果有\r或\n，直接拒绝</p>
+<h3 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h3><p>PHP用于文件管理的函数，如果输入变量用户可控，程序中也没有做数据验证，便可成为高危漏洞。<br>相关函数：<br>copy、rmdir、unlink、delete、fwrite、chmod、fgetc、fgetcsv、fgets、fgetss、file、file_get_contents、fread、readfile、ftruncate、file_put_contents、fputcsv、fputs，通常PHP中每一个文件操作函数都是危险的。<br>防范方法：<br>1) 对提交数据进行严格匹配<br>2) 限定文件可操作目录</p>
+<h3 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h3><p>上传通常使用move_uploaded_file，也可以找到文件上传的程序进行具体分析<br>防范方法：<br>1) 使用白名单方式检测文件后缀<br>2) 上传之后按时间算法生成文件名称<br>3) 上传目录脚本文件不可执行<br>4) 注意%00截断</p>
+<h3 id="变量覆盖"><a href="#变量覆盖" class="headerlink" title="变量覆盖"></a>变量覆盖</h3><p>i. 情况一、遍历初始化变量<br>    1) foreach($_GET as $key =&gt; $value)<br>    2) $$key = $value<br>ii. 情况二、函数覆盖变量：parse_str、mb_parse_str、import_request_variables<br>iii. 情况三、register_globals =ON,GET方式提交变量会直接覆盖<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/637324.jpg" alt=""><br>防范方法：<br>1) 设置register_globals=Off<br>2) 不要使用这些函数来获取变量</p>
+<h2 id="会话安全"><a href="#会话安全" class="headerlink" title="会话安全"></a>会话安全</h2><ol>
 <li>会话固定攻击<br>i. 利用session不变机制，借他人之手获得认证和授权，然后冒充他人。<br>ii. 类型一、A打开一个网址<a href="http://unsafe，服务器回复一个session" target="_blank" rel="noopener">http://unsafe，服务器回复一个session</a> id（SID=QQQQQ）。A给B发了一个钓鱼邮件，<a href="http://unsafe/?SID=QQQQ，B被吸引了，点击了，像往常一样输入了自己的帐号和口令登录到银行网站。因为服务器session" target="_blank" rel="noopener">http://unsafe/?SID=QQQQ，B被吸引了，点击了，像往常一样输入了自己的帐号和口令登录到银行网站。因为服务器session</a> id不变，现在A点击<a href="http://unsafe/?SID=QQQ后，就拥有了B的身份。" target="_blank" rel="noopener">http://unsafe/?SID=QQQ后，就拥有了B的身份。</a><br>iii. 类型二、受害者打开站点获取SessionID，攻击者通过手段获取SessionID，然后通过获取的ID访问站点即可获得目标用户合法会话。<br> 1) 如何获取？<pre><code>爆破、窃取、预测
 </code></pre></li>
 <li>HTTPonly设置<br> i. session.cookie_httponly = ON时，客户端脚本（JS等）无法访问cookie，打开可以比较有效的防御XSS</li>
@@ -361,7 +389,9 @@
 <li>cookie持续时间<br> i. 检查session.cookie_lifetime，如果时间设置过程过长，即使用户关闭浏览器，攻击者也会危害帐号安全</li>
 <li>secure设置<br> i. 如果使用HTTPS，应该设置session.cookie_secure=ON，确保使用HTTPS来传输cookie</li>
 <li>session固定<br> i. 如果权限级别改变时（如验证完用户名和密码后，普通用户提升到管理员），我们应该修改即将重新生成的会话ID，否则可能会面临会话固定攻击的风险。</li>
-<li>CSRF<br>跨站请求伪造，攻击者伪造一个恶意请求连接，通过各种方式让正常用户访问后，会以用户的身份执行这些恶意请求。应该对比较重要的程序模块（如修改用户密码、添加用户等）功能进行审查，检察有无使用一次性令牌防御csrf攻击。<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2></li>
+<li>CSRF<br>跨站请求伪造，攻击者伪造一个恶意请求连接，通过各种方式让正常用户访问后，会以用户的身份执行这些恶意请求。应该对比较重要的程序模块（如修改用户密码、添加用户等）功能进行审查，检察有无使用一次性令牌防御csrf攻击。</li>
+</ol>
+<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><ol>
 <li>明文存储密码</li>
 <li>密码弱加密<br> i. 使用容易破解的加密算法</li>
 <li>密码存储在攻击者能够访问的文件<br> 保存密码在txt、ini、conf等文件，或者直接写在HTML注释中<h2 id="认证与授权"><a href="#认证与授权" class="headerlink" title="认证与授权"></a>认证与授权</h2></li>
@@ -369,7 +399,9 @@
 <li>函数或文件的未认证调用<br> i. 一些管理页面是禁止普通用户访问的，有时候开发者忘记对这些文件进行权限验证，导致漏洞发生<br> ii. 某些页面使用参数调用功能，没有经过权限验证，比如index.php?action=upload</li>
 <li>密码硬编码<br> 有的程序会把数据库链接帐号和密码，直接写到数据库连接函数中<h2 id="随机函数"><a href="#随机函数" class="headerlink" title="随机函数"></a>随机函数</h2></li>
 <li>rand()<br> i. rand()最大随机数是32767，当使用rand处理session时，攻击者很容易破解出session，建议使用mt_rand()<br> ii. mt_rand()，返回0~mt_getrandmax()之间的伪随机数。<br> iii. 伪随机数：看似随机实际有固定的周期性序列。<br> iv. mt_getrandmax() 显示随机数的最大可能值。</li>
-<li>mt_srand()和mt_rand()<br>PHP4和PHP5&lt;5.2.6，这两个函数处理数据是不安全的，在Web应用中很多mt_rand来处理随机的session，比如密码找回功能等，这样的后果就是被恶意利用直接修改密码。<h2 id="PHP危险函数"><a href="#PHP危险函数" class="headerlink" title="PHP危险函数"></a>PHP危险函数</h2></li>
+<li>mt_srand()和mt_rand()<br>PHP4和PHP5&lt;5.2.6，这两个函数处理数据是不安全的，在Web应用中很多mt_rand来处理随机的session，比如密码找回功能等，这样的后果就是被恶意利用直接修改密码。</li>
+</ol>
+<h2 id="PHP危险函数"><a href="#PHP危险函数" class="headerlink" title="PHP危险函数"></a>PHP危险函数</h2><ol>
 <li>缓冲区溢出  confirm_phpdoc_compiled<br>i. 影响版本<br> phpDocumentor phpDocumentor 1.3.1<br> phpDocumentor phpDocumentor 1.3 RC4<br> phpDocumentor phpDocumentor 1.3 RC3<br> phpDocumentor phpDocumentor 1.2.3<br> phpDocumentor phpDocumentor 1.2.2<br> phpDocumentor phpDocumentor 1.2.1<br> phpDocumentor phpDocumentor 1.2<br> mssql_pconnect/mssql_connect<br> 影响版本：PHP &lt; = 4.4.6<br> crack_opendict<br> 影响版本：PHP = 4.4.6<br> snmpget<br> 影响版本：PHP &lt;= 5.2.3<br> ibase_connect<br> 影响版本：PHP = 4.4.6<br> unserialize<br>影响版本：PHP 5.0.2、PHP 5.0.1、PHP 5.0.0、PHP 4.3.9、PHP 4.3.8、PHP 4.3.7、PHP 4.3.6、PHP 4.3.3、PHP 4.3.2、PHP 4.3.1、PHP 4.3.0、PHP 4.2.3、PHP 4.2.2、PHP 4.2.1、PHP 4.2.0、PHP 4.2-dev、PHP 4.1.2、PHP 4.1.1、PHP 4.1.0、PHP 4.1、PHP 4.0.7、PHP 4.0.6、PHP 4.0.5、PHP 4.0.4、PHP 4.0.3pl1、PHP 4.0.3、PHP 4.0.2、PHP 4.0.1pl2、PHP 4.0.1pl1、PHP 4.0.1</li>
 <li>session_destroy()删除文件漏洞<br> i. 影响版本不详<br> ii. 测试代码<pre><code>&lt;?php
 session_save_path(&apos;./&apos;);
@@ -383,7 +415,9 @@ echo(session_id());
 print_r($_SESSION);
 } ?&gt;
 </code></pre>当提交cookieHPSESSIONID=././1.php，就相当于删除了此文件</li>
-<li>unset()-zend_hash_del_key_or_index漏洞<br>zend_hash_del_key_or_index PHP小于4.4.3和PHP小于5.1.3，可能会导致zend_hash_del删除错误的元素。当PHP的unset()函数被调用时，它会阻止变量被Unset()<h2 id="信息泄露"><a href="#信息泄露" class="headerlink" title="信息泄露"></a>信息泄露</h2></li>
+<li>unset()-zend_hash_del_key_or_index漏洞<br>zend_hash_del_key_or_index PHP小于4.4.3和PHP小于5.1.3，可能会导致zend_hash_del删除错误的元素。当PHP的unset()函数被调用时，它会阻止变量被Unset()</li>
+</ol>
+<h2 id="信息泄露"><a href="#信息泄露" class="headerlink" title="信息泄露"></a>信息泄露</h2><ol>
 <li>phpinfo()</li>
 <li>其他<h2 id="PHP环境"><a href="#PHP环境" class="headerlink" title="PHP环境"></a>PHP环境</h2></li>
 <li>open_basedir设置<br> i. open_basedir能限制应用程序访问的目录，检查有没有对open_basedir进行设置，有的可以通过Web服务器来设置，例如apache的php_admin_value，nginx+fcgi通过conf来控制PHP设置</li>
@@ -395,8 +429,22 @@ print_r($_SESSION);
 <li>safe_mode设置<br> i. 是PHP中的重要安全特性，建议开启。</li>
 <li>session_use_trans_dis设置<br> i. 如果启用，会导致PHP通过URL传递会话ID，这样一来，攻击者很容易劫持当前回话，或者欺骗用户使用已经被攻击者控制的现有会话</li>
 <li>display_errors设置<br> i. 如果启用，PHP将输出所有错误或警告信息，攻击者可以利用获取Web根路径等敏感信息</li>
-<li>expose_php设置<br>如果启用，PHP解释器生成的每个响应都会包含主机系统上安装的PHP版本，了解到远程服务器上运行的PHP版本后，攻击者就能针对系统枚举已知的盗取手段，从而大大增加成功发动攻击的机会。<h1 id="XDCMS审计"><a href="#XDCMS审计" class="headerlink" title="XDCMS审计"></a>XDCMS审计</h1>下载地址：<a href="http://www.mycodes.net/49/5240.htm" target="_blank" rel="noopener">http://www.mycodes.net/49/5240.htm</a><h2 id="目录总览"><a href="#目录总览" class="headerlink" title="目录总览"></a>目录总览</h2><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/82174230.jpg" alt=""><br>首先寻找数据库文件，是否存在默认的下载路径，如果能直接下载到对方的数据库文件或者数据库配置文件拿到管理员帐号密码就不用审计了<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/46027846.jpg" alt=""><br>里边没有默认的mdb和sql文件，唯一有用的就是config.inc.php，但因为是php所以不显示，这里的情况是我们下载了一套官方的与目标相同的CMS来审计，不是直接下了对方的所有源码….<h2 id="查看目录"><a href="#查看目录" class="headerlink" title="查看目录"></a>查看目录</h2>a. admin是管理员目录<br>b. cache是缓存目录，应该没什么用<br>c. data大约是存放数据库文件的地方<br>d. install为安装目录，经常出现的就是任意文件删除漏洞，利用漏洞删除install目录下的lock文件，就可以导致CMS重装<br>e. system应该是CMS的组成文件，是审计的重点<br>f. uploadfile上传目录，可以测试任意文件上传<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><a href="https://github.com/wizardforcel/hacking-reading-list/blob/master/web/php/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1.md" target="_blank" rel="noopener">https://github.com/wizardforcel/hacking-reading-list/blob/master/web/php/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1.md</a><br><a href="http://www.cnseay.com/1051/" target="_blank" rel="noopener">http://www.cnseay.com/1051/</a><br>《代码审计 企业级Web代码安全架构》</li>
+<li>expose_php设置<br>如果启用，PHP解释器生成的每个响应都会包含主机系统上安装的PHP版本，了解到远程服务器上运行的PHP版本后，攻击者就能针对系统枚举已知的盗取手段，从而大大增加成功发动攻击的机会。</li>
 </ol>
+<h1 id="XDCMS审计"><a href="#XDCMS审计" class="headerlink" title="XDCMS审计"></a>XDCMS审计</h1><p>下载地址：<a href="http://www.mycodes.net/49/5240.htm" target="_blank" rel="noopener">http://www.mycodes.net/49/5240.htm</a></p>
+<h2 id="目录总览"><a href="#目录总览" class="headerlink" title="目录总览"></a>目录总览</h2><p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/82174230.jpg" alt=""><br>首先寻找数据库文件，是否存在默认的下载路径，如果能直接下载到对方的数据库文件或者数据库配置文件拿到管理员帐号密码就不用审计了<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/46027846.jpg" alt=""><br>里边没有默认的mdb和sql文件，唯一有用的就是config.inc.php，但因为是php所以不显示，这里的情况是我们下载了一套官方的与目标相同的CMS来审计，不是直接下了对方的所有源码….</p>
+<h2 id="查看目录"><a href="#查看目录" class="headerlink" title="查看目录"></a>查看目录</h2><p>a. admin是管理员目录<br>b. cache是缓存目录，应该没什么用<br>c. data大约是存放数据库文件的地方<br>d. install为安装目录，经常出现的就是任意文件删除漏洞，利用漏洞删除install目录下的lock文件，就可以导致CMS重装<br>e. system应该是CMS的组成文件，是审计的重点<br>f. uploadfile上传目录，可以测试任意文件上传</p>
+<h2 id="开始审计"><a href="#开始审计" class="headerlink" title="开始审计"></a>开始审计</h2><p>想起了开始的两种审计方法<br>一、直接丢到审计系统去扫一下，找到敏感函数之后回溯，然后找到入口点和可控的位置<br>二、从最开始的地方（index.php）读起，一直到程序初始化完成，这样可以比较明确的了解源码的结构。之后阅读到有问题的代码有较大的帮助</p>
+<h2 id="第一步骤"><a href="#第一步骤" class="headerlink" title="第一步骤"></a>第一步骤</h2><p>查看index.php文件<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/52523049.jpg" alt=""><br>包含两个文件，第一个是数据库配置文件，默认字符集是utf8</p>
+<h3 id="宽字节注入"><a href="#宽字节注入" class="headerlink" title="宽字节注入"></a>宽字节注入</h3><p>这里再巩固一下宽字节注入的绕过<br>默认情况下开启了GPC或用addslashes过滤GET/POST，当提交’时会变成\’<br>1) GBK里的宽字节<br>a) 当提交为%df’时，会转变为%df\’  - &gt;   %df%5c%27，由于是从GBK -&gt; UTF8，%df%5c会变成一个汉字 縗，这样就造成了单引号逃逸<br>b) 现在基本都是使用set charset_set_client=binary来解决这个问题。<br>2) UTF8的宽字节<br>如果是UTF8 -&gt; GBK，同样适用addslashes进行过滤，我们输入錦这个字，它的utf8编码是e98ca6，GBK编码是e55c，而反斜杠正好是5c，所以输入錦’，它们被转成GBK（%e5%5c%5c%27），两个反斜杠被转义成一个反斜杠，导致单引号逃逸</p>
+<p>第二个文件：<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/80116506.jpg" alt=""><br>应该是系统整体架构文件，发现在最下面一行又引入了一个文件fun.inc.php<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/18506993.jpg" alt=""><br>从这个文件中我们发现了一个过滤函数，并发现其存在一些绕过，我们来找一下都是哪些页面调用了这个函数<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/35619309.jpg" alt=""><br>1) 我们可以从中排除一些不必要的页面，比如管理员后台php，以及管理员才能接触的一些组件<br>来到member/index.php中<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/81667703.jpg" alt=""><br>我们在登录或注册页面对其进行注入绕过<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/24462565.jpg" alt=""><br>fuzz之后，m应该是目录，f所对应的是member/index.php里边的函数<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/19122373.jpg" alt=""><br>单引号报错，根据源码对其进行显错注入的绕过</p>
+<h3 id="updatexml"><a href="#updatexml" class="headerlink" title="updatexml()"></a>updatexml()</h3><p>这里需要再学习一下MySQL updatexml() 函数的使用<br>UPDATEXML (XML_document, XPath_string, new_value);<br>第一个参数：XML_document是String格式，为XML文档对象的名称，文中为Doc<br>第二个参数：XPath_string (Xpath格式的字符串) ，如果不了解Xpath语法，可以在网上查找教程。<br>第三个参数：new_value，String格式，替换查找到的符合条件的数据<br>作用：改变文档中符合条件的节点的值</p>
+<blockquote>
+<p><a href="http://www.XXXIII.com/a.php?id=1" target="_blank" rel="noopener">http://www.XXXIII.com/a.php?id=1</a> and updatexml(1,concat(0x7e,(SELECT @@version),0x7e),1)<br>通过查询@@version,返回版本。然后CONCAT将其字符串化。因为UPDATEXML第二个参数需要Xpath格式的字符串,所以不符合要求，然后报错。<br>错误大概会是：<br>ERROR 1105 (HY000): XPATH syntax error: ’:root@localhost’</p>
+</blockquote>
+<p>构造语句得出所要信息，其他方法类似<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/2025174.jpg" alt=""></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/11116629.jpg" alt=""><br>上传点还有几个，也不用进行绕过了，直接修改后缀上传木马即可。<br>上传上去是个txt文本<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/61284747.jpg" alt=""><br>完了再搞，吃饭时间到了..</p>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a href="https://www.cnblogs.com/MiWhite/p/6228491.html" target="_blank" rel="noopener">https://www.cnblogs.com/MiWhite/p/6228491.html</a><br><a href="http://foreversong.cn/archives/709#" target="_blank" rel="noopener">http://foreversong.cn/archives/709#</a><br><a href="https://github.com/wizardforcel/hacking-reading-list/blob/master/web/php/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1.md" target="_blank" rel="noopener">https://github.com/wizardforcel/hacking-reading-list/blob/master/web/php/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1.md</a><br><a href="http://www.cnseay.com/1051/" target="_blank" rel="noopener">http://www.cnseay.com/1051/</a><br>《代码审计 企业级Web代码安全架构》</p>
 
       
     </div>
@@ -460,8 +508,8 @@ print_r($_SESSION);
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/07/HIPS-Malware-Defender/" rel="next" title="HIPS-Malware Defender">
-                <i class="fa fa-chevron-left"></i> HIPS-Malware Defender
+              <a href="/2017/10/31/Wireshark的使用/" rel="next" title="Wireshark查看TCP三次握手以及流式图片恢复">
+                <i class="fa fa-chevron-left"></i> Wireshark查看TCP三次握手以及流式图片恢复
               </a>
             
           </div>
@@ -470,8 +518,8 @@ print_r($_SESSION);
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/11/10/代码审计初探-XDCMS-1/" rel="prev" title="代码审计初探-XDCMS">
-                代码审计初探-XDCMS <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/13/好书推荐/" rel="prev" title="好书推荐">
+                好书推荐 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -566,7 +614,7 @@ print_r($_SESSION);
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -652,7 +700,7 @@ print_r($_SESSION);
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#代码审计"><span class="nav-number">1.</span> <span class="nav-text">代码审计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目的"><span class="nav-number">1.1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于审计"><span class="nav-number">1.2.</span> <span class="nav-text">关于审计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前提"><span class="nav-number">1.2.1.</span> <span class="nav-text">前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本质"><span class="nav-number">1.2.2.</span> <span class="nav-text">本质</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#审计流程"><span class="nav-number">1.3.</span> <span class="nav-text">审计流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#了解"><span class="nav-number">1.3.1.</span> <span class="nav-text">了解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计划"><span class="nav-number">1.3.2.</span> <span class="nav-text">计划</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞挖掘"><span class="nav-number">1.4.</span> <span class="nav-text">漏洞挖掘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#漏洞相关部分"><span class="nav-number">2.</span> <span class="nav-text">漏洞相关部分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入验证和输出显示"><span class="nav-number">2.1.</span> <span class="nav-text">输入验证和输出显示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#命令注入"><span class="nav-number">2.1.1.</span> <span class="nav-text">命令注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跨站脚本"><span class="nav-number">2.1.2.</span> <span class="nav-text">跨站脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件包含"><span class="nav-number">2.1.3.</span> <span class="nav-text">文件包含</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码注入"><span class="nav-number">2.1.4.</span> <span class="nav-text">代码注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL注入"><span class="nav-number">2.1.5.</span> <span class="nav-text">SQL注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Xpath注入"><span class="nav-number">2.1.6.</span> <span class="nav-text">Xpath注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP响应拆分"><span class="nav-number">2.1.7.</span> <span class="nav-text">HTTP响应拆分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件管理"><span class="nav-number">2.1.8.</span> <span class="nav-text">文件管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件上传"><span class="nav-number">2.1.9.</span> <span class="nav-text">文件上传</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量覆盖"><span class="nav-number">2.1.10.</span> <span class="nav-text">变量覆盖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#会话安全"><span class="nav-number">2.2.</span> <span class="nav-text">会话安全</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加密"><span class="nav-number">2.3.</span> <span class="nav-text">加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#认证与授权"><span class="nav-number">2.4.</span> <span class="nav-text">认证与授权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机函数"><span class="nav-number">2.5.</span> <span class="nav-text">随机函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP危险函数"><span class="nav-number">2.6.</span> <span class="nav-text">PHP危险函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息泄露"><span class="nav-number">2.7.</span> <span class="nav-text">信息泄露</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP环境"><span class="nav-number">2.8.</span> <span class="nav-text">PHP环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XDCMS审计"><span class="nav-number">3.</span> <span class="nav-text">XDCMS审计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录总览"><span class="nav-number">3.1.</span> <span class="nav-text">目录总览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看目录"><span class="nav-number">3.2.</span> <span class="nav-text">查看目录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#代码审计"><span class="nav-number">1.</span> <span class="nav-text">代码审计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目的"><span class="nav-number">1.1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于审计"><span class="nav-number">1.2.</span> <span class="nav-text">关于审计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前提"><span class="nav-number">1.2.1.</span> <span class="nav-text">前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本质"><span class="nav-number">1.2.2.</span> <span class="nav-text">本质</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#审计流程"><span class="nav-number">1.3.</span> <span class="nav-text">审计流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#了解"><span class="nav-number">1.3.1.</span> <span class="nav-text">了解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计划"><span class="nav-number">1.3.2.</span> <span class="nav-text">计划</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞挖掘"><span class="nav-number">1.4.</span> <span class="nav-text">漏洞挖掘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#漏洞相关部分"><span class="nav-number">2.</span> <span class="nav-text">漏洞相关部分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入验证和输出显示"><span class="nav-number">2.1.</span> <span class="nav-text">输入验证和输出显示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#命令注入"><span class="nav-number">2.1.1.</span> <span class="nav-text">命令注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跨站脚本"><span class="nav-number">2.1.2.</span> <span class="nav-text">跨站脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件包含"><span class="nav-number">2.1.3.</span> <span class="nav-text">文件包含</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码注入"><span class="nav-number">2.1.4.</span> <span class="nav-text">代码注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL注入"><span class="nav-number">2.1.5.</span> <span class="nav-text">SQL注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Xpath注入"><span class="nav-number">2.1.6.</span> <span class="nav-text">Xpath注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP响应拆分"><span class="nav-number">2.1.7.</span> <span class="nav-text">HTTP响应拆分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件管理"><span class="nav-number">2.1.8.</span> <span class="nav-text">文件管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件上传"><span class="nav-number">2.1.9.</span> <span class="nav-text">文件上传</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量覆盖"><span class="nav-number">2.1.10.</span> <span class="nav-text">变量覆盖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#会话安全"><span class="nav-number">2.2.</span> <span class="nav-text">会话安全</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加密"><span class="nav-number">2.3.</span> <span class="nav-text">加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#认证与授权"><span class="nav-number">2.4.</span> <span class="nav-text">认证与授权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机函数"><span class="nav-number">2.5.</span> <span class="nav-text">随机函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP危险函数"><span class="nav-number">2.6.</span> <span class="nav-text">PHP危险函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息泄露"><span class="nav-number">2.7.</span> <span class="nav-text">信息泄露</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP环境"><span class="nav-number">2.8.</span> <span class="nav-text">PHP环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XDCMS审计"><span class="nav-number">3.</span> <span class="nav-text">XDCMS审计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录总览"><span class="nav-number">3.1.</span> <span class="nav-text">目录总览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看目录"><span class="nav-number">3.2.</span> <span class="nav-text">查看目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始审计"><span class="nav-number">3.3.</span> <span class="nav-text">开始审计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步骤"><span class="nav-number">3.4.</span> <span class="nav-text">第一步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#宽字节注入"><span class="nav-number">3.4.1.</span> <span class="nav-text">宽字节注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#updatexml"><span class="nav-number">3.4.2.</span> <span class="nav-text">updatexml()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">3.5.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
             
 
           </div>
@@ -675,7 +723,7 @@ print_r($_SESSION);
         <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

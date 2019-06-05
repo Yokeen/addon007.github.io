@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="硬件安全,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/111.png?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="勇者愤怒，抽刃向更强者；怯者愤怒，却抽刃向更弱者。—— 《华盖集·杂感》">
+<meta name="keywords" content="硬件安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BadUSB制作与使用">
+<meta property="og:url" content="http://yoursite.com/2019/05/24/BadUSB制作与使用/index.html">
+<meta property="og:site_name" content="Yokeen&#39;s blog">
+<meta property="og:description" content="勇者愤怒，抽刃向更强者；怯者愤怒，却抽刃向更弱者。—— 《华盖集·杂感》">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525095121.png">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525095308.png">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525091401.png">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525090456.png">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525091449.png">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525091526.png">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525091556.png">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525091556.png">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525092036.png">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525093542.png">
+<meta property="og:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525100318.png">
+<meta property="og:updated_time" content="2019-06-05T02:23:27.336Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BadUSB制作与使用">
+<meta name="twitter:description" content="勇者愤怒，抽刃向更强者；怯者愤怒，却抽刃向更弱者。—— 《华盖集·杂感》">
+<meta name="twitter:image" content="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525095121.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/24/BadUSB制作与使用/">
+
+
+
+
+
+  <title>BadUSB制作与使用 | Yokeen's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12246f7e36b6d790ccbbfabf73da926b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yokeen's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/24/BadUSB制作与使用/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yokeen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/beiy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yokeen's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">BadUSB制作与使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-24T14:49:59+08:00">
+                2019-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/05/24/BadUSB制作与使用/" class="leancloud_visitors" data-flag-title="BadUSB制作与使用">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>勇者愤怒，抽刃向更强者；怯者愤怒，却抽刃向更弱者。<br>—— 《华盖集·杂感》<br><a id="more"></a></p>
+<h1 id="BadUSB原理及前景"><a href="#BadUSB原理及前景" class="headerlink" title="BadUSB原理及前景"></a>BadUSB原理及前景</h1><p>HID是Human Interface Device的缩写，由其名称可以了解HID设备是直接与人交互的设备，例如键盘、鼠标与游戏杆等。不过HID设备并不一定要有人机接口，只要符合HID类别规范的设备都是HID设备。</p>
+<p>从传统意义讲，当你在电脑中插入一张CD/DVD光盘，或者插入一个USB设备时，可以通过自动播放来运行一个包含恶意的文件，不过自动播放功能被关闭时，autorun.inf文件就无法自动执行你的文件了。然而通过TEENSY，你可以模拟出一个键盘和鼠标，当你插入这个定制的USB设备时，电脑会识别为一个键盘，利用设备中的微处理器，与存储空间，和编程进去的攻击代码，就可以向主机发送控制命令，从而完全控制主机，无论自动播放是否开启，都可以成功。</p>
+<p>BadUSB早在2014年底的PacSec会议上便已经提出<a href="https://srlabs.de/wp-content/uploads/2014/11/SRLabs-BadUSB-Pacsec-v2.pdf" target="_blank" rel="noopener"></a>，这是USB协议中的一个漏洞————USB设备可以伪装成为其他任何设备，例如输入设备、网卡等等。</p>
+<h2 id="常见硬件介绍"><a href="#常见硬件介绍" class="headerlink" title="常见硬件介绍"></a>常见硬件介绍</h2><h3 id="Psychson"><a href="#Psychson" class="headerlink" title="Psychson"></a>Psychson</h3><p>此项目包含了一系列制作BadUSB的方法以及列出了所支持的设备<br><strong>2303 Chip</strong></p>
+<blockquote>
+<p>Kingston DataTraveler 3.0 T111 8GB<br>Silicon power marvel M60 64GB<br>Toshiba TransMemory-MX™ Black 16 GB<br>Patriot Stellar 64 Gb Phison<br>Silicon Power32G</p>
+</blockquote>
+<p><strong>2307 Chip: (i.e. not supported)</strong></p>
+<blockquote>
+<p>Kingston DataTraveler 100 G3 8GB<br>Kingston DataTraveler 100G3 16GB<br>Kingstone DataTraveler DTM30 16GB<br>Silicon Power M01 32GB<br>Silicon Power M01 8GB Y<br>Silicon Power M01 8GB X</p>
+</blockquote>
+<p>2309 Chip (i.e. not supported) Silicon Power BLAZE B30 32GB USB 3.1<br><a href="https://github.com/brandonlw/Psychson" target="_blank" rel="noopener">项目地址</a></p>
+<h3 id="USB-RUBBER-DUCKY"><a href="#USB-RUBBER-DUCKY" class="headerlink" title="USB RUBBER DUCKY"></a>USB RUBBER DUCKY</h3><pre><code>_      _      _      USB       _      _      _
+</code></pre><p>   <strong>(.)&lt; </strong>(.)&gt; <strong>(.)=   Rubber   &gt;(.)</strong> &lt;(.)<strong> =(.)</strong><br>   _<strong>)  _</strong>)  _<strong>)    Ducky!    (_</strong>/  (<strong><em>/  (</em></strong>/ </p>
+<blockquote>
+<p>The USB Rubber Ducky is a Human Interface Device programmable with a simple scripting language allowing penetration testers to quickly and easily craft and deploy security auditing payloads that mimic human keyboard input. The source is written in C and requires the AVR Studio 5 IDE from atmel.com/avrstudio. Hardware is commercially available at hakshop.com. Tools and payloads can be found at usbrubberducky.com. Quack!</p>
+</blockquote>
+<p>大黄鸭，售价45刀。</p>
+<p>创建Payload非常简单，选择合适的平台<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525095121.png" alt=""><br>然后根据所想要实现的目标勾选相对应的功能即可<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525095308.png" alt=""><br><a href="https://shop.hak5.org/products/usb-rubber-ducky-deluxe" target="_blank" rel="noopener">出售链接</a><br><a href="https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads" target="_blank" rel="noopener">payload库</a><br><a href="https://www.ducktoolkit.com/" target="_blank" rel="noopener">payload创建及加密</a></p>
+<h3 id="Teensy"><a href="#Teensy" class="headerlink" title="Teensy"></a>Teensy</h3><blockquote>
+<p>Teensy是一个完整的基于USB的微控制器开发系统,占地面积非常小,能够实现多种类型的项目。</p>
+</blockquote>
+<p>测试也是使用Teensy++2.0来实现的，特点：<strong><font color="red">Windows免驱动</font></strong><br>价格40RMB左右。</p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525091401.png" alt=""></p>
+<h4 id="环境搭建："><a href="#环境搭建：" class="headerlink" title="环境搭建："></a>环境搭建：</h4><p>1、Teensy++2.0板子<br>2、Arduino IDE 1.8.4<br>链接：<a href="https://www.arduino.cc/download_handler.php?f=/arduino-1.8.4-windows.zip）" target="_blank" rel="noopener">https://www.arduino.cc/download_handler.php?f=/arduino-1.8.4-windows.zip）</a><br>3、Teensyduino<br>链接：<a href="https://www.pjrc.com/teensy/td_140/" target="_blank" rel="noopener">https://www.pjrc.com/teensy/td_140/</a></p>
+<p>安装Teensyduino时，选择Arduino IDE所在的目录一路NEXT即可。</p>
+<p>安装好环境之后，插入开发板，配置IDE选项如下图所示</p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525090456.png" alt=""></p>
+<p>将样例代码写入IDE：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Keyboard.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Init function */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">// Begining the Keyboard stream</span></span><br><span class="line">Keyboard.begin();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Wait 500ms</span></span><br><span class="line">delay(<span class="number">500</span>);</span><br><span class="line">delay(<span class="number">3000</span>);</span><br><span class="line"></span><br><span class="line">Keyboard.press(KEY_LEFT_GUI);</span><br><span class="line">Keyboard.press(<span class="string">'r'</span>);</span><br><span class="line">Keyboard.releaseAll();</span><br><span class="line">	</span><br><span class="line">delay(<span class="number">500</span>);</span><br><span class="line"><span class="number">18.</span>	</span><br><span class="line">Keyboard.print(<span class="string">"cmd"</span>);</span><br><span class="line">delay(<span class="number">1000</span>);</span><br><span class="line">Keyboard.press(KEY_RETURN);</span><br><span class="line">delay(<span class="number">50</span>);</span><br><span class="line">Keyboard.release(KEY_RETURN);</span><br><span class="line"></span><br><span class="line">delay(<span class="number">1000</span>);</span><br><span class="line">Keyboard.print(<span class="string">"echo Hello,Teensy++2.0!"</span>);</span><br><span class="line">Keyboard.press(KEY_RETURN);</span><br><span class="line">delay(<span class="number">50</span>);</span><br><span class="line">Keyboard.release(KEY_RETURN);</span><br><span class="line">delay(<span class="number">700</span>);</span><br><span class="line">Keyboard.press(KEY_LEFT_ALT);</span><br><span class="line">Keyboard.press(KEY_F4);</span><br><span class="line">Keyboard.releaseAll();</span><br><span class="line"><span class="comment">// Ending stream</span></span><br><span class="line">Keyboard.end();</span><br><span class="line">&#125;</span><br><span class="line">	<span class="comment">/* Unused endless loop */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>点击上传<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525091449.png" alt=""><br>这时可能会提示摁一下Teensy上边的按钮进入可编程模式<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525091526.png" alt=""><br>也就是板子这个地方<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525091556.png" alt=""><br>摁一下之后窗口会有反应，reboot之后就写入完成了。</p>
+<blockquote>
+<p>测试过程中并没有出现需要摁按钮的情况，上传代码后会自动重启并执行其中的代码。</p>
+</blockquote>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>插入设备后，自动弹出cmd框，并运行Hello,Teensy++2.0!，仅作测试，也可使用cmd /c来隐藏命令框的弹出，或使用powershell，vbscript来编写其他功能更为强大的代码。<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525091556.png" alt=""></p>
+<h3 id="Arduino-Leonardo"><a href="#Arduino-Leonardo" class="headerlink" title="Arduino Leonardo"></a>Arduino Leonardo</h3><p>Arduino Leonardo的处理器核心是ATmega32u4，同时具有20路数字输入/输出口（其中7路可作为PWM输出，12路模拟输入），一个16MHz晶体振荡器，一个USB接口，一个电源插座，一个ICSP header和一个复位按钮。[4]<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525092036.png" alt=""></p>
+<h3 id="Digispark"><a href="#Digispark" class="headerlink" title="Digispark"></a>Digispark</h3><p>特点：<strong><font color="red">Windows不免驱，Linux免驱动（忘记是在哪看到的了，这个要自己测）</font></strong><br>驱动安装与开发板环境配置见<a href="https://www.cnblogs.com/Mayfly-nymph/p/9293806.html" target="_blank" rel="noopener">5</a></p>
+<h2 id="BadUSB防御措施"><a href="#BadUSB防御措施" class="headerlink" title="BadUSB防御措施"></a>BadUSB防御措施</h2><h3 id="注册表中限制"><a href="#注册表中限制" class="headerlink" title="注册表中限制"></a>注册表中限制</h3><p>通过创建一系列黑名单来限制弱点的暴露<a href="https://heimdalsecurity.com/blog/badusb-exploit-vulnerability-fix/" target="_blank" rel="noopener">7</a></p>
+<p>start -&gt; run (gpedit.msc) -&gt; Computer Configuration &gt; Administrative Templates &gt; System &gt; Device Installation &gt; Device Installation Restrictions<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525093542.png" alt=""><br>其中提供了诸多策略针对设备安装限制，可以通过编辑相关属性从而做到对BadUSB的防御。</p>
+<p>中文版：<a href="https://www.freebuf.com/sectool/47411.html" target="_blank" rel="noopener">6</a><br>英文版：<a href="https://heimdalsecurity.com/blog/badusb-exploit-vulnerability-fix/" target="_blank" rel="noopener">7</a></p>
+<h3 id="硬件防御"><a href="#硬件防御" class="headerlink" title="硬件防御"></a>硬件防御</h3><p>一些转接头只保留了充电功能取消了数据传输功能，从而在硬件层面上防止了BadUSB<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/badusb/clipboard_20190525100318.png" alt=""></p>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p>1、<a href="https://www.freebuf.com/sectool/107242.html" target="_blank" rel="noopener">利用Arduino快速制作Teensy BadUSB</a><br>2、<a href="https://www.freebuf.com/geek/127601.html" target="_blank" rel="noopener">低成本玩转硬件安全</a><br>3、<a href="https://www.freebuf.com/sectool/47411.html" target="_blank" rel="noopener">BadUSB的前世今生：USB RUBBER DUCKY和Teensy USB</a><br>4、<a href="https://www.eeboard.com/ziliao/arduino-leonardo/" target="_blank" rel="noopener">Arduino Leonardo</a><br>5、<a href="https://www.cnblogs.com/Mayfly-nymph/p/9293806.html" target="_blank" rel="noopener">Digispark(ATTINY85) 微型开发板驱动安装与开发环境配置教程</a><br>6、<a href="https://www.freebuf.com/sectool/47411.html" target="_blank" rel="noopener">BadUSB防御初探</a><br>7、<a href="https://heimdalsecurity.com/blog/badusb-exploit-vulnerability-fix/" target="_blank" rel="noopener">How to Fix the Critical BadUSB Security Flaw in Less than 10 Minutes</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.png" alt="Yokeen WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Yokeen Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/硬件安全/" rel="tag"># 硬件安全</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/24/Hi-im-back/" rel="next" title="Hi,im back.">
+                <i class="fa fa-chevron-left"></i> Hi,im back.
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/25/毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》/" rel="prev" title="毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》">
+                毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/beiy.jpg" alt="Yokeen">
+          <p class="site-author-name" itemprop="name">Yokeen</p>
+           
+              <p class="site-description motion-element" itemprop="description">无所畏惧，勇往直前</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Yokeen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.test404.com" title="Test404'Blog" target="_blank">Test404'Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.lmxspace.com" title="l1nk3r's blog" target="_blank">l1nk3r's blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BadUSB原理及前景"><span class="nav-number">1.</span> <span class="nav-text">BadUSB原理及前景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#常见硬件介绍"><span class="nav-number">1.1.</span> <span class="nav-text">常见硬件介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Psychson"><span class="nav-number">1.1.1.</span> <span class="nav-text">Psychson</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#USB-RUBBER-DUCKY"><span class="nav-number">1.1.2.</span> <span class="nav-text">USB RUBBER DUCKY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Teensy"><span class="nav-number">1.1.3.</span> <span class="nav-text">Teensy</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#环境搭建："><span class="nav-number">1.1.3.1.</span> <span class="nav-text">环境搭建：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Arduino-Leonardo"><span class="nav-number">1.1.4.</span> <span class="nav-text">Arduino Leonardo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Digispark"><span class="nav-number">1.1.5.</span> <span class="nav-text">Digispark</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BadUSB防御措施"><span class="nav-number">1.2.</span> <span class="nav-text">BadUSB防御措施</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册表中限制"><span class="nav-number">1.2.1.</span> <span class="nav-text">注册表中限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬件防御"><span class="nav-number">1.2.2.</span> <span class="nav-text">硬件防御</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文章"><span class="nav-number">2.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yokeen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("jwmoWLlH6Y6Lhn3O89mgQzzU-gzGzoHsz", "d2eM2PNMsQCyGqPbC5aaIyuz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
