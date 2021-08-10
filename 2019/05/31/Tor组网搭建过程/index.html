@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Yokeen">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Yokeen">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="无所畏惧，勇往直前">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>在PC以及路由器上的Tor组网搭建过程 · Yokeen&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin="">
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin="">
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Yokeen&#39;s Blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">在PC以及路由器上的Tor组网搭建过程</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Yokeen's Blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            在PC以及路由器上的Tor组网搭建过程
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="硬件安全">硬件安全</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="tools">tools</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.6k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/05/31</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>It always seems impossible until its done.<br>—— 曼德拉<br><a id="more"></a></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>应公司需求搭建Tor组网，找了网上的几篇文章，博主们只是贴了部分代码没有效果也不知道到底弄好了没有。</p>
+<p>配合官方文档学习各项技术知识，搭了很多遍，各种检查配置文件以及日志，但是怎么都通不了。</p>
+<p>最后找了一篇老外的文章，从视频演示中看到是有效果的，遂参考之。</p>
+<p>搭了一遍后完成，最后还是公司小伙伴搭好，我就纳闷相同的操作我怎么就怎么搭都不行…<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531040746.png" alt=""></p>
+<h1 id="基础知识说明"><a href="#基础知识说明" class="headerlink" title="基础知识说明"></a>基础知识说明</h1><p><strong>Tor基础组件说明</strong><br>DA、Guard Relay、Exit Relay、Middle Relay、Client</p>
+<ul>
+<li>DA（Directory Authority）：权威服务器，用来获取各中继节点。</li>
+<li>Guard Relay：入口节点。</li>
+<li>Middle Relay：中继节点。</li>
+<li>Exit Relay：退出节点，最后流量通过Exit Relay直接发向目标。</li>
+<li>Client：客户端。</li>
+</ul>
+<p><strong>Tor基本原理</strong><br>Tor用户架设一个洋葱代理服务器，这个服务器定期和其他Tor节点交流从而形成一个回路（circuit）。Tor把用户要传输的信息在应用层加密，每对节点之间进行加密通信，每层节点只知道谁发送了数据包以及要将数据包发送到下一个，当数据包到达出口时，出口节点将数据包解密，发送到目标。这样的多层拓扑结构相当于把客户端包在洋葱的中心，这就是Tor保护信息来源的方式。<br>信息从客户端发出，通过网络随机化寻找路径，通过一层一层的加密代理节点，从出口节点以明文的方式发出去，所以对目标服务器来说它只能看到明文消息从出口节点发出并不知道消息源客户端的位置。</p>
+<h1 id="PC硬件拓扑"><a href="#PC硬件拓扑" class="headerlink" title="PC硬件拓扑"></a>PC硬件拓扑</h1><p>看网上的一些博主都是在局域网下搭的，在局域网下测了很多遍不行，进而转移到公网上，机器选择是在<a href="https://www.vultr.com/" target="_blank" rel="noopener">VULTR</a>，按时间计算收费对当前需求还是比较适合。<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531045033.png" alt=""></p>
+<p>本次挑选了6台VPS作为实验环境，分别对应的IP及角色为(Tor组网默认跳3次，所以最少需要3台作为中继)：</p>
+<ul>
+<li>Webserver       149.248.0.164</li>
+<li>Da              149.248.21.46</li>
+<li>Client           149.248.1.166</li>
+<li>Relay1           66.42.100.181</li>
+<li>Relay2          207.246.96.62</li>
+<li>Relay3           144.202.115.12</li>
+</ul>
+<p><strong>Web Serber</strong>作用是为我们提供了一个展示来源者IP的页面，效果如图所示：<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531045431.png" alt=""></p>
+<p><strong>Relay1~3</strong>作为中继，将客户端的流量在其中进行转发，并自动作为出口节点将原始流量发送至目标点。</p>
+<p><strong>DA</strong>作用是收集我们搭建环境中的所有中继，并在其中选择下一跳的位置。</p>
+<p><strong>Client</strong>为使用者，作为需要隐匿信息的机器。</p>
+<h1 id="功能设计"><a href="#功能设计" class="headerlink" title="功能设计"></a>功能设计</h1><p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531050045.png" alt=""><br>当我们使用Tor网络进行通信时：<br>客户端通过代理Tor网络，对Web服务器发出请求，流量通过Tor网络跳转（默认在组网中跳转三次），最后在出口节点处发往Web服务器。<br>而Web服务器处得到的请求来源IP为Tor组网中的某一节点的IP，节点直接与目标服务器进行交互，从而很好的隐匿了客户端信息。<br>并且在Tor组网中，若有节点服务器故障终端，并不会影响流量的传输，组网会挑选其他正常的节点来继续传输客户端发出的流量。</p>
+<h1 id="配置信息"><a href="#配置信息" class="headerlink" title="配置信息"></a>配置信息</h1><h2 id="DA"><a href="#DA" class="headerlink" title="DA"></a>DA</h2><p>在终端中依次执行<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、sudo apt-get update</span><br><span class="line"><span class="number">2</span>、sudo apt-get -y --force-yes install tor tor-arm vim curl ntpdate</span><br><span class="line"><span class="number">3</span>、sudo -u debian-tor mkdir /var/lib/tor/keys  </span><br><span class="line"><span class="number">4</span>、sudo -u debian-tor tor-gencert --create-identity-key -m <span class="number">12</span> -a <span class="number">149.248</span><span class="number">.21</span><span class="number">.46</span>:<span class="number">7000</span> -i /var/lib/tor/keys/authority_identity_key -s /var/lib/tor/keys/authority_signing_key -c /var/lib/tor/keys/authority_certificate</span><br><span class="line"><span class="number">5</span>、service tor stop</span><br><span class="line"><span class="number">6</span>、sudo -u debian-tor tor --<span class="built_in">list</span>-fingerprint --orport <span class="number">1</span> --dirserver <span class="string">"x 127.0.0.1:1 ffffffffffffffffffffffffffffffffffffffff"</span> --datadirectory /var/lib/tor</span><br></pre></td></tr></table></figure></p>
+<p>接着在Tor配置文件（/etc/tor/torrc）末尾加入：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">TestingTorNetwork <span class="number">1</span>  </span><br><span class="line">DataDirectory /var/lib/tor  </span><br><span class="line">RunAsDaemon <span class="number">1</span>  </span><br><span class="line">ConnLimit <span class="number">60</span>  </span><br><span class="line">Nickname DA  </span><br><span class="line">ShutdownWaitLength <span class="number">0</span>  </span><br><span class="line">PidFile /var/lib/tor/pid  </span><br><span class="line">Log notice file /var/<span class="built_in">log</span>/tor/notice.<span class="built_in">log</span>  </span><br><span class="line">Log info file /var/<span class="built_in">log</span>/tor/info.<span class="built_in">log</span>  </span><br><span class="line">Log debug file /var/<span class="built_in">log</span>/tor/debug.<span class="built_in">log</span>  </span><br><span class="line">ProtocolWarnings <span class="number">1</span>  </span><br><span class="line">SafeLogging <span class="number">0</span>  </span><br><span class="line">DisableDebuggerAttachment <span class="number">0</span>  </span><br><span class="line">DirAuthority DA orport=<span class="number">5000</span> no-v2 hs v3ident=fingerprint1 <span class="number">149.248</span><span class="number">.21</span><span class="number">.46</span>:<span class="number">7000</span> fingerprint2</span><br><span class="line">SocksPort <span class="number">0</span>  </span><br><span class="line">OrPort <span class="number">5000</span>  </span><br><span class="line">ControlPort <span class="number">9051</span>  </span><br><span class="line">Address <span class="number">149.248</span><span class="number">.21</span><span class="number">.46</span>  </span><br><span class="line">DirPort <span class="number">7000</span>  </span><br><span class="line"># An <span class="built_in">exit</span> policy that allows exiting to IPv4 LAN</span><br><span class="line">ExitPolicy accept *:*</span><br><span class="line"></span><br><span class="line">AuthoritativeDirectory <span class="number">1</span>  </span><br><span class="line">V3AuthoritativeDirectory <span class="number">1</span>  </span><br><span class="line">ContactInfo auth0@test.test  </span><br><span class="line">ExitPolicy reject *:*  </span><br><span class="line">TestingV3AuthInitialVotingInterval <span class="number">300</span>  </span><br><span class="line">TestingV3AuthInitialVoteDelay <span class="number">20</span>  </span><br><span class="line">TestingV3AuthInitialDistDelay <span class="number">20</span></span><br></pre></td></tr></table></figure></p>
+<p>其中要修改两个点</p>
+<ol>
+<li>修改fingerprint1、fingerprint2</li>
+<li>修改Address的地址为DA的IP地址</li>
+</ol>
+<blockquote>
+<p>其中fingerprint1的位置于/var/lib/tor/keys/authority_certificate 文件中的fingerprint字段，fingerprint2的位置于/var/lib/tor/fingerprint，得出值后填入上述配置信息中的相应位置。</p>
+</blockquote>
+<p><strong>Web Server</strong><br>依次在终端中执行以下命令<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、sudo apt-get -y install apache2 libapache2-mod-php</span><br><span class="line"><span class="number">2</span>、sudo rm /var/www/html/index.html</span><br><span class="line">3、echo '&lt;?php' | sudo tee -a /var/www/html/index.php</span><br><span class="line">4、echo 'echo "Remote address: " . $_SERVER['REMOTE_ADDR'] . "\n";' | sudo tee -a /var/www/html/index.php</span><br><span class="line">5、echo 'echo "Forwarded for:  " . $_SERVER['HTTP_X_FORWARDED_FOR'] . "\n";' | sudo tee -a /var/www/html/index.php</span><br><span class="line">6、echo '?&gt;' | sudo tee -a /var/www/html/index.php</span><br><span class="line"><span class="number">7</span>、sudo /etc/init.d/apache2 restart</span><br></pre></td></tr></table></figure></p>
+<p>效果如图：<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531045431.png" alt=""></p>
+<h2 id="Relay"><a href="#Relay" class="headerlink" title="Relay"></a>Relay</h2><p>我们的中继节点总共有3台，依在每台机器上次执行以下命令<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、sudo apt-get update</span><br><span class="line"><span class="number">2</span>、sudo apt-get -y --force-yes install tor tor-arm vim curl ntpdate</span><br><span class="line"><span class="number">3</span>、service tor stop</span><br><span class="line"><span class="number">4</span>、sudo -u debian-tor tor --<span class="built_in">list</span>-fingerprint --orport <span class="number">1</span> --dirserver <span class="string">"x 127.0.0.1:1 ffffffffffffffffffffffffffffffffffffffff"</span> --datadirectory /var/lib/tor</span><br></pre></td></tr></table></figure></p>
+<p>将以下代码写入配置文件（/etc/tor/torrc）尾部<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">TestingTorNetwork <span class="number">1</span>  </span><br><span class="line">DataDirectory /var/lib/tor  </span><br><span class="line">RunAsDaemon <span class="number">1</span>  </span><br><span class="line">ConnLimit <span class="number">60</span>  </span><br><span class="line">ShutdownWaitLength <span class="number">0</span>  </span><br><span class="line">PidFile /var/lib/tor/pid  </span><br><span class="line">Log notice file /var/<span class="built_in">log</span>/tor/notice.<span class="built_in">log</span>  </span><br><span class="line">Log info file /var/<span class="built_in">log</span>/tor/info.<span class="built_in">log</span>  </span><br><span class="line">Log debug file /var/<span class="built_in">log</span>/tor/debug.<span class="built_in">log</span>  </span><br><span class="line">ProtocolWarnings <span class="number">1</span>  </span><br><span class="line">SafeLogging <span class="number">0</span>  </span><br><span class="line">DisableDebuggerAttachment <span class="number">0</span>  </span><br><span class="line">DirAuthority DA orport=<span class="number">5000</span> no-v2 hs v3ident=fingerprint1 <span class="number">149.248</span><span class="number">.21</span><span class="number">.46</span>:<span class="number">7000</span> fingerprint2</span><br><span class="line"></span><br><span class="line">SocksPort <span class="number">0</span>  </span><br><span class="line">OrPort <span class="number">5000</span>  </span><br><span class="line">ControlPort <span class="number">9051</span></span><br><span class="line"># An <span class="built_in">exit</span> policy that allows exiting to IPv4 LAN</span><br><span class="line">ExitPolicy accept *:*</span><br><span class="line"></span><br><span class="line">Nickname relayX </span><br><span class="line">Address xx.xx.xx.xx</span><br></pre></td></tr></table></figure></p>
+<p>上述配置文件中需要改变的有三个地方：<br>1、fingerprint那行修改至与DA相同<br>2、Nickname relayX处，修改为当前节点的名称（如本次实验中节点名称为Relay1、Relay2、Relay3），分别在不同的机器上修改。<br>3、Address的值改变为当前中继节点的IP地址。</p>
+<h2 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h2><p>将以下代码写入配置文件（/etc/tor/torrc）尾部<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">TestingTorNetwork <span class="number">1</span>  </span><br><span class="line">DataDirectory /var/lib/tor  </span><br><span class="line">RunAsDaemon <span class="number">1</span>  </span><br><span class="line">ConnLimit <span class="number">60</span>  </span><br><span class="line">ShutdownWaitLength <span class="number">0</span>  </span><br><span class="line">PidFile /var/lib/tor/pid  </span><br><span class="line">Log notice file /var/<span class="built_in">log</span>/tor/notice.<span class="built_in">log</span>  </span><br><span class="line">Log info file /var/<span class="built_in">log</span>/tor/info.<span class="built_in">log</span>  </span><br><span class="line">Log debug file /var/<span class="built_in">log</span>/tor/debug.<span class="built_in">log</span>  </span><br><span class="line">ProtocolWarnings <span class="number">1</span>  </span><br><span class="line">SafeLogging <span class="number">0</span>  </span><br><span class="line">DisableDebuggerAttachment <span class="number">0</span>  </span><br><span class="line">DirAuthority DA orport=<span class="number">5000</span> no-v2 hs v3ident=fingerprint1 <span class="number">149.248</span><span class="number">.21</span><span class="number">.46</span>:<span class="number">7000</span> fingerprint2  #修改此行与DA处相同</span><br><span class="line"></span><br><span class="line">SocksPort <span class="number">9050</span>  </span><br><span class="line">ControlPort <span class="number">9051</span>  </span><br><span class="line"></span><br><span class="line">Nickname client</span><br><span class="line">Address <span class="number">149.248</span><span class="number">.1</span><span class="number">.166</span></span><br></pre></td></tr></table></figure></p>
+<p>接着安装proxychains（其作用是对指定的程序添加代理），在终端中执行<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install proxychains</span><br></pre></td></tr></table></figure></p>
+<p>编辑其配置文件（/etc/proxychains.conf），默认行尾使用的配置为<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SOCKS4 <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">9050</span></span><br><span class="line">将其改为</span><br><span class="line">SOCKS5 <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">9050</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h1><p>当完成上述配置后，在每台机器上执行以下两条命令，作用是同步各机器之间的时间<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> /etc/init.d/ntp stop</span><br><span class="line"><span class="number">2.</span> ntpdate ntp.ubuntu.com</span><br></pre></td></tr></table></figure></p>
+<p>接着在每台机器开启Tor服务<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>service tor start</span><br></pre></td></tr></table></figure></p>
+<p>跳转回客户端机器，执行下图命令<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531052439.png" alt=""><br>客户端IP为149.248.1.166，通过代理本地Tor端口，对Web Server发送出HTTP请求，发现返回的IP结果不是我们客户端的IP地址，说明代理已经完成。<br>查看节点服务器上的日志（var/log/tor/info.log），发现其找到了对应IP的三个节点从而作为跳板，依次进行跳跃，最后选择出口跳向目标服务器，如下图所示。<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531052508.png" alt=""><br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531052558.png" alt=""><br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531052615.png" alt=""><br>在Web服务器中查看请求来源，IP为节点服务器IP，没有客户端信息，如下图所示<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531052638.png" alt=""><br>我们关闭其中一个节点作为故障测试，发现依旧可以通过其他的节点跳出，如下图所示<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190531052708.png" alt=""><br>至此，Tor组网测试完毕。</p>
+<h1 id="在ROUTER上搭建Tor"><a href="#在ROUTER上搭建Tor" class="headerlink" title="在ROUTER上搭建Tor"></a>在ROUTER上搭建Tor</h1><p>开始找到了这个哥们的文章，准备开始编，也大概两种方法：</p>
+<ul>
+<li>编译生成适合路由器指令集的GCC编译器，直接在路由器上编。</li>
+<li>交叉编译编好再装到路由器上。</li>
+</ul>
+<p>开始没多久，公司小伙伴发现前边我们编译出来的Merlin固件里边自带有Tor，写个配置文件直接就可以用了，遂测试，完成，</p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190605025557.png" alt="编译固件"></p>
+<blockquote>
+<p>前段时间做了一段时间的过路由器固件认证，在针对ASUS Merlin类型时，GitHub上的外国师兄给出了多种型号的编译方法<a href="https://github.com/RMerl/asuswrt-merlin/wiki/Compile-Firmware-from-source-using-Ubuntu" target="_blank" rel="noopener">4</a>，遂搭建环境进行测试，根据官方文档，中间遇到了各种坑，处在不停地解决问题然而又遇到新问题的过程。<br>后边是公司小伙伴搭好了，也最终有了一次搭建完成的过程文档。 </p>
+</blockquote>
+<p>效果和上文中的一样，也还是默认跳三下，关掉其中一个会重新选择别的节点<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190605025729.png" alt=""><br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Tor/clipboard_20190605025829.png" alt=""></p>
+<p>虽然Tor早就已经不再安全，但是不能否认它在历史上的巨大作用以及它代码的优秀，还是值得参考以及改进，网上也有一部分文章阅读并分析Tor的源码，如果对这方面的知识有兴趣，还是可以继续钻研一番。</p>
+<p>至此Tor组网也就测试完毕。</p>
+<h1 id="另外"><a href="#另外" class="headerlink" title="另外"></a>另外</h1><p>我感觉我现在对于处理问题的能力相比较于大学时期下降的比较多。就技术层面来说，来一些问题还好，但是不停的出现新的问题就开始越来越躁了。当在学校时，烦躁了从实验室直接回寝室吃完饭睡一觉就出去打球，晚上再回去实验室也就更有耐心地去探究并最后解决这个问题。但现在烦躁了只能在阳台上待一会回去还是得面对并解决这个问题，没有了缓冲的时间，个人觉得还是应该调整自己，去适应这种情况，现如今时间不像以前那样慢节奏，需要自己提高在短时间内面对不同情况并及时解决的能力。但就当前的话，还是处于一个较低的水平，还是需要谨记并在日后的生活中不断调整与提升。</p>
+<h1 id="参阅文章"><a href="#参阅文章" class="headerlink" title="参阅文章"></a>参阅文章</h1><p>1、<a href="https://2019.www.torproject.org/docs/tor-manual.html.en" target="_blank" rel="noopener">Tor Documentation</a><br>2、<a href="https://witestlab.poly.edu/blog/anonymous-routing-of-network-traffic-using-tor/" target="_blank" rel="noopener">Anonymous Routing of Network Traffic Using Tor</a><br>3、<a href="https://1sparrow.com/2017/12/07/%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91tor%E5%9C%A8%E8%B7%AF%E7%94%B1%E5%99%A8%E4%B8%8A%E4%BD%BF%E7%94%A8/" target="_blank" rel="noopener">交叉编译Tor在路由器上使用</a><br>4、<a href="https://github.com/RMerl/asuswrt-merlin/wiki/Compile-Firmware-from-source-using-Ubuntu" target="_blank" rel="noopener">Compile Firmware from source using Ubuntu</a><br>感谢他们提供的知识。</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">Yokeen</a>
+            </p><p>原文链接：<a href="http://yoursite.com/2019/05/31/Tor组网搭建过程/">http://yoursite.com/2019/05/31/Tor组网搭建过程/</a>
+            </p><p>发表日期：<a href="http://yoursite.com/2019/05/31/Tor组网搭建过程/">May 31st 2019, 3:38:20 pm</a>
+            </p><p>更新日期：<a href="http://yoursite.com/2019/05/31/Tor组网搭建过程/">June 17th 2019, 9:29:31 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2019/06/17/DNS劫持与内网投毒/" title="DNS劫持与内网投毒">
+                    <div class="nextTitle">DNS劫持与内网投毒</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2019/05/25/毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》/" title="毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》">
+                    <div class="prevTitle">毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:12345@qq.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基础知识说明"><span class="toc-number">2.</span> <span class="toc-text">基础知识说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PC硬件拓扑"><span class="toc-number">3.</span> <span class="toc-text">PC硬件拓扑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#功能设计"><span class="toc-number">4.</span> <span class="toc-text">功能设计</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置信息"><span class="toc-number">5.</span> <span class="toc-text">配置信息</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DA"><span class="toc-number">5.1.</span> <span class="toc-text">DA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Relay"><span class="toc-number">5.2.</span> <span class="toc-text">Relay</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Client"><span class="toc-number">5.3.</span> <span class="toc-text">Client</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#效果展示"><span class="toc-number">6.</span> <span class="toc-text">效果展示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在ROUTER上搭建Tor"><span class="toc-number">7.</span> <span class="toc-text">在ROUTER上搭建Tor</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#另外"><span class="toc-number">8.</span> <span class="toc-text">另外</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参阅文章"><span class="toc-number">9.</span> <span class="toc-text">参阅文章</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href="/2021/08/10/test/">test</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span><a class="archive-post-title" href="/2019/06/17/DNS劫持与内网投毒/">DNS劫持与内网投毒</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href="/2019/05/31/Tor组网搭建过程/">在PC以及路由器上的Tor组网搭建过程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/25</span><a class="archive-post-title" href="/2019/05/25/毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》/">毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href="/2019/05/24/BadUSB制作与使用/">BadUSB制作与使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href="/2019/05/24/Hi-im-back/">Hi,im back.</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href="/2018/06/28/Django中的基础攻防测试/">Django基础开发与攻防测试[入门篇]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span><a class="archive-post-title" href="/2018/06/12/Python-Fuzzing脚本编写学习/">Python Fuzzing脚本编写学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href="/2018/04/27/nmap脚本编写初探/">nmap脚本编写初探</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href="/2018/04/22/无题/">Onenote笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/14</span><a class="archive-post-title" href="/2018/04/14/初探Selenium/">网络账号获取与Selenium初探</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href="/2018/04/10/CTF中的杂项小结/">CTF中的杂项小结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href="/2018/02/25/利用Python爆破教务系统批量获取用户信息/">利用Python爆破教务系统批量获取用户信息</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2018/02/02/sqlmap-payload学习/">sqlmap payload学习</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/28</span><a class="archive-post-title" href="/2017/12/28/学期总结-大三上/">大学三年级上 学习总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span><a class="archive-post-title" href="/2017/12/18/Python-Scapy/">Python-Scapy</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/13</span><a class="archive-post-title" href="/2017/11/13/好书推荐/">好书推荐</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/09</span><a class="archive-post-title" href="/2017/11/09/代码审计初探-XDCMS/">代码审计初探与XDCMS审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/31</span><a class="archive-post-title" href="/2017/10/31/Wireshark的使用/">Wireshark查看TCP三次握手以及流式图片恢复</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href="/2017/10/13/CTF-sha1和MD5/">CTF中的sha1和MD5碰撞</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href="/2017/10/08/提升期/">提升期</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href="/2017/08/24/解决MySQL为单一用户root设置密码刷新权限后还是可以空密码登录问题/">解决MySQL为单一用户root设置密码刷新权限后还是可以空密码登录问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href="/2017/08/03/使用msf路由转发实现内网渗透/">使用msf路由转发实现内网渗透</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span><a class="archive-post-title" href="/2017/05/26/解决python2-x编码之殇/">转-python2编码问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/21</span><a class="archive-post-title" href="/2017/05/21/关于sqlmap dump数据的格式问题/">关于sqlmap dump数据的格式问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href="/2017/05/14/Linux下反弹shell以及传输文件的几种方法/">Linux下反弹shell及传输文件的几种方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span><a class="archive-post-title" href="/2017/04/05/渗透测试中的Bypass技巧/">渗透测试中的Bypass技巧</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2017/04/02/17年4月2日/">17年4月2日</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href="/2017/03/27/各种常见漏洞以及解析/">各种常见漏洞以及解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href="/2017/03/25/关于逻辑漏洞/">关于逻辑漏洞</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href="/2016/12/06/好长时间了的一点随感/">这一段时间的感受</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href="/2016/10/24/通过准备ctf所学习到的知识/">通过准备ctf所学习到的知识</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href="/2016/10/12/nmap以及sqlmap的使用/">nmap以及burp的简单使用以及一些基本知识</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/30</span><a class="archive-post-title" href="/2016/09/30/web基本的攻击方法/">服务器的入侵简介以及选择自己适合的语言</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href="/2016/09/17/最近目标/">最近目标</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href="/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/">web渗透-基本入门方法以及sql手工注入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href="/2016/08/23/python-web框架django博客开发/">python-web框架django博客开发</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href="/2016/08/17/blog-start/">blog_start</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href="/2016/08/17/python爬取数十万级数据/">python爬取十万级数据</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="随感及小结"><span class="iconfont-archer">&#xe606;</span>随感及小结</span>
+    
+        <span class="sidebar-tag-name" data-tags="CTF"><span class="iconfont-archer">&#xe606;</span>CTF</span>
+    
+        <span class="sidebar-tag-name" data-tags="硬件安全"><span class="iconfont-archer">&#xe606;</span>硬件安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="内网安全"><span class="iconfont-archer">&#xe606;</span>内网安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="Web安全"><span class="iconfont-archer">&#xe606;</span>Web安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
+    
+        <span class="sidebar-tag-name" data-tags="书"><span class="iconfont-archer">&#xe606;</span>书</span>
+    
+        <span class="sidebar-tag-name" data-tags="机器学习"><span class="iconfont-archer">&#xe606;</span>机器学习</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Web安全"><span class="iconfont-archer">&#xe60a;</span>Web安全</span>
+    
+        <span class="sidebar-category-name" data-categories="随感"><span class="iconfont-archer">&#xe60a;</span>随感</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Yokeen"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Yokeen">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Yokeen">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="无所畏惧，勇往直前">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>代码审计初探与XDCMS审计 · Yokeen&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin="">
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin="">
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Yokeen&#39;s Blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">代码审计初探与XDCMS审计</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Yokeen's Blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            代码审计初探与XDCMS审计
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Web安全">Web安全</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4.8k</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/11/09</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>代码审计初探之XDCMS<br>一来总结一下最近所学习的代码审计的知识。<br>二来实战一下一个小CMS的代码审计。<br><a id="more"></a></p>
+<h1 id="代码审计"><a href="#代码审计" class="headerlink" title="代码审计"></a>代码审计</h1><h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>查找并修复在开发阶段存在的一些漏洞或程序逻辑错误，避免漏洞被非法利用给企业带来风险。</p>
+<blockquote>
+<p>应该让开发人员填写一个Checklist。它能比较直观的反映应用程序的信息和开发人员所做的编码安全，应该涵盖可能存在的严重漏洞模块，比如：数据验证、身份认证、会话管理、授权、加密、错误处理、日志、安全配置、网络架构。</p>
+</blockquote>
+<h2 id="关于审计"><a href="#关于审计" class="headerlink" title="关于审计"></a>关于审计</h2><h3 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h3><p>刚开始审计，拿到一套源码。先查看数据库相关文件，如果直接拿到对方的数据库帐号密码那就先不用审计了。<br>也么直接丢到工具里边扫敏感函数，然后一个一个去回溯，找到入口点与可控的位置。这样对于快速寻找漏洞来说是高效的，但是如果是针对所分配任务（公司代码整体了解）这样是这样是浪费时间的，需要做的是去了解整个源码。</p>
+<h3 id="本质"><a href="#本质" class="headerlink" title="本质"></a>本质</h3><p>①用户的一切输入都是有害的。②一切进入函数的变量都是有害的。</p>
+<h2 id="审计流程"><a href="#审计流程" class="headerlink" title="审计流程"></a>审计流程</h2><p>拿到一套源码，先从最开始的地方（一般是根目录Index文件），按执行的顺序去读代码，一直到它的初始化内容，和基本功能完毕为止。<br>这样可以比较明确的了解整套源码的结构，哪一种函数文件放在哪个文件夹下；知道通用函数在哪个文件，之后在阅读可能有问题的代码，有比较大的帮助，比如在看到一个通用函数时，我们可以快速的切换到通用函数文件，查找其实现代码。</p>
+<h3 id="了解"><a href="#了解" class="headerlink" title="了解"></a>了解</h3><ol>
+<li>阅读代码之前，了解整套代码的每一个功能点，每一个框以及他曾经出现的漏洞及相关修补方案。</li>
+<li>了解源码的各个功能时候，注意观察url的编码，可以在后边的阅读代码过程跳过很多无用的分支</li>
+<li>在测试每一个输入框时，仔细观察HTML源码中输入框的id或者name，可以在后边的审计中快速定位到利用点<br>4、尝试了解这套代码曾经出现的漏洞，以及修补方案，一套源码可能不是一个人完成的，尝试了解可能会发现开发人员共有的陋习，若能了解漏洞修补的详细细节，因为随着平台的升级或者新技术的出现，修补或许就可能成为摆设。</li>
+</ol>
+<h3 id="计划"><a href="#计划" class="headerlink" title="计划"></a>计划</h3><p>一、要找什么样的漏洞<br>明确要找什么样的漏洞，能方便我们在收集相关资料（引发问题的函数字典）时的目标更加精确，收集资料更加全面。</p>
+<p>二、要花多长时间完成</p>
+<h2 id="漏洞挖掘"><a href="#漏洞挖掘" class="headerlink" title="漏洞挖掘"></a>漏洞挖掘</h2><p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/75228704.jpg" alt=""><br>通过变量找函数（正向跟踪）   通过函数找变量（逆向跟踪）<br>人工代码审计的过程中，大多都会选择查找危险函数，根据危险函数的变量回溯到传入变量的方式。（如果有变量自动化跟踪工具，不用费很大精力便可完成）<br>跟踪函数，要收集可控变量（参数）的最终形态（用户通过各种方式传入进程序经过各种处理之后等待调用的形态）<br>对爆出的漏洞进行poc学习。<br>对已经修复的漏洞，进行补丁或修复方法的学习。</p>
+<h1 id="漏洞相关部分"><a href="#漏洞相关部分" class="headerlink" title="漏洞相关部分"></a>漏洞相关部分</h1><h2 id="输入验证和输出显示"><a href="#输入验证和输出显示" class="headerlink" title="输入验证和输出显示"></a>输入验证和输出显示</h2><p>较为严格的数据验证方式：</p>
+<ol>
+<li>对数据进行精确匹配</li>
+<li>接收白名单的数据</li>
+<li>拒绝黑名单的数据</li>
+<li>对匹配黑名单的数据进行编码</li>
+</ol>
+<p>PHP可以由用户输入的变量列表：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">* $_SERVER</span><br><span class="line">* $_GET/_POST/COOKIE/REQUEST</span><br><span class="line">* $_FILES</span><br><span class="line">* $_ENV</span><br><span class="line">* $_HTTP_COOKIE_VARS</span><br><span class="line">* $_HTTP_ENV_VARS</span><br><span class="line">* $_HTTP_GET_VARS</span><br><span class="line">* $_HTTP_POST_FILES</span><br><span class="line">* $_HTTP_POST_VARS</span><br><span class="line">* $_HTTP_SERVER_VARS</span><br></pre></td></tr></table></figure></p>
+<h3 id="命令注入"><a href="#命令注入" class="headerlink" title="命令注入"></a>命令注入</h3><p>i. PHP执行系统命令可以使用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system、exec、passthru、``、shell_exec、popen、proc_open、pcntl_exec</span><br></pre></td></tr></table></figure></p>
+<p>ii. 通过在全部程序文件中搜索这些函数，确定函数的参数是否会因为外部提交而提交，检查是否经过安全处理<br>防范方法：<br>1) 使用自定义的函数或函数库来替代外部命令的功能<br>2) 使用escapeshellarg函数来处理命令函数<br>3) 使用safe_mode_exec_dir指定可执行文件的路径</p>
+<h3 id="跨站脚本"><a href="#跨站脚本" class="headerlink" title="跨站脚本"></a>跨站脚本</h3><p>输出函数经常用：echo、print、printf、vprintf、&lt;%=$test%&gt;<br>防范方法：<br>1) 如果输入数据只包含字母和数字，那么任何特殊字符都应当组织<br>2) 对输入的数据经过严格匹配，比如邮件格式，用户名只包含英文或中文、下划线、连字符<br>3) 对输出进行HTML编码，编码规范</p>
+<h3 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h3><p>PHP中可能出现的文件包含函数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Include</span>[_once]、<span class="keyword">require</span>[_once]、show_source、highlight_file、readfile、file_get_contents、fopen、file</span><br></pre></td></tr></table></figure></p>
+<p>防范方法：<br>1) 对输入数据进行精确匹配，比如根据变量的值确定语言，比如根据变量的值确定语言en.php或cn.php，两个文件放在<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'language/'</span>.$_POST[<span class="string">'lang'</span>].<span class="string">'.php'</span></span><br></pre></td></tr></table></figure></p>
+<p>那么检查提交的数据是否是en或者cn是最严格的，检查是否只包含字母也不错<br>2) 过滤参数中的/、..等字符</p>
+<h3 id="代码注入"><a href="#代码注入" class="headerlink" title="代码注入"></a>代码注入</h3><p>i. 将字符串按照PHP代码来执行。这里的例子是DVWA里边，本来是输入一个网页然后Ping，结果输入 网址 &amp; net user可以执行代码<br>ii. PHP可能出现的代码注入函数：eval、preg_replace+/e、assert、call_user_func、call_user_func_array、create_function 查找使用这些函数的地方，检查用户是否可控并且有无做输入验证<br>防范方法：<br>1) 输入数据精确匹配<br>2) 白名单方式过滤可执行函数</p>
+<h3 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h3><p>SQL语句关键字：select、insert、delete、update，查看传递的变量参数是否用户可控，有无做过安全处理<br>防范方法：<br>1) 使用参数化查询<br>2) 过滤关键词<br>3) 预编译语句</p>
+<h3 id="Xpath注入"><a href="#Xpath注入" class="headerlink" title="Xpath注入"></a>Xpath注入</h3><p>Xpath用于操控xml，通过搜索xpath来分析，提交给xpath函数的参数是否经过安全处理<br>防范方法：<br>1) 对数据进行精确匹配</p>
+<h3 id="HTTP响应拆分"><a href="#HTTP响应拆分" class="headerlink" title="HTTP响应拆分"></a>HTTP响应拆分</h3><p>i. 也叫做CRLF漏洞，CR和LF分别对应回车、换行字符。HTTP头又很多被CRLF组合分离的行构成，每行的结构都是“键：值”。如果用户输入部分注入了CRLF，有可能改变HTTP报头结构。可以注入自定义的HTTP头，比如注入cookie或者HTML代码，进行类似XSS或者会话固定攻击。</p>
+<p>ii. PHP中可以导致HTTP响应拆分的情况为：使用header函数和使用&amp;#36_SERVER变量。高版本PHP会禁止HTTP表头中出现换行字符。</p>
+<p>防范方法：<br>1) 精确匹配数据<br>2) 检测输入如果有\r或\n，直接拒绝</p>
+<h3 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h3><p>PHP用于文件管理的函数，如果输入变量用户可控，程序中也没有做数据验证，便可成为高危漏洞。<br>相关函数：<br>copy、rmdir、unlink、delete、fwrite、chmod、fgetc、fgetcsv、fgets、fgetss、file、file_get_contents、fread、readfile、ftruncate、file_put_contents、fputcsv、fputs，通常PHP中每一个文件操作函数都是危险的。<br>防范方法：<br>1) 对提交数据进行严格匹配<br>2) 限定文件可操作目录</p>
+<h3 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h3><p>上传通常使用move_uploaded_file，也可以找到文件上传的程序进行具体分析<br>防范方法：<br>1) 使用白名单方式检测文件后缀<br>2) 上传之后按时间算法生成文件名称<br>3) 上传目录脚本文件不可执行<br>4) 注意%00截断</p>
+<h3 id="变量覆盖"><a href="#变量覆盖" class="headerlink" title="变量覆盖"></a>变量覆盖</h3><p>i. 情况一、遍历初始化变量<br>    1) foreach($_GET as $key =&gt; $value)<br>    2) $$key = $value<br>ii. 情况二、函数覆盖变量：parse_str、mb_parse_str、import_request_variables<br>iii. 情况三、register_globals =ON,GET方式提交变量会直接覆盖<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/637324.jpg" alt=""><br>防范方法：<br>1) 设置register_globals=Off<br>2) 不要使用这些函数来获取变量</p>
+<h2 id="会话安全"><a href="#会话安全" class="headerlink" title="会话安全"></a>会话安全</h2><ol>
+<li>会话固定攻击<br>i. 利用session不变机制，借他人之手获得认证和授权，然后冒充他人。<br>ii. 类型一、A打开一个网址<a href="http://unsafe，服务器回复一个session" target="_blank" rel="noopener">http://unsafe，服务器回复一个session</a> id（SID=QQQQQ）。A给B发了一个钓鱼邮件，<a href="http://unsafe/?SID=QQQQ，B被吸引了，点击了，像往常一样输入了自己的帐号和口令登录到银行网站。因为服务器session" target="_blank" rel="noopener">http://unsafe/?SID=QQQQ，B被吸引了，点击了，像往常一样输入了自己的帐号和口令登录到银行网站。因为服务器session</a> id不变，现在A点击<a href="http://unsafe/?SID=QQQ后，就拥有了B的身份。" target="_blank" rel="noopener">http://unsafe/?SID=QQQ后，就拥有了B的身份。</a><br>iii. 类型二、受害者打开站点获取SessionID，攻击者通过手段获取SessionID，然后通过获取的ID访问站点即可获得目标用户合法会话。<br> 1) 如何获取？<pre><code>爆破、窃取、预测
+</code></pre></li>
+<li>HTTPonly设置<br> i. session.cookie_httponly = ON时，客户端脚本（JS等）无法访问cookie，打开可以比较有效的防御XSS</li>
+<li>domain设置<br> i. 检查session.cookie_domain是否只包含本域，如果是父域，则其他子域能够获取本域的cookie</li>
+<li>path设置<br> i. 检查session.cookie_path，如果网站本身应用在/app，那么path必须设置为/app/，才能保证安全</li>
+<li>cookie持续时间<br> i. 检查session.cookie_lifetime，如果时间设置过程过长，即使用户关闭浏览器，攻击者也会危害帐号安全</li>
+<li>secure设置<br> i. 如果使用HTTPS，应该设置session.cookie_secure=ON，确保使用HTTPS来传输cookie</li>
+<li>session固定<br> i. 如果权限级别改变时（如验证完用户名和密码后，普通用户提升到管理员），我们应该修改即将重新生成的会话ID，否则可能会面临会话固定攻击的风险。</li>
+<li>CSRF<br>跨站请求伪造，攻击者伪造一个恶意请求连接，通过各种方式让正常用户访问后，会以用户的身份执行这些恶意请求。应该对比较重要的程序模块（如修改用户密码、添加用户等）功能进行审查，检察有无使用一次性令牌防御csrf攻击。</li>
+</ol>
+<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><ol>
+<li>明文存储密码</li>
+<li>密码弱加密<br> i. 使用容易破解的加密算法</li>
+<li>密码存储在攻击者能够访问的文件<br> 保存密码在txt、ini、conf等文件，或者直接写在HTML注释中<h2 id="认证与授权"><a href="#认证与授权" class="headerlink" title="认证与授权"></a>认证与授权</h2></li>
+<li>用户认证<br> i. 检查代码进行用户认证的位置，是否能够绕过认证，例如：登录代码可能存在表单注入<br> ii. 检查登陆代码有无使用验证码，防止暴力破解的手段</li>
+<li>函数或文件的未认证调用<br> i. 一些管理页面是禁止普通用户访问的，有时候开发者忘记对这些文件进行权限验证，导致漏洞发生<br> ii. 某些页面使用参数调用功能，没有经过权限验证，比如index.php?action=upload</li>
+<li>密码硬编码<br> 有的程序会把数据库链接帐号和密码，直接写到数据库连接函数中<h2 id="随机函数"><a href="#随机函数" class="headerlink" title="随机函数"></a>随机函数</h2></li>
+<li>rand()<br> i. rand()最大随机数是32767，当使用rand处理session时，攻击者很容易破解出session，建议使用mt_rand()<br> ii. mt_rand()，返回0~mt_getrandmax()之间的伪随机数。<br> iii. 伪随机数：看似随机实际有固定的周期性序列。<br> iv. mt_getrandmax() 显示随机数的最大可能值。</li>
+<li>mt_srand()和mt_rand()<br>PHP4和PHP5&lt;5.2.6，这两个函数处理数据是不安全的，在Web应用中很多mt_rand来处理随机的session，比如密码找回功能等，这样的后果就是被恶意利用直接修改密码。</li>
+</ol>
+<h2 id="PHP危险函数"><a href="#PHP危险函数" class="headerlink" title="PHP危险函数"></a>PHP危险函数</h2><ol>
+<li>缓冲区溢出  confirm_phpdoc_compiled<br>i. 影响版本<br> phpDocumentor phpDocumentor 1.3.1<br> phpDocumentor phpDocumentor 1.3 RC4<br> phpDocumentor phpDocumentor 1.3 RC3<br> phpDocumentor phpDocumentor 1.2.3<br> phpDocumentor phpDocumentor 1.2.2<br> phpDocumentor phpDocumentor 1.2.1<br> phpDocumentor phpDocumentor 1.2<br> mssql_pconnect/mssql_connect<br> 影响版本：PHP &lt; = 4.4.6<br> crack_opendict<br> 影响版本：PHP = 4.4.6<br> snmpget<br> 影响版本：PHP &lt;= 5.2.3<br> ibase_connect<br> 影响版本：PHP = 4.4.6<br> unserialize<br>影响版本：PHP 5.0.2、PHP 5.0.1、PHP 5.0.0、PHP 4.3.9、PHP 4.3.8、PHP 4.3.7、PHP 4.3.6、PHP 4.3.3、PHP 4.3.2、PHP 4.3.1、PHP 4.3.0、PHP 4.2.3、PHP 4.2.2、PHP 4.2.1、PHP 4.2.0、PHP 4.2-dev、PHP 4.1.2、PHP 4.1.1、PHP 4.1.0、PHP 4.1、PHP 4.0.7、PHP 4.0.6、PHP 4.0.5、PHP 4.0.4、PHP 4.0.3pl1、PHP 4.0.3、PHP 4.0.2、PHP 4.0.1pl2、PHP 4.0.1pl1、PHP 4.0.1</li>
+<li>session_destroy()删除文件漏洞<br> i. 影响版本不详<br> ii. 测试代码<pre><code>&lt;?php
+session_save_path(&apos;./&apos;);
+session_start();
+if($_GET[&apos;del&apos;]) {
+session_unset();
+session_destroy();
+}else{
+$_SESSION[&apos;do&apos;]=1;
+echo(session_id());
+print_r($_SESSION);
+} ?&gt;
+</code></pre>当提交cookieHPSESSIONID=././1.php，就相当于删除了此文件</li>
+<li>unset()-zend_hash_del_key_or_index漏洞<br>zend_hash_del_key_or_index PHP小于4.4.3和PHP小于5.1.3，可能会导致zend_hash_del删除错误的元素。当PHP的unset()函数被调用时，它会阻止变量被Unset()</li>
+</ol>
+<h2 id="信息泄露"><a href="#信息泄露" class="headerlink" title="信息泄露"></a>信息泄露</h2><ol>
+<li>phpinfo()</li>
+<li>其他<h2 id="PHP环境"><a href="#PHP环境" class="headerlink" title="PHP环境"></a>PHP环境</h2></li>
+<li>open_basedir设置<br> i. open_basedir能限制应用程序访问的目录，检查有没有对open_basedir进行设置，有的可以通过Web服务器来设置，例如apache的php_admin_value，nginx+fcgi通过conf来控制PHP设置</li>
+<li>all_url_fopen设置<br> i. 如果为ON，PHP可以读取远程文件进行操作</li>
+<li>all_url_include设置<br> i. 如果为ON，PHP可以远程包含文件，造成严重漏洞</li>
+<li>safe_mode_exec_dir设置<br> i. 可以控制PHP调用外部命令的目录，如果PHP程序中有调用外部命令，通过指定外部命令的目录，控制程序的风险</li>
+<li>magic_quote_gpc<br> i. 可以转移提交给参数的特殊字符，建议设置为ON</li>
+<li>register_globals设置<br> i. 开启之后，导致PHP对所有外部提交的变量注册为全局变量，后果严重</li>
+<li>safe_mode设置<br> i. 是PHP中的重要安全特性，建议开启。</li>
+<li>session_use_trans_dis设置<br> i. 如果启用，会导致PHP通过URL传递会话ID，这样一来，攻击者很容易劫持当前回话，或者欺骗用户使用已经被攻击者控制的现有会话</li>
+<li>display_errors设置<br> i. 如果启用，PHP将输出所有错误或警告信息，攻击者可以利用获取Web根路径等敏感信息</li>
+<li>expose_php设置<br>如果启用，PHP解释器生成的每个响应都会包含主机系统上安装的PHP版本，了解到远程服务器上运行的PHP版本后，攻击者就能针对系统枚举已知的盗取手段，从而大大增加成功发动攻击的机会。</li>
+</ol>
+<h1 id="XDCMS审计"><a href="#XDCMS审计" class="headerlink" title="XDCMS审计"></a>XDCMS审计</h1><p>下载地址：<a href="http://www.mycodes.net/49/5240.htm" target="_blank" rel="noopener">http://www.mycodes.net/49/5240.htm</a></p>
+<h2 id="目录总览"><a href="#目录总览" class="headerlink" title="目录总览"></a>目录总览</h2><p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/82174230.jpg" alt=""><br>首先寻找数据库文件，是否存在默认的下载路径，如果能直接下载到对方的数据库文件或者数据库配置文件拿到管理员帐号密码就不用审计了<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/46027846.jpg" alt=""><br>里边没有默认的mdb和sql文件，唯一有用的就是config.inc.php，但因为是php所以不显示，这里的情况是我们下载了一套官方的与目标相同的CMS来审计，不是直接下了对方的所有源码….</p>
+<h2 id="查看目录"><a href="#查看目录" class="headerlink" title="查看目录"></a>查看目录</h2><p>a. admin是管理员目录<br>b. cache是缓存目录，应该没什么用<br>c. data大约是存放数据库文件的地方<br>d. install为安装目录，经常出现的就是任意文件删除漏洞，利用漏洞删除install目录下的lock文件，就可以导致CMS重装<br>e. system应该是CMS的组成文件，是审计的重点<br>f. uploadfile上传目录，可以测试任意文件上传</p>
+<h2 id="开始审计"><a href="#开始审计" class="headerlink" title="开始审计"></a>开始审计</h2><p>想起了开始的两种审计方法<br>一、直接丢到审计系统去扫一下，找到敏感函数之后回溯，然后找到入口点和可控的位置<br>二、从最开始的地方（index.php）读起，一直到程序初始化完成，这样可以比较明确的了解源码的结构。之后阅读到有问题的代码有较大的帮助</p>
+<h2 id="第一步骤"><a href="#第一步骤" class="headerlink" title="第一步骤"></a>第一步骤</h2><p>查看index.php文件<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/52523049.jpg" alt=""><br>包含两个文件，第一个是数据库配置文件，默认字符集是utf8</p>
+<h3 id="宽字节注入"><a href="#宽字节注入" class="headerlink" title="宽字节注入"></a>宽字节注入</h3><p>这里再巩固一下宽字节注入的绕过<br>默认情况下开启了GPC或用addslashes过滤GET/POST，当提交’时会变成\’<br>1) GBK里的宽字节<br>a) 当提交为%df’时，会转变为%df\’  - &gt;   %df%5c%27，由于是从GBK -&gt; UTF8，%df%5c会变成一个汉字 縗，这样就造成了单引号逃逸<br>b) 现在基本都是使用set charset_set_client=binary来解决这个问题。<br>2) UTF8的宽字节<br>如果是UTF8 -&gt; GBK，同样适用addslashes进行过滤，我们输入錦这个字，它的utf8编码是e98ca6，GBK编码是e55c，而反斜杠正好是5c，所以输入錦’，它们被转成GBK（%e5%5c%5c%27），两个反斜杠被转义成一个反斜杠，导致单引号逃逸</p>
+<p>第二个文件：<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/80116506.jpg" alt=""><br>应该是系统整体架构文件，发现在最下面一行又引入了一个文件fun.inc.php<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/18506993.jpg" alt=""><br>从这个文件中我们发现了一个过滤函数，并发现其存在一些绕过，我们来找一下都是哪些页面调用了这个函数<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/35619309.jpg" alt=""><br>1) 我们可以从中排除一些不必要的页面，比如管理员后台php，以及管理员才能接触的一些组件<br>来到member/index.php中<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-9/81667703.jpg" alt=""><br>我们在登录或注册页面对其进行注入绕过<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/24462565.jpg" alt=""><br>fuzz之后，m应该是目录，f所对应的是member/index.php里边的函数<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/19122373.jpg" alt=""><br>单引号报错，根据源码对其进行显错注入的绕过</p>
+<h3 id="updatexml"><a href="#updatexml" class="headerlink" title="updatexml()"></a>updatexml()</h3><p>这里需要再学习一下MySQL updatexml() 函数的使用<br>UPDATEXML (XML_document, XPath_string, new_value);<br>第一个参数：XML_document是String格式，为XML文档对象的名称，文中为Doc<br>第二个参数：XPath_string (Xpath格式的字符串) ，如果不了解Xpath语法，可以在网上查找教程。<br>第三个参数：new_value，String格式，替换查找到的符合条件的数据<br>作用：改变文档中符合条件的节点的值</p>
+<blockquote>
+<p><a href="http://www.XXXIII.com/a.php?id=1" target="_blank" rel="noopener">http://www.XXXIII.com/a.php?id=1</a> and updatexml(1,concat(0x7e,(SELECT @@version),0x7e),1)<br>通过查询@@version,返回版本。然后CONCAT将其字符串化。因为UPDATEXML第二个参数需要Xpath格式的字符串,所以不符合要求，然后报错。<br>错误大概会是：<br>ERROR 1105 (HY000): XPATH syntax error: ’:root@localhost’</p>
+</blockquote>
+<p>构造语句得出所要信息，其他方法类似<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/2025174.jpg" alt=""></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/11116629.jpg" alt=""><br>上传点还有几个，也不用进行绕过了，直接修改后缀上传木马即可。<br>上传上去是个txt文本<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/17-11-10/61284747.jpg" alt=""><br>完了再搞，吃饭时间到了..</p>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a href="https://www.cnblogs.com/MiWhite/p/6228491.html" target="_blank" rel="noopener">https://www.cnblogs.com/MiWhite/p/6228491.html</a><br><a href="http://foreversong.cn/archives/709#" target="_blank" rel="noopener">http://foreversong.cn/archives/709#</a><br><a href="https://github.com/wizardforcel/hacking-reading-list/blob/master/web/php/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1.md" target="_blank" rel="noopener">https://github.com/wizardforcel/hacking-reading-list/blob/master/web/php/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1.md</a><br><a href="http://www.cnseay.com/1051/" target="_blank" rel="noopener">http://www.cnseay.com/1051/</a><br>《代码审计 企业级Web代码安全架构》</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">Yokeen</a>
+            </p><p>原文链接：<a href="http://yoursite.com/2017/11/09/代码审计初探-XDCMS/">http://yoursite.com/2017/11/09/代码审计初探-XDCMS/</a>
+            </p><p>发表日期：<a href="http://yoursite.com/2017/11/09/代码审计初探-XDCMS/">November 9th 2017, 6:53:11 pm</a>
+            </p><p>更新日期：<a href="http://yoursite.com/2017/11/09/代码审计初探-XDCMS/">June 5th 2019, 11:14:26 am</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2017/11/13/好书推荐/" title="好书推荐">
+                    <div class="nextTitle">好书推荐</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2017/10/31/Wireshark的使用/" title="Wireshark查看TCP三次握手以及流式图片恢复">
+                    <div class="prevTitle">Wireshark查看TCP三次握手以及流式图片恢复</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:12345@qq.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#代码审计"><span class="toc-number">1.</span> <span class="toc-text">代码审计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#目的"><span class="toc-number">1.1.</span> <span class="toc-text">目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于审计"><span class="toc-number">1.2.</span> <span class="toc-text">关于审计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前提"><span class="toc-number">1.2.1.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本质"><span class="toc-number">1.2.2.</span> <span class="toc-text">本质</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#审计流程"><span class="toc-number">1.3.</span> <span class="toc-text">审计流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#了解"><span class="toc-number">1.3.1.</span> <span class="toc-text">了解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计划"><span class="toc-number">1.3.2.</span> <span class="toc-text">计划</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞挖掘"><span class="toc-number">1.4.</span> <span class="toc-text">漏洞挖掘</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#漏洞相关部分"><span class="toc-number">2.</span> <span class="toc-text">漏洞相关部分</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#输入验证和输出显示"><span class="toc-number">2.1.</span> <span class="toc-text">输入验证和输出显示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令注入"><span class="toc-number">2.1.1.</span> <span class="toc-text">命令注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#跨站脚本"><span class="toc-number">2.1.2.</span> <span class="toc-text">跨站脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件包含"><span class="toc-number">2.1.3.</span> <span class="toc-text">文件包含</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码注入"><span class="toc-number">2.1.4.</span> <span class="toc-text">代码注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入"><span class="toc-number">2.1.5.</span> <span class="toc-text">SQL注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xpath注入"><span class="toc-number">2.1.6.</span> <span class="toc-text">Xpath注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP响应拆分"><span class="toc-number">2.1.7.</span> <span class="toc-text">HTTP响应拆分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件管理"><span class="toc-number">2.1.8.</span> <span class="toc-text">文件管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件上传"><span class="toc-number">2.1.9.</span> <span class="toc-text">文件上传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#变量覆盖"><span class="toc-number">2.1.10.</span> <span class="toc-text">变量覆盖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#会话安全"><span class="toc-number">2.2.</span> <span class="toc-text">会话安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加密"><span class="toc-number">2.3.</span> <span class="toc-text">加密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#认证与授权"><span class="toc-number">2.4.</span> <span class="toc-text">认证与授权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随机函数"><span class="toc-number">2.5.</span> <span class="toc-text">随机函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP危险函数"><span class="toc-number">2.6.</span> <span class="toc-text">PHP危险函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信息泄露"><span class="toc-number">2.7.</span> <span class="toc-text">信息泄露</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP环境"><span class="toc-number">2.8.</span> <span class="toc-text">PHP环境</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XDCMS审计"><span class="toc-number">3.</span> <span class="toc-text">XDCMS审计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#目录总览"><span class="toc-number">3.1.</span> <span class="toc-text">目录总览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看目录"><span class="toc-number">3.2.</span> <span class="toc-text">查看目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开始审计"><span class="toc-number">3.3.</span> <span class="toc-text">开始审计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一步骤"><span class="toc-number">3.4.</span> <span class="toc-text">第一步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#宽字节注入"><span class="toc-number">3.4.1.</span> <span class="toc-text">宽字节注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#updatexml"><span class="toc-number">3.4.2.</span> <span class="toc-text">updatexml()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">3.5.</span> <span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考文章"><span class="toc-number">4.</span> <span class="toc-text">参考文章</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href="/2021/08/10/test/">test</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span><a class="archive-post-title" href="/2019/06/17/DNS劫持与内网投毒/">DNS劫持与内网投毒</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href="/2019/05/31/Tor组网搭建过程/">在PC以及路由器上的Tor组网搭建过程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/25</span><a class="archive-post-title" href="/2019/05/25/毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》/">毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href="/2019/05/24/BadUSB制作与使用/">BadUSB制作与使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href="/2019/05/24/Hi-im-back/">Hi,im back.</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href="/2018/06/28/Django中的基础攻防测试/">Django基础开发与攻防测试[入门篇]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span><a class="archive-post-title" href="/2018/06/12/Python-Fuzzing脚本编写学习/">Python Fuzzing脚本编写学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href="/2018/04/27/nmap脚本编写初探/">nmap脚本编写初探</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href="/2018/04/22/无题/">Onenote笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/14</span><a class="archive-post-title" href="/2018/04/14/初探Selenium/">网络账号获取与Selenium初探</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href="/2018/04/10/CTF中的杂项小结/">CTF中的杂项小结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href="/2018/02/25/利用Python爆破教务系统批量获取用户信息/">利用Python爆破教务系统批量获取用户信息</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2018/02/02/sqlmap-payload学习/">sqlmap payload学习</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/28</span><a class="archive-post-title" href="/2017/12/28/学期总结-大三上/">大学三年级上 学习总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span><a class="archive-post-title" href="/2017/12/18/Python-Scapy/">Python-Scapy</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/13</span><a class="archive-post-title" href="/2017/11/13/好书推荐/">好书推荐</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/09</span><a class="archive-post-title" href="/2017/11/09/代码审计初探-XDCMS/">代码审计初探与XDCMS审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/31</span><a class="archive-post-title" href="/2017/10/31/Wireshark的使用/">Wireshark查看TCP三次握手以及流式图片恢复</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href="/2017/10/13/CTF-sha1和MD5/">CTF中的sha1和MD5碰撞</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href="/2017/10/08/提升期/">提升期</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href="/2017/08/24/解决MySQL为单一用户root设置密码刷新权限后还是可以空密码登录问题/">解决MySQL为单一用户root设置密码刷新权限后还是可以空密码登录问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href="/2017/08/03/使用msf路由转发实现内网渗透/">使用msf路由转发实现内网渗透</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span><a class="archive-post-title" href="/2017/05/26/解决python2-x编码之殇/">转-python2编码问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/21</span><a class="archive-post-title" href="/2017/05/21/关于sqlmap dump数据的格式问题/">关于sqlmap dump数据的格式问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href="/2017/05/14/Linux下反弹shell以及传输文件的几种方法/">Linux下反弹shell及传输文件的几种方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span><a class="archive-post-title" href="/2017/04/05/渗透测试中的Bypass技巧/">渗透测试中的Bypass技巧</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2017/04/02/17年4月2日/">17年4月2日</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href="/2017/03/27/各种常见漏洞以及解析/">各种常见漏洞以及解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href="/2017/03/25/关于逻辑漏洞/">关于逻辑漏洞</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href="/2016/12/06/好长时间了的一点随感/">这一段时间的感受</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href="/2016/10/24/通过准备ctf所学习到的知识/">通过准备ctf所学习到的知识</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href="/2016/10/12/nmap以及sqlmap的使用/">nmap以及burp的简单使用以及一些基本知识</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/30</span><a class="archive-post-title" href="/2016/09/30/web基本的攻击方法/">服务器的入侵简介以及选择自己适合的语言</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href="/2016/09/17/最近目标/">最近目标</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href="/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/">web渗透-基本入门方法以及sql手工注入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href="/2016/08/23/python-web框架django博客开发/">python-web框架django博客开发</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href="/2016/08/17/blog-start/">blog_start</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href="/2016/08/17/python爬取数十万级数据/">python爬取十万级数据</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="随感及小结"><span class="iconfont-archer">&#xe606;</span>随感及小结</span>
+    
+        <span class="sidebar-tag-name" data-tags="CTF"><span class="iconfont-archer">&#xe606;</span>CTF</span>
+    
+        <span class="sidebar-tag-name" data-tags="硬件安全"><span class="iconfont-archer">&#xe606;</span>硬件安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="内网安全"><span class="iconfont-archer">&#xe606;</span>内网安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="Web安全"><span class="iconfont-archer">&#xe606;</span>Web安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
+    
+        <span class="sidebar-tag-name" data-tags="书"><span class="iconfont-archer">&#xe606;</span>书</span>
+    
+        <span class="sidebar-tag-name" data-tags="机器学习"><span class="iconfont-archer">&#xe606;</span>机器学习</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Web安全"><span class="iconfont-archer">&#xe60a;</span>Web安全</span>
+    
+        <span class="sidebar-category-name" data-categories="随感"><span class="iconfont-archer">&#xe60a;</span>随感</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Yokeen"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

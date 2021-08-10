@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Yokeen">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Yokeen">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="无所畏惧，勇往直前">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Django基础开发与攻防测试[入门篇] · Yokeen&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin="">
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin="">
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Yokeen&#39;s Blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Django基础开发与攻防测试[入门篇]</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Yokeen's Blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Django基础开发与攻防测试[入门篇]
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Web安全">Web安全</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.6k</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/06/28</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <hr>
+<p>真香~</p>
+<hr>
+<a id="more"></a>
+<blockquote>
+<p>大约有2年左右的时间没再碰过django了，依稀记得上次用django + semantic ui + mongodb的博客搭建还是大一的时候…</p>
+</blockquote>
+<p>最近包括在培训以及在一些比赛中，python框架方面的攻防需求出现的越来越多。</p>
+<p>虽然python框架相对于Java、php等的广泛度还略低一点（现在的流行程度已经越来越高了），但是我们并不能够因此而忽视其的安全性。比如在一些赛事中就常用flask来出题等等，所以花时间学习python框架的开发与攻防对于web选手来说还是一件比较重要的事情，所以撰写这篇文章，希望可以给一些想要快速入门的同学一点帮助，同时也共同进步。</p>
+<p>如有错误的地方，还请各位师兄与同学斧正。</p>
+<h1 id="基础开发流程"><a href="#基础开发流程" class="headerlink" title="基础开发流程"></a>基础开发流程</h1><h2 id="下载安装与启动"><a href="#下载安装与启动" class="headerlink" title="下载安装与启动"></a>下载安装与启动</h2><p>使用的版本是django 1.8.2 ，以前搭博客就是用1.8.2，还啃了一段时间django文档，但是现在回想当初的学习与吸收能力还是比较差，不扯废话了…</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载django</span></span><br><span class="line">pip install django==<span class="number">1.8</span><span class="number">.2</span> -i https://pypi.mirrors.ustc.edu.cn/simple/</span><br><span class="line"><span class="comment"># 创建文件夹并启动虚拟环境</span></span><br><span class="line">virtualenv django_demo</span><br><span class="line">cd django_demo</span><br><span class="line">source bin/activate</span><br><span class="line"><span class="comment"># 创建存放django文件的文件夹</span></span><br><span class="line">mkdir learn_django</span><br><span class="line">cd learn_django</span><br><span class="line"><span class="comment"># 创建项目</span></span><br><span class="line">python django-admin.py startproject django_web</span><br><span class="line"><span class="comment"># 创建应用</span></span><br><span class="line">python manage.py startapp django_app</span><br><span class="line"><span class="comment"># 编辑django_web中的settings.py文件，将django_app加入到apps中</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-28/49718055.jpg" alt=""></p>
+<p>这样就完成了最基础的搭建<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/10457405.jpg" alt=""><br>运行服务看一下<br>python manage.py runserver，默认在8000端口<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-28/88267697.jpg" alt=""></p>
+<h2 id="Django框架中的MVC与MTV"><a href="#Django框架中的MVC与MTV" class="headerlink" title="Django框架中的MVC与MTV"></a>Django框架中的MVC与MTV</h2><p><strong><font color="red">MVC是众所周知的模式：model（模型）、view（视图）、controller（控制器）</font></strong><br>用户在页面输入url，转交给url控制器，然后根据url匹配相应的视图函数，viwe会去到models取数据，然后models在数据库中取得数据后返回给视图，视图把要展示的数据返回给模版，然后就输出到页面上。<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-28/70679906.jpg" alt=""></p>
+<p><strong><font color="red"><br>Django也是一个MVC框架，但是在Django中，控制器接受用户输入的部分由框架自行处理，所以django更加关注的是 模型(model)、view(视图)、templates(模版)，也就是MTV模型。</font></strong><br>请求一个url后，匹配相应的view区，view去models(一个托管数据的层级)查找我们要的数据，然后将数据装载到templates层，然后呈献给我们。<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-28/87206505.jpg" alt=""></p>
+<p>可以说两者很像，MTV基于MVC。</p>
+<h2 id="静态Web开发"><a href="#静态Web开发" class="headerlink" title="静态Web开发"></a>静态Web开发</h2><h3 id="创建模版"><a href="#创建模版" class="headerlink" title="创建模版"></a>创建模版</h3><p>在learn_django中创建templates文件夹（如果是IDE创建的django项目会自动创建），这就是我们的模版文件夹，来添加一个可视化的模版index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Django Learning<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hellow,Django!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span>&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="创建view层"><a href="#创建view层" class="headerlink" title="创建view层"></a>创建view层</h3><p>vim django_app/views.py<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your views here.</span></span><br><span class="line"><span class="comment"># 对于传入的请求，使用render函数进行渲染，返回index页面</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>)</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建url层"><a href="#创建url层" class="headerlink" title="创建url层"></a>创建url层</h3><p>创建url层，根据传入的url来找到我们的视图函数，从而将渲染的模版返回<br>vim django_web/urls.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 引入我们刚才创建的视图函数</span></span><br><span class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> include, url</span><br><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"><span class="keyword">from</span> django_app.views <span class="keyword">import</span> index</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(<span class="string">r'^admin/'</span>, include(admin.site.urls)),</span><br><span class="line"><span class="comment"># 用正则去对url进行匹配，然后将视图函数匹配给相应的url</span></span><br><span class="line">    url(<span class="string">r'^index/'</span>,index),</span><br></pre></td></tr></table></figure>
+<p>到这一步有一部分同学会有一些小问题，那就是并不能返回模版，Windows和linux情况可能各不相同，linux需要把templates目录放在app目录下才可以找到</p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/62526867.jpg" alt=""></p>
+<p>原因就在于settings.py中模版路径设置问题，如果templates目录是放在项目根目录，在settings中将templates路径加入就可以了</p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/64033568.jpg" alt=""><br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/16852597.jpg" alt=""></p>
+<h2 id="动态Web开发"><a href="#动态Web开发" class="headerlink" title="动态Web开发"></a>动态Web开发</h2><p>前边是说静态页面，如果需要实现动态，那就不得不说与数据库存储的交互问题，需要对models进行对应的编写来取得数据。</p>
+<h3 id="mysql-django"><a href="#mysql-django" class="headerlink" title="mysql + django"></a>mysql + django</h3><p>安装对应的数据库接口驱动，这里大致有三种：mysqldb、pymysql、mysqlclient</p>
+<p><strong>在settings.py中修改DATABASES项</strong><br>默认使用web根目录下的sqlite3数据库<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/21814421.jpg" alt=""><br>将其修改为相应的mysql信息<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/54213649.jpg" alt=""><br>创建mysql数据库，指定字符集为UTF-8<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/69712118.jpg" alt=""></p>
+<h3 id="models层"><a href="#models层" class="headerlink" title="models层"></a>models层</h3><table>
+<thead>
+<tr>
+<th>程序</th>
+<th style="text-align:right">数据库</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>class类型</td>
+<td style="text-align:right">table表格</td>
+</tr>
+<tr>
+<td>attr属性</td>
+<td style="text-align:right">field字段</td>
+</tr>
+<tr>
+<td>object对象</td>
+<td style="text-align:right">record记录</td>
+</tr>
+</tbody>
+</table>
+<p>创建模型的对象和数据库字段的对应关系<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/80637495.jpg" alt=""><br>字段定义中的特殊属性<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/59162130.jpg" alt=""><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your models here.</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DjangoTest</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    text = models.CharField(max_length=<span class="number">20</span>)</span><br></pre></td></tr></table></figure></p>
+<p>生成迁移文件并执行迁移<br>python manage.py makemigrations<br>python manage.py migrate<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/52793516.jpg" alt=""></p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/34935735.jpg" alt=""><br>查看创建的信息<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/34935735.jpg" alt=""><br>建立一些测试数据<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/32451482.jpg" alt=""></p>
+<p>在去创建views层之前，我们先对models层进行测试，看是否提取出了数据</p>
+<p><strong><font color="red">可以用两种方法：</font></strong><br><strong>1、直接在models中填写提取数据</strong></p>
+<p>也可以在view层，这个无所谓<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/36792466.jpg" alt=""></p>
+<p>运行后可能会出现，因为在项目中单独运行python文件，需要搜索环境变量，而并没有指定，所以需要进行设置</p>
+<blockquote>
+<p>django.core.exceptions.ImproperlyConfigured: Requested setting DEFAULT_INDEX_TABLESPACE, but settings are not configured. You must either define the environment variable DJANGO_SETTINGS…..</p>
+</blockquote>
+<p><a href="https://blog.csdn.net/u011013781/article/details/52155761" target="_blank" rel="noopener">pycharm解决方法</a></p>
+<p><strong>2、使用django shell</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打开django shell</span></span><br><span class="line">python manage.py shell</span><br><span class="line"><span class="keyword">import</span> django</span><br><span class="line">django.setup()</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django_app.models imoort DjangoTest <span class="keyword">as</span> dj</span><br><span class="line"><span class="comment"># 添加数据，结果见下方图片</span></span><br><span class="line">a = dj(text=<span class="string">"django shell test"</span>)</span><br><span class="line">a.save()</span><br><span class="line"><span class="comment"># 查询数据，get查询单个数据，filter查询多个模型，all查询</span></span><br><span class="line">dj.objects.all()</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/76576127.jpg" alt=""></p>
+<p>django admin可以帮我们快速管理后台数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建管理员</span></span><br><span class="line">python manage.py createsuperuser</span><br></pre></td></tr></table></figure>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/76119583.jpg" alt=""><br>将我们的模型注册到admin中，打开admin.py<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"></span><br><span class="line"><span class="comment"># Register your models here.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> models <span class="keyword">import</span> DjangoTest</span><br><span class="line"></span><br><span class="line">admin.site.register(DjangoTest)</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/2068501.jpg" alt=""><br>这样就可以在管理员界面管理模型<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-29/96493939.jpg" alt=""></p>
+<h3 id="view与url层"><a href="#view与url层" class="headerlink" title="view与url层"></a>view与url层</h3><p>当用户请求django站点上的某个页面时，django会使用路由解析模块来解析路由，默认是app目录下的urls.py</p>
+<p>django加载该路由解析模块，并寻找可用的urlpatterns，这是一个python列表，然后django依次匹配列表中每个url模式，在遇到第一个与请求相匹配的模式时停下来，然后调用对应的视图，视图是一个python函数（或者是一个基于类的视图）。</p>
+<p><strong>一个简单的路由选择模块示例：</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> url</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> views</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(<span class="string">r'^articles/2003/$'</span>, views.special_case_2003),</span><br><span class="line">    url(<span class="string">r'^articles/([0-9]&#123;4&#125;)/$'</span>, views.year_archive),</span><br><span class="line">    url(<span class="string">r'^articles/([0-9]&#123;4&#125;)/([0-9]&#123;2&#125;)/$'</span>, views.month_archive),</span><br><span class="line">    url(<span class="string">r'^articles/([0-9]&#123;4&#125;)/([0-9]&#123;2&#125;)/([0-9]+)/$'</span>, views.article_detail),</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
+<p><strong>与之对应的请求的例子：</strong></p>
+<blockquote>
+<ul>
+<li>对/articles/2005/03/ 的请求将匹配列表中的第三个模式。Django 将调用函数views.month_archive(request, ‘2005’, ‘03’)。</li>
+<li>/articles/2005/3/ 不匹配任何URL 模式，因为列表中的第三个模式要求月份应该是两个数字。</li>
+<li>/articles/2003/ 将匹配列表中的第一个模式不是第二个，因为模式按顺序匹配，第一个会首先测试是否匹配。请像这样自由插入一些特殊的情况来探测匹配的次序。</li>
+<li>/articles/2003 不匹配任何一个模式，因为每个模式要求URL 以一个斜线结尾。</li>
+<li>/articles/2003/03/03/ 将匹配最后一个模式。Django 将调用函数views.article_detail(request, ‘2003’, ‘03’, ‘03’)。</li>
+</ul>
+</blockquote>
+<p><strong><font color="green">根据url后边的数值，赋予相应的参数：id</font></strong><br><strong>urls.py</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> include, url</span><br><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"><span class="keyword">from</span> django_app.views <span class="keyword">import</span> index</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(<span class="string">r'^admin/'</span>, include(admin.site.urls)),</span><br><span class="line">    url(<span class="string">r'^index/(?P&lt;id&gt;[0-9])/$'</span>, index),</span><br><span class="line"></span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
+<p><strong><font color="green">将对于的id参数代入查询获取数据列表中指定索引的值(忽略这的一点小细节错误)</font></strong><br><strong>views.py</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render</span><br><span class="line"><span class="keyword">from</span> django_app.models <span class="keyword">import</span> DjangoTest</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your views here.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request,id)</span>:</span></span><br><span class="line">    text = DjangoTest.objects.all()</span><br><span class="line">    iden = int(id)</span><br><span class="line">    context = &#123;<span class="string">'text'</span>:text[iden]&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>,context)</span><br></pre></td></tr></table></figure></p>
+<h3 id="模版层"><a href="#模版层" class="headerlink" title="模版层"></a>模版层</h3><p><a href="https://yiyibooks.cn/xx/django_182/ref/templates/language.html" target="_blank" rel="noopener">模版语法参考</a></p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/15980616.jpg" alt=""></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Django test<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>ID: &#123;&#123; text.id &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello:&#123;&#123; text.text &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="实际效果"><a href="#实际效果" class="headerlink" title="实际效果"></a>实际效果</h3><p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/65850339.jpg" alt=""><br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/29467894.jpg" alt=""></p>
+<h1 id="Django开发中的Web攻防"><a href="#Django开发中的Web攻防" class="headerlink" title="Django开发中的Web攻防"></a>Django开发中的Web攻防</h1><h2 id="格式化字符串漏洞"><a href="#格式化字符串漏洞" class="headerlink" title="格式化字符串漏洞"></a>格式化字符串漏洞</h2><h3 id="修复前"><a href="#修复前" class="headerlink" title="修复前"></a>修复前</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render</span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> authenticate, login</span><br><span class="line"><span class="keyword">import</span> django</span><br><span class="line">django.setup()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your views here.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">'GET'</span>:</span><br><span class="line">        <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        username = request.POST[<span class="string">'username'</span>]</span><br><span class="line">        password = request.POST[<span class="string">'password'</span>]</span><br><span class="line">        user = authenticate(username=username,password=password)</span><br><span class="line">        <span class="keyword">if</span> user <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">if</span> user.is_active:</span><br><span class="line">                login(request, user)</span><br><span class="line">                template = <span class="string">'Hello &#123;user&#125;! , You can set your email is:'</span> + request.POST.get(<span class="string">'email'</span>)</span><br><span class="line">                <span class="keyword">return</span> render(request, <span class="string">'index.html'</span>, &#123;<span class="string">"value"</span>: template.format(user=request.user)&#125;)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                info = <span class="string">"The password is valid, but the account has been disabled!"</span></span><br><span class="line">                <span class="keyword">return</span> render(request, <span class="string">'index.html'</span>, &#123;<span class="string">"value"</span>: info&#125;)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            info = <span class="string">"The username and password were incorrect."</span></span><br><span class="line">            <span class="keyword">return</span> render(request, <span class="string">'index.html'</span>, &#123;<span class="string">"value"</span>: info&#125;)</span><br></pre></td></tr></table></figure>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/67184458.jpg" alt=""></p>
+<p>在原来的代码上变动了一下，如果不增加认证选项，返回的用户永远是匿名用户。</p>
+<p>在前边我已经创建了一个超级用户（admin admin），所以直接用这个用户来进行认证。</p>
+<p>认证之后返回登录用户的用户名，我们可以自己通过post方法传入一个邮箱地址上去作为临时地址，如果用户名信息出现任何错误，返回相应的错误信息。</p>
+<p><a href="https://yiyibooks.cn/xx/django_182/topics/auth/default.html" target="_blank" rel="noopener">使用django认证系统</a></p>
+<blockquote>
+<p>User对象是认证系统的核心，默认user的基本属性有username、password、email…..</p>
+</blockquote>
+<p>代码中邮箱信息直接通过format拼接在了字符串中，然后展示在页面里，我们可以通过以下payload来获取敏感数据，将user变量中的password属性 作为变量信息进行拼接，从而进行获取</p>
+<p><strong><font color="red">payload：  {user.password}</font>&gt;</strong><br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/42003739.jpg" alt=""></p>
+<h3 id="修复后"><a href="#修复后" class="headerlink" title="修复后"></a>修复后</h3><p><strong>index.html</strong><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 将其他的文本信息直接存放在模版中</span><br><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Django test<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, Django!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>hello &#123;&#123; user &#125;&#125;, You can set your email is:&#123;&#123; value &#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>views.py</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">email = request.POST.get(<span class="string">'email'</span>)</span><br><span class="line"><span class="keyword">return</span> render(request, <span class="string">'index.html'</span>, &#123;<span class="string">"value"</span>: email&#125;)</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/99842320.jpg" alt=""></p>
+<h2 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h2><h3 id="测试与修复"><a href="#测试与修复" class="headerlink" title="测试与修复"></a>测试与修复</h3><p>只是简单的接收post参数值，然后让其显示在页面上<br><strong>views.py</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">'GET'</span>:</span><br><span class="line">        <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        info = request.POST.get(<span class="string">'info'</span>)</span><br><span class="line">        <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>,&#123;<span class="string">"value"</span>:info&#125;)</span><br></pre></td></tr></table></figure></p>
+<p><strong>index.html</strong><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, Django!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>&#123;&#123; value &#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/30439824.jpg" alt=""><br>当键入payload时，并没有预想的弹窗，因为django自动为开发者提供了escape功能，让html代码在render之前先进行转义，然后再显示出来。</p>
+<p>除了自动开启的escape，还有safe、autoescape、make_Safe</p>
+<p><strong><font color="red">autoescape测试</font></strong><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% autoescape off %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>&#123;&#123; value &#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">&#123;% endautoescape %&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当其值为off时，即存在xss漏洞<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/62917608.jpg" alt=""></p>
+<p><strong><font color="red">safe测试</font></strong><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, Django!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>&#123;&#123; value | safe &#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>通过safe关闭了模版的安全机制，出现XSS漏洞<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/84099916.jpg" alt=""></p>
+<p><strong>还有几种情况也可能存在XSS：</strong><br>1、var mystr = “{ { value | escapejs } }“<br>2、safe、make_safe、autoescape<br>3、DOM型XSS<br>4、HttpResponse返回动态内容</p>
+<h3 id="修复后-1"><a href="#修复后-1" class="headerlink" title="修复后"></a>修复后</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cgi</span><br><span class="line"><span class="comment"># Create your views here.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">'GET'</span>:</span><br><span class="line">        <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        info = request.POST.get(<span class="string">'info'</span>)</span><br><span class="line">        info = cgi.escape(info)</span><br><span class="line">        <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>,&#123;<span class="string">"value"</span>:info&#125;)</span><br></pre></td></tr></table></figure>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/33758689.jpg" alt=""></p>
+<p><strong>使用cgi模块需要注意：</strong><br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-6-30/75998801.jpg" alt=""><br>转义尽可能多的可能导致逃逸的字符。</p>
+<h2 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h2><h3 id="Django-QuerySet"><a href="#Django-QuerySet" class="headerlink" title="Django QuerySet"></a>Django QuerySet</h3><p><strong>查看django queryset执行的SQL</strong><br>from django_app.models import DjangoTest as dj<br>print dj.objects.all().query</p>
+<p>SELECT <code>django_app_djangotest</code>.<code>id</code>, <code>django_app_djangotest</code>.<code>text</code> FROM <code>django_app_djangotest</code><br>简化之后就是：SELECT id,text FROM django_app_djangotest;</p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/97922875.jpg" alt=""></p>
+<p><strong>extra实现别名、条件、排序等</strong><br>以select为例：<br>tag = dj.objects.all().extra(select={“tag_id”:’id’})<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/49186214.jpg" alt=""></p>
+<p>extra里的允许当前的where参数可以使用原声的sql语句进行查询。</p>
+<p>条件为id=1，结果即查询出了一条数据<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/66783708.jpg" alt=""></p>
+<p><strong>raw方法实现原生的SQL语句查询</strong><br>a = dj.objects.raw(‘SELECT id,text FROM django_app_djangotest ‘)<br>raw()方法支持索引访问<br>a[0]</p>
+<p>也可以打印当前赋予的这个变量a都有哪些方法<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/2763019.jpg" alt=""><br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/80775555.jpg" alt=""></p>
+<h3 id="直接利用API来查询数据"><a href="#直接利用API来查询数据" class="headerlink" title="直接利用API来查询数据"></a>直接利用API来查询数据</h3><h4 id="django-connection"><a href="#django-connection" class="headerlink" title="django.connection"></a>django.connection</h4><p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/62817865.jpg" alt=""></p>
+<h4 id="MySQL-API"><a href="#MySQL-API" class="headerlink" title="MySQL API"></a>MySQL API</h4><p>诸如mysqldb、pymysql、mysqlclient，在views层写好sql语句，根据传入的参数值来查询，得出结果后返回给模版就可以了</p>
+<h3 id="修复前-1"><a href="#修复前-1" class="headerlink" title="修复前"></a>修复前</h3><p><strong>views.py</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render</span><br><span class="line"><span class="keyword">from</span> django_app.models <span class="keyword">import</span> DjangoTest <span class="keyword">as</span> dj</span><br><span class="line"><span class="comment"># Create your views here.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">'GET'</span>:</span><br><span class="line">        <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        id = request.POST.get(<span class="string">'id'</span>)</span><br><span class="line">        tag = dj.objects.extra(where=&#123;<span class="string">'id=&#123;&#125;'</span>.format(id)&#125;)[<span class="number">0</span>].text</span><br><span class="line">        <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>,&#123;<span class="string">"value"</span>:tag&#125;)</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/19337039.jpg" alt=""></p>
+<p>接下来就可以进行愉快的测试了<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/36664721.jpg" alt=""></p>
+<p>a = dj.objects.extra(where={‘id=1’})</p>
+<p>SELECT <code>django_app_djangotest</code>.<code>id</code>, <code>django_app_djangotest</code>.<code>text</code> FROM <code>django_app_djangotest</code> WHERE (id=1asdasdad)</p>
+<h4 id="测试篇"><a href="#测试篇" class="headerlink" title="测试篇"></a>测试篇</h4><p>先输入payload查看django传递回数据库的sql语句是什么<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/74782749.jpg" alt=""><br>更改后的payload<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/25820482.jpg" alt=""><br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/36110458.jpg" alt=""></p>
+<p>后边又构造测试了几个，SQL语句是正确，但是django传入SQL语句时会提示里边的语法问题,并且就算语法正确，也返回不了数据，因为id的值，从而在页面中显示不出来，所以这时候想到了延时注入<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/19831488.jpg" alt=""><br>在这里调用a的时候会延时3秒<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/80424574.jpg" alt=""><br>我们在Web页面中进行测试<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/63776619.jpg" alt=""><br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/8132428.jpg" alt=""></p>
+<p>接下来就好办了</p>
+<p>x = dj.objects.extra(where={“id=1 and if(substr((select user()),1,<br>1)=’r’,sleep(3),1)”})</p>
+<p><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/60497169.jpg" alt=""><br>后边的步骤跟着盲注的流程走就OJBK了。</p>
+<p>有时候不要直接在django shell中执行，先去mysql命令行把命令敲对了，也确实可以执行payload时候再回来测试<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/16840745.jpg" alt=""></p>
+<p>刚才说了的只是extra中的where子句，其他类型的数据提取方法在前边也有说过了，具体案例具体分析</p>
+<h3 id="修复后-2"><a href="#修复后-2" class="headerlink" title="修复后"></a>修复后</h3><p><strong>views.py</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render</span><br><span class="line"><span class="keyword">from</span> django_app.models <span class="keyword">import</span> DjangoTest <span class="keyword">as</span> dj</span><br><span class="line"><span class="comment"># Create your views here.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">'GET'</span>:</span><br><span class="line">        <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        id = request.POST.get(<span class="string">'id'</span>)</span><br><span class="line">        tag = dj.objects.extra(where=[<span class="string">'id=%s'</span>],params=id)</span><br><span class="line">        info = tag[<span class="number">0</span>].text</span><br><span class="line">        <span class="keyword">return</span> render(request,<span class="string">'index.html'</span>,&#123;<span class="string">"value"</span>:info&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>用户发送的请求再匹配到视图函数进行处理时，视图函数的相关机制会对敏感信息进行处理，导致一些恶意语句被过滤</p>
+<p>现在测试就不会了<br><img src="https://0169-1251822086.cos.ap-chengdu.myqcloud.com/Blog_photo/Test/18-7-1/11440192.jpg" alt=""></p>
+<h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2><p>最近这两天就到学期末了，有一部分事情处理完毕就准备去实习了，在django攻防方面的知识自己会去好好研究的，更多漏洞方面的知识拓展在花时间了解之后也会补充在这里，也就先这样，10点半了该回寝室了。下午打球来着，虽然又有一段时间没打球了，但是今天发挥的还是那么的C</p>
+<h1 id="参阅文章"><a href="#参阅文章" class="headerlink" title="参阅文章"></a>参阅文章</h1><p><a href="https://www.cnblogs.com/yeahpeng/articles/3911189.html" target="_blank" rel="noopener">理解django模式–MVC与MTV</a><br><a href="https://blog.csdn.net/u011054333/article/details/78767724" target="_blank" rel="noopener">django快速入门</a><br><a href="https://yiyibooks.cn/xx/django_182/index.html" target="_blank" rel="noopener">Django1.8.2手册</a><br><a href="https://www.bugbank.cn/live/view.html?id=111142" target="_blank" rel="noopener">Django框架开发中的Web漏洞案例解析</a></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">Yokeen</a>
+            </p><p>原文链接：<a href="http://yoursite.com/2018/06/28/Django中的基础攻防测试/">http://yoursite.com/2018/06/28/Django中的基础攻防测试/</a>
+            </p><p>发表日期：<a href="http://yoursite.com/2018/06/28/Django中的基础攻防测试/">June 28th 2018, 8:52:42 pm</a>
+            </p><p>更新日期：<a href="http://yoursite.com/2018/06/28/Django中的基础攻防测试/">November 29th 2018, 9:42:47 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2019/05/24/Hi-im-back/" title="Hi,im back.">
+                    <div class="nextTitle">Hi,im back.</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2018/06/12/Python-Fuzzing脚本编写学习/" title="Python Fuzzing脚本编写学习">
+                    <div class="prevTitle">Python Fuzzing脚本编写学习</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:12345@qq.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基础开发流程"><span class="toc-number">1.</span> <span class="toc-text">基础开发流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载安装与启动"><span class="toc-number">1.1.</span> <span class="toc-text">下载安装与启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Django框架中的MVC与MTV"><span class="toc-number">1.2.</span> <span class="toc-text">Django框架中的MVC与MTV</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#静态Web开发"><span class="toc-number">1.3.</span> <span class="toc-text">静态Web开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建模版"><span class="toc-number">1.3.1.</span> <span class="toc-text">创建模版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建view层"><span class="toc-number">1.3.2.</span> <span class="toc-text">创建view层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建url层"><span class="toc-number">1.3.3.</span> <span class="toc-text">创建url层</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态Web开发"><span class="toc-number">1.4.</span> <span class="toc-text">动态Web开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql-django"><span class="toc-number">1.4.1.</span> <span class="toc-text">mysql + django</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#models层"><span class="toc-number">1.4.2.</span> <span class="toc-text">models层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#view与url层"><span class="toc-number">1.4.3.</span> <span class="toc-text">view与url层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模版层"><span class="toc-number">1.4.4.</span> <span class="toc-text">模版层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实际效果"><span class="toc-number">1.4.5.</span> <span class="toc-text">实际效果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Django开发中的Web攻防"><span class="toc-number">2.</span> <span class="toc-text">Django开发中的Web攻防</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#格式化字符串漏洞"><span class="toc-number">2.1.</span> <span class="toc-text">格式化字符串漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修复前"><span class="toc-number">2.1.1.</span> <span class="toc-text">修复前</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复后"><span class="toc-number">2.1.2.</span> <span class="toc-text">修复后</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS"><span class="toc-number">2.2.</span> <span class="toc-text">XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试与修复"><span class="toc-number">2.2.1.</span> <span class="toc-text">测试与修复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复后-1"><span class="toc-number">2.2.2.</span> <span class="toc-text">修复后</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入"><span class="toc-number">2.3.</span> <span class="toc-text">SQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Django-QuerySet"><span class="toc-number">2.3.1.</span> <span class="toc-text">Django QuerySet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#直接利用API来查询数据"><span class="toc-number">2.3.2.</span> <span class="toc-text">直接利用API来查询数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#django-connection"><span class="toc-number">2.3.2.1.</span> <span class="toc-text">django.connection</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MySQL-API"><span class="toc-number">2.3.2.2.</span> <span class="toc-text">MySQL API</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复前-1"><span class="toc-number">2.3.3.</span> <span class="toc-text">修复前</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#测试篇"><span class="toc-number">2.3.3.1.</span> <span class="toc-text">测试篇</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复后-2"><span class="toc-number">2.3.4.</span> <span class="toc-text">修复后</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#待更新"><span class="toc-number">2.4.</span> <span class="toc-text">待更新</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参阅文章"><span class="toc-number">3.</span> <span class="toc-text">参阅文章</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href="/2021/08/10/test/">test</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span><a class="archive-post-title" href="/2019/06/17/DNS劫持与内网投毒/">DNS劫持与内网投毒</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href="/2019/05/31/Tor组网搭建过程/">在PC以及路由器上的Tor组网搭建过程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/25</span><a class="archive-post-title" href="/2019/05/25/毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》/">毕业论文《基于机器学习的Web异常流量监测系统的设计与实现》</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href="/2019/05/24/BadUSB制作与使用/">BadUSB制作与使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href="/2019/05/24/Hi-im-back/">Hi,im back.</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href="/2018/06/28/Django中的基础攻防测试/">Django基础开发与攻防测试[入门篇]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span><a class="archive-post-title" href="/2018/06/12/Python-Fuzzing脚本编写学习/">Python Fuzzing脚本编写学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href="/2018/04/27/nmap脚本编写初探/">nmap脚本编写初探</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href="/2018/04/22/无题/">Onenote笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/14</span><a class="archive-post-title" href="/2018/04/14/初探Selenium/">网络账号获取与Selenium初探</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href="/2018/04/10/CTF中的杂项小结/">CTF中的杂项小结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href="/2018/02/25/利用Python爆破教务系统批量获取用户信息/">利用Python爆破教务系统批量获取用户信息</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2018/02/02/sqlmap-payload学习/">sqlmap payload学习</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/28</span><a class="archive-post-title" href="/2017/12/28/学期总结-大三上/">大学三年级上 学习总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span><a class="archive-post-title" href="/2017/12/18/Python-Scapy/">Python-Scapy</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/13</span><a class="archive-post-title" href="/2017/11/13/好书推荐/">好书推荐</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/09</span><a class="archive-post-title" href="/2017/11/09/代码审计初探-XDCMS/">代码审计初探与XDCMS审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/31</span><a class="archive-post-title" href="/2017/10/31/Wireshark的使用/">Wireshark查看TCP三次握手以及流式图片恢复</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href="/2017/10/13/CTF-sha1和MD5/">CTF中的sha1和MD5碰撞</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href="/2017/10/08/提升期/">提升期</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href="/2017/08/24/解决MySQL为单一用户root设置密码刷新权限后还是可以空密码登录问题/">解决MySQL为单一用户root设置密码刷新权限后还是可以空密码登录问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href="/2017/08/03/使用msf路由转发实现内网渗透/">使用msf路由转发实现内网渗透</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span><a class="archive-post-title" href="/2017/05/26/解决python2-x编码之殇/">转-python2编码问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/21</span><a class="archive-post-title" href="/2017/05/21/关于sqlmap dump数据的格式问题/">关于sqlmap dump数据的格式问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href="/2017/05/14/Linux下反弹shell以及传输文件的几种方法/">Linux下反弹shell及传输文件的几种方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span><a class="archive-post-title" href="/2017/04/05/渗透测试中的Bypass技巧/">渗透测试中的Bypass技巧</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2017/04/02/17年4月2日/">17年4月2日</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href="/2017/03/27/各种常见漏洞以及解析/">各种常见漏洞以及解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href="/2017/03/25/关于逻辑漏洞/">关于逻辑漏洞</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href="/2016/12/06/好长时间了的一点随感/">这一段时间的感受</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href="/2016/10/24/通过准备ctf所学习到的知识/">通过准备ctf所学习到的知识</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href="/2016/10/12/nmap以及sqlmap的使用/">nmap以及burp的简单使用以及一些基本知识</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/30</span><a class="archive-post-title" href="/2016/09/30/web基本的攻击方法/">服务器的入侵简介以及选择自己适合的语言</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href="/2016/09/17/最近目标/">最近目标</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href="/2016/08/27/web渗透入门-基本入门方法以及sql手工注入/">web渗透-基本入门方法以及sql手工注入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href="/2016/08/23/python-web框架django博客开发/">python-web框架django博客开发</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href="/2016/08/17/blog-start/">blog_start</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href="/2016/08/17/python爬取数十万级数据/">python爬取十万级数据</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="随感及小结"><span class="iconfont-archer">&#xe606;</span>随感及小结</span>
+    
+        <span class="sidebar-tag-name" data-tags="CTF"><span class="iconfont-archer">&#xe606;</span>CTF</span>
+    
+        <span class="sidebar-tag-name" data-tags="硬件安全"><span class="iconfont-archer">&#xe606;</span>硬件安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="内网安全"><span class="iconfont-archer">&#xe606;</span>内网安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="Web安全"><span class="iconfont-archer">&#xe606;</span>Web安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
+    
+        <span class="sidebar-tag-name" data-tags="书"><span class="iconfont-archer">&#xe606;</span>书</span>
+    
+        <span class="sidebar-tag-name" data-tags="机器学习"><span class="iconfont-archer">&#xe606;</span>机器学习</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Web安全"><span class="iconfont-archer">&#xe60a;</span>Web安全</span>
+    
+        <span class="sidebar-category-name" data-categories="随感"><span class="iconfont-archer">&#xe60a;</span>随感</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Yokeen"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
