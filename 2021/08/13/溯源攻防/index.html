@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="1import requests 1phpinfo(); 前两天在吐司看到一篇溯源反制的文章，PDF总结了架构&amp;amp;方法&amp;amp;案例，同时我在本地也有一部分溯源攻防的资料，再结合本身的经历，总结性的写一点东西到博客上。也感谢他们的分享精神。 主要考察技术点：应急响应 &amp;amp; 取证 蓝队溯源目的：完整还原攻击链、溯源到黑客的身份，OR 反控攻击方主机。 姓名：攻击IP：攻击域名：地理位置：">
+<meta name="keywords" content="溯源攻防">
+<meta property="og:type" content="article">
+<meta property="og:title" content="溯源攻防">
+<meta property="og:url" content="http://lessismore.cool/2021/08/13/溯源攻防/index.html">
+<meta property="og:site_name" content="Yokeen&#39;s blog">
+<meta property="og:description" content="1import requests 1phpinfo(); 前两天在吐司看到一篇溯源反制的文章，PDF总结了架构&amp;amp;方法&amp;amp;案例，同时我在本地也有一部分溯源攻防的资料，再结合本身的经历，总结性的写一点东西到博客上。也感谢他们的分享精神。 主要考察技术点：应急响应 &amp;amp; 取证 蓝队溯源目的：完整还原攻击链、溯源到黑客的身份，OR 反控攻击方主机。 姓名：攻击IP：攻击域名：地理位置：">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2021-08-19T13:02:06.385Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="溯源攻防">
+<meta name="twitter:description" content="1import requests 1phpinfo(); 前两天在吐司看到一篇溯源反制的文章，PDF总结了架构&amp;amp;方法&amp;amp;案例，同时我在本地也有一部分溯源攻防的资料，再结合本身的经历，总结性的写一点东西到博客上。也感谢他们的分享精神。 主要考察技术点：应急响应 &amp;amp; 取证 蓝队溯源目的：完整还原攻击链、溯源到黑客的身份，OR 反控攻击方主机。 姓名：攻击IP：攻击域名：地理位置：">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>溯源攻防</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top"="" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/friend/">Friend</a></li>
+         
+          <li><a href="/about/">About</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2021/08/11/AWD篇/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lessismore.cool/2021/08/13/溯源攻防/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lessismore.cool/2021/08/13/溯源攻防/&text=溯源攻防"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lessismore.cool/2021/08/13/溯源攻防/&title=溯源攻防"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lessismore.cool/2021/08/13/溯源攻防/&is_video=false&description=溯源攻防"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=溯源攻防&body=Check out this article: http://lessismore.cool/2021/08/13/溯源攻防/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lessismore.cool/2021/08/13/溯源攻防/&title=溯源攻防"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lessismore.cool/2021/08/13/溯源攻防/&title=溯源攻防"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lessismore.cool/2021/08/13/溯源攻防/&title=溯源攻防"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lessismore.cool/2021/08/13/溯源攻防/&title=溯源攻防"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lessismore.cool/2021/08/13/溯源攻防/&name=溯源攻防&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://lessismore.cool/2021/08/13/溯源攻防/&t=溯源攻防"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#蓝队溯源"><span class="toc-number">1.</span> <span class="toc-text">蓝队溯源</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#攻击源捕获"><span class="toc-number">1.1.</span> <span class="toc-text">攻击源捕获</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取开源情报"><span class="toc-number">1.2.</span> <span class="toc-text">获取开源情报</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IP-amp-域名"><span class="toc-number">1.2.1.</span> <span class="toc-text">IP &amp; 域名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ID"><span class="toc-number">1.2.2.</span> <span class="toc-text">ID</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#信息防护"><span class="toc-number">2.</span> <span class="toc-text">信息防护</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#个人信息防护"><span class="toc-number">2.1.</span> <span class="toc-text">个人信息防护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#c2服务器隐藏"><span class="toc-number">2.2.</span> <span class="toc-text">c2服务器隐藏</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#应急响应"><span class="toc-number">3.</span> <span class="toc-text">应急响应</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows"><span class="toc-number">3.1.</span> <span class="toc-text">Windows</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux"><span class="toc-number">3.2.</span> <span class="toc-text">Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#文件排查"><span class="toc-number">3.2.1.</span> <span class="toc-text">文件排查</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整性排查"><span class="toc-number">3.2.1.1.</span> <span class="toc-text">完整性排查</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动项-amp-计划排查"><span class="toc-number">3.2.2.</span> <span class="toc-text">启动项&amp;计划排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程排查"><span class="toc-number">3.2.3.</span> <span class="toc-text">进程排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络连接排查"><span class="toc-number">3.2.4.</span> <span class="toc-text">网络连接排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#案例"><span class="toc-number">3.2.5.</span> <span class="toc-text">案例</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        溯源攻防
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Yokeen</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-08-13T02:22:43.000Z" itemprop="datePublished">2021-08-13</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/安全技术/">安全技术</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/溯源攻防/">溯源攻防</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">phpinfo();</span><br></pre></td></tr></table></figure>
+<p>前两天在吐司看到一篇溯源反制的文章，PDF总结了架构&amp;方法&amp;案例，同时我在本地也有一部分溯源攻防的资料，再结合本身的经历，总结性的写一点东西到博客上。也感谢他们的分享精神。</p>
+<p>主要考察技术点：应急响应 &amp; 取证</p>
+<h1 id="蓝队溯源"><a href="#蓝队溯源" class="headerlink" title="蓝队溯源"></a>蓝队溯源</h1><p>目的：完整还原攻击链、溯源到黑客的身份，OR 反控攻击方主机。</p>
+<p>姓名：<br>攻击IP：<br>攻击域名：<br>地理位置：<br>QQ：<br>邮箱：<br>手机号：<br>微信微博等社交账户：<br>身份证及照片：<br>跳板机：<br>关联攻击事件（还原攻击链）：</p>
+<h2 id="攻击源捕获"><a href="#攻击源捕获" class="headerlink" title="攻击源捕获"></a>攻击源捕获</h2><p>安全设备报警（扫描、被入侵、病毒木马等）<br>服务器资源异常（桌面敏感信息、系统日志、敏感进程通信地址、系统操作指令）<br>钓鱼（恶意样本通信地址）<br>蜜罐（搭建伪造的不同协议的蜜罐，每天提取其中的C2地址）</p>
+<blockquote>
+<p>同时也要不断完善蜜罐，批量工具进入后会先用各种指令判断系统是否为蜜罐，你要给他们想要的信息，然后他们才会执行从C2地址下载的指令</p>
+</blockquote>
+<p><strong>样本分析：</strong><br>微步云沙箱：<a href="https://s.threatbook.cn/" target="_blank" rel="noopener">https://s.threatbook.cn/</a><br>腾讯哈勃：<br>VT：<a href="https://www.virustotal.com/gui/home/upload" target="_blank" rel="noopener">https://www.virustotal.com/gui/home/upload</a></p>
+<h2 id="获取开源情报"><a href="#获取开源情报" class="headerlink" title="获取开源情报"></a>获取开源情报</h2><h3 id="IP-amp-域名"><a href="#IP-amp-域名" class="headerlink" title="IP &amp; 域名"></a>IP &amp; 域名</h3><p>1、ip归属及开放端口&amp;反向入侵<br>2、域名归属<br>3、IP反查域名<br>4、域名解析到IP（合适解析到何IP）<br>5、域名备案</p>
+<p>微步X社区：<a href="https://x.threatbook.cn/" target="_blank" rel="noopener">https://x.threatbook.cn/</a></p>
+<h3 id="ID"><a href="#ID" class="headerlink" title="ID"></a>ID</h3><p>通过搜索引擎搜索目标ID暴露的个人信息，还有各种社交平台，还有电报社工库。</p>
+<h1 id="信息防护"><a href="#信息防护" class="headerlink" title="信息防护"></a>信息防护</h1><h2 id="个人信息防护"><a href="#个人信息防护" class="headerlink" title="个人信息防护"></a>个人信息防护</h2><p>1、工作电脑 + 虚拟机<br>工作电脑不要有任何个人信息，工作机断网（随意IP&amp;dns），打好补丁禁用常用端口；<br>虚拟机更新至最新版本、打好补丁禁止常用端口、英文系统、NO IE、少装乱七八糟的软件；</p>
+<p>有条件可以在断网物理机上做一层监控（常见的操作例如文件读取拷贝&amp;命令执行&amp;软件运行），毕竟就算物理机断网，大牛也可以虚拟机逃逸。</p>
+<p>周期重装系统。</p>
+<p>2、匿名网络+VPN<br>匿名物联网卡 OR 公共场所WIFI；<br>系统拨一层，常用软件（例如浏览器）走一层socks代理<br>（可以在打下的目标内网中的出网机器搭建（常用漏洞打下的路由器难免会被其他人打下抓取流量））</p>
+<p>系统IP与DNS可以乱设，VPN断开后自然无法上网。</p>
+<blockquote>
+<p>安全隐蔽很难与速度两全，自行考虑。之前搭建过洋葱网络，三层跳板，用VPS测试速度说起来还行，但最后因为离职也没有实际部署在公网的路由器。</p>
+</blockquote>
+<p>3、注册匿名社交账户<br>主要是邮箱（非临时），用来注册VPS和域名供应商。</p>
+<p>4、虚拟币购买VPS<br>注册完匿名邮箱后再注册VPS供应商，用虚拟币支付（手机支付时注意网络）。</p>
+<h2 id="c2服务器隐藏"><a href="#c2服务器隐藏" class="headerlink" title="c2服务器隐藏"></a>c2服务器隐藏</h2><p>1、利用CDN隐藏C2域名</p>
+<p>2、云函数保护域名</p>
+<p><a href="https://www.t00ls.net/articles-62395.html" target="_blank" rel="noopener">frp+云函数上线</a></p>
+<h1 id="应急响应"><a href="#应急响应" class="headerlink" title="应急响应"></a>应急响应</h1><p>我学长主要是做Linux这块的，之前跟他学习了不少这块的知识。</p>
+<p>Windows这块比较拉，接触的比较少了，在微步时问Windows响应大师博哥要了份资料，</p>
+<p>要点：及时止损（拔网线封IP）、防止扩散</p>
+<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><p>准备一套干净的指令或busybox交叉对比，查看进程是否被隐藏</p>
+<h3 id="文件排查"><a href="#文件排查" class="headerlink" title="文件排查"></a>文件排查</h3><p>find<br>atime、ctime、mtime<br>find / -mtime 0 //24小时内被修改过的文件</p>
+<h4 id="完整性排查"><a href="#完整性排查" class="headerlink" title="完整性排查"></a>完整性排查</h4><p>rpm -Va、dpkg -V<br>S：代表文件容量大小是否被改变<br>M：文件类型或属性是否被改变<br>5：文件MD5是否被改版<br>D：设备的主/次号码<br>L：文件路径是否被改变<br>U：文件所有者是否被改变<br>G：文件所属用户组是否被改变<br>T：文件创建时间死否被改变<br>若左边包含S.5 右边为可执行文件，例如sshd、httpd等程序，则可能为重新编译过的后门程序，针对性检查</p>
+<h3 id="启动项-amp-计划排查"><a href="#启动项-amp-计划排查" class="headerlink" title="启动项&amp;计划排查"></a>启动项&amp;计划排查</h3><p>相关启动项文件<br>/etc/rc.local<br>/etc/init.d/<br>/etc/rc*.d/<br>/etc/rc.d/<br>/etc/init.d/<br>/etc/rc.sysinit<br>查看文件内容是否发声变化，根据内容判断是否包含恶意启动项</p>
+<p>/etc/crontab, /etc/cron.daily/, /etc/cron.hourly/, /etc/cron.monthly/, /etc/cron.weekly/,<br>/var/spool/cron/crontabs/，/etc/cron.d/</p>
+<h3 id="进程排查"><a href="#进程排查" class="headerlink" title="进程排查"></a>进程排查</h3><p>top<br>ps 命令可以查看系统中当前运行哪些进程。<br>ps –auxf     以树形结构排列所有进程<br>top  查看系统性能，可以事实显示系统各个进程的资源占用情况<br>lsof –Pi        显示所有连接，并不要做端口解析<br>lsof –f –p pid    查看与此PID交互的一切文件</p>
+<h3 id="网络连接排查"><a href="#网络连接排查" class="headerlink" title="网络连接排查"></a>网络连接排查</h3><p>ss</p>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p>brootkit<br>gates</p>
+<p><a href="https://www.secpulse.com/archives/141438.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/141438.html</a><br><a href="https://www.t00ls.net/articles-62348.html#" target="_blank" rel="noopener">吐司：分享一个溯源定位反制的手册</a><br><a href="https://netsecurity.51cto.com/art/202010/629184.htm" target="_blank" rel="noopener">Bypass：安全攻击溯源思路及案例</a><br><a href="https://www.t00ls.net/articles-62395.html" target="_blank" rel="noopener">frp+云函数上线</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/friend/">Friend</a></li>
+         
+          <li><a href="/about/">About</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#蓝队溯源"><span class="toc-number">1.</span> <span class="toc-text">蓝队溯源</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#攻击源捕获"><span class="toc-number">1.1.</span> <span class="toc-text">攻击源捕获</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取开源情报"><span class="toc-number">1.2.</span> <span class="toc-text">获取开源情报</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IP-amp-域名"><span class="toc-number">1.2.1.</span> <span class="toc-text">IP &amp; 域名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ID"><span class="toc-number">1.2.2.</span> <span class="toc-text">ID</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#信息防护"><span class="toc-number">2.</span> <span class="toc-text">信息防护</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#个人信息防护"><span class="toc-number">2.1.</span> <span class="toc-text">个人信息防护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#c2服务器隐藏"><span class="toc-number">2.2.</span> <span class="toc-text">c2服务器隐藏</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#应急响应"><span class="toc-number">3.</span> <span class="toc-text">应急响应</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows"><span class="toc-number">3.1.</span> <span class="toc-text">Windows</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux"><span class="toc-number">3.2.</span> <span class="toc-text">Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#文件排查"><span class="toc-number">3.2.1.</span> <span class="toc-text">文件排查</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#完整性排查"><span class="toc-number">3.2.1.1.</span> <span class="toc-text">完整性排查</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动项-amp-计划排查"><span class="toc-number">3.2.2.</span> <span class="toc-text">启动项&amp;计划排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程排查"><span class="toc-number">3.2.3.</span> <span class="toc-text">进程排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络连接排查"><span class="toc-number">3.2.4.</span> <span class="toc-text">网络连接排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#案例"><span class="toc-number">3.2.5.</span> <span class="toc-text">案例</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lessismore.cool/2021/08/13/溯源攻防/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lessismore.cool/2021/08/13/溯源攻防/&text=溯源攻防"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lessismore.cool/2021/08/13/溯源攻防/&title=溯源攻防"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lessismore.cool/2021/08/13/溯源攻防/&is_video=false&description=溯源攻防"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=溯源攻防&body=Check out this article: http://lessismore.cool/2021/08/13/溯源攻防/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lessismore.cool/2021/08/13/溯源攻防/&title=溯源攻防"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lessismore.cool/2021/08/13/溯源攻防/&title=溯源攻防"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lessismore.cool/2021/08/13/溯源攻防/&title=溯源攻防"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lessismore.cool/2021/08/13/溯源攻防/&title=溯源攻防"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lessismore.cool/2021/08/13/溯源攻防/&name=溯源攻防&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://lessismore.cool/2021/08/13/溯源攻防/&t=溯源攻防"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    Yokeen
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/friend/">Friend</a></li>
+         
+          <li><a href="/about/">About</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
